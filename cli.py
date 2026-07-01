@@ -10901,7 +10901,9 @@ class HermesCLI(CLIAgentSetupMixin, CLICommandsMixin):
                     self._voice_continuous = False
                     self._no_speech_count = 0
                     _cprint(f"{_DIM}No speech detected 3 times, continuous mode stopped.{_RST}")
-                    return
+                    stop_continuous = True
+                else:
+                    stop_continuous = False
             else:
                 self._no_speech_count = 0
 
