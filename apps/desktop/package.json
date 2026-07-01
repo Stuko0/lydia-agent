@@ -1,10 +1,10 @@
 {
-  "name": "hermes",
-  "productName": "Hermes",
+  "name": "lydia",
+  "productName": "Lydia",
   "private": true,
   "version": "0.17.0",
-  "description": "Native desktop shell for Hermes Agent.",
-  "author": "Nous Research",
+  "description": "Native desktop shell for Lydia Agent.",
+  "author": "Arquant",
   "type": "module",
   "main": "electron/main.cjs",
   "engines": {
