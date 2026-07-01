@@ -195,6 +195,9 @@ def _check_via_rev(local_rev: str) -> Optional[int]:
 def _check_via_local_git(repo_dir: Path) -> Optional[int]:
     """Count commits behind origin/main in a local checkout."""
     origin_url = _git_stdout(["remote", "get-url", "origin"], cwd=repo_dir)
+    if not origin_url:
+        # No remote configured (offline fork) — no updates possible
+        return 0
     if _is_official_ssh_remote(origin_url):
         head_rev = _git_stdout(["rev-parse", "HEAD"], cwd=repo_dir)
         checked = _check_via_rev(head_rev) if head_rev else None
