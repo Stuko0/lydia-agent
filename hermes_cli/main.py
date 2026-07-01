@@ -9065,6 +9065,20 @@ def cmd_update(args):
     runs the update, then restores stdio on the way out (even on
     ``sys.exit`` or unhandled exceptions).
     """
+    # Offline fork: no remote → no updates to pull
+    _has_origin = (
+        subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=5,
+        ).returncode
+        == 0
+    )
+    if not _has_origin:
+        print("⚕ Offline mode: Hermes is installed from a local fork with no git remote.")
+        print("  Updates are handled internally — run 'git pull <your-mirror>' manually")
+        print("  or use the internal package distribution mechanism.")
+        sys.exit(0)
+
     from hermes_cli.config import (
         detect_install_method,
         format_docker_update_message,
