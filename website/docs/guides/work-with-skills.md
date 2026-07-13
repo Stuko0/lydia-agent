@@ -162,7 +162,7 @@ Manage skill config from the CLI:
 hermes skills config gif-search
 
 # View all skill config
-hermes config show | grep '^skills\.config'
+lydia config show | grep '^skills\.config'
 ```
 
 ---
@@ -235,7 +235,7 @@ For API details, load the reference: `skill_view("my-skill", "references/api-doc
 Start a new session and try your skill:
 
 ```bash
-hermes chat -q "/my-skill help me with the thing"
+lydia chat -q "/my-skill help me with the thing"
 ```
 
 The skill appears automatically — no registration needed. Drop it in `~/.hermes/skills/` and it's live.

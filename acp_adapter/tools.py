@@ -1,4 +1,4 @@
-"""ACP tool-call helpers for mapping hermes tools to ACP ToolKind and building content."""
+"""ACP tool-call helpers for mapping lydia native to ACP ToolKind and building content."""
 
 from __future__ import annotations
 
@@ -192,7 +192,7 @@ def _json_loads_maybe(value: Optional[str]) -> Any:
     except Exception:
         pass
 
-    # Some Hermes tools append a human hint after a JSON payload, e.g.
+    # Some Lydia native append a human hint after a JSON payload, e.g.
     # ``{...}\n\n[Hint: Results truncated...]``. Keep the structured rendering path
     # by decoding the first JSON value instead of falling back to raw text.
     try:

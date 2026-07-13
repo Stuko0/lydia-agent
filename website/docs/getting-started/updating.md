@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "Updating & Uninstalling"
-description: "How to update Hermes Agent to the latest version or uninstall it"
+description: "How to update Lydia Agent to the latest version or uninstall it"
 ---
 
 # Updating & Uninstalling
@@ -17,7 +17,7 @@ hermes update
 This pulls the latest code from `main`, updates dependencies, and prompts you to configure any new options that were added since your last update.
 
 :::tip
-`hermes update` automatically detects new configuration options and prompts you to add them. If you skipped that prompt, you can manually run `hermes config check` to see missing options, then `hermes config migrate` to interactively add them.
+`hermes update` automatically detects new configuration options and prompts you to add them. If you skipped that prompt, you can manually run `lydia config check` to see missing options, then `lydia config migrate` to interactively add them.
 :::
 
 ### What happens during an update
@@ -106,7 +106,7 @@ Expected output looks like:
 
 ```
 $ hermes update
-Updating Hermes Agent...
+Updating Lydia Agent...
 📥 Pulling latest code...
 Already up to date.  (or: Updating abc1234..def5678)
 📦 Updating dependencies...
@@ -115,7 +115,7 @@ Already up to date.  (or: Updating abc1234..def5678)
 ✅ Config is up to date  (or: Found 2 new options — running migration...)
 🔄 Restarting gateways...
 ✅ Gateway restarted
-✅ Hermes Agent updated successfully!
+✅ Lydia Agent updated successfully!
 ```
 
 ### Recommended Post-Update Validation
@@ -123,7 +123,7 @@ Already up to date.  (or: Updating abc1234..def5678)
 `hermes update` handles the main update path, but a quick validation confirms everything landed cleanly:
 
 1. `git status --short` — if the tree is unexpectedly dirty, inspect before continuing
-2. `hermes doctor` — checks config, dependencies, and service health
+2. `lydia doctor` — checks config, dependencies, and service health
 3. `hermes --version` — confirm the version bumped as expected
 4. If you use the gateway: `hermes gateway status`
 5. If `doctor` reports npm audit issues: run `npm audit fix` in the flagged directory
@@ -182,8 +182,8 @@ git pull origin main
 uv pip install -e ".[all]"
 
 # Check for new config options
-hermes config check
-hermes config migrate   # Interactively add any missing options
+lydia config check
+lydia config migrate   # Interactively add any missing options
 ```
 
 ### Rollback instructions
@@ -212,7 +212,7 @@ uv pip install -e ".[all]"
 ```
 
 :::warning
-Rolling back may cause config incompatibilities if new options were added. Run `hermes config check` after rolling back and remove any unrecognized options from `config.yaml` if you encounter errors.
+Rolling back may cause config incompatibilities if new options were added. Run `lydia config check` after rolling back and remove any unrecognized options from `config.yaml` if you encounter errors.
 :::
 
 ### Note for Nix users

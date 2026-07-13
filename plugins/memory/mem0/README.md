@@ -15,7 +15,7 @@ hermes memory setup    # select "mem0"
 
 Or manually:
 ```bash
-hermes config set memory.provider mem0
+lydia config set memory.provider mem0
 echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
 ```
 

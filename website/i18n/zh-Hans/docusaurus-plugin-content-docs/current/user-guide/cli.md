@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
 title: "CLI 界面"
-description: "掌握 Hermes Agent 终端界面——命令、快捷键、人格设定等"
+description: "掌握 Lydia Agent 终端界面——命令、快捷键、人格设定等"
 ---
 
 # CLI 界面
 
-Hermes Agent 的 CLI 是一个完整的终端用户界面（TUI），而非 Web UI。它支持多行编辑、斜杠命令自动补全、对话历史、中断并重定向，以及流式工具输出。专为常驻终端的用户而生。
+Lydia Agent 的 CLI 是一个完整的终端用户界面（TUI），而非 Web UI。它支持多行编辑、斜杠命令自动补全、对话历史、中断并重定向，以及流式工具输出。专为常驻终端的用户而生。
 
 :::tip
 Hermes 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非阻塞输入。使用 `hermes --tui` 启动——参见 [TUI](tui.md) 指南。
@@ -19,28 +19,28 @@ Hermes 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非
 hermes
 
 # 单次查询模式（非交互式）
-hermes chat -q "Hello"
+lydia chat -q "Hello"
 
 # 使用指定模型
-hermes chat --model "anthropic/claude-sonnet-4"
+lydia chat --model "anthropic/claude-sonnet-4"
 
 # 使用指定提供商
-hermes chat --provider nous        # 使用 Nous Portal
-hermes chat --provider openrouter  # 强制使用 OpenRouter
+lydia chat --provider nous        # 使用 Nous Portal
+lydia chat --provider openrouter  # 强制使用 OpenRouter
 
 # 使用指定工具集
-hermes chat --toolsets "web,terminal,skills"
+lydia chat --toolsets "web,terminal,skills"
 
 # 启动时预加载一个或多个 skill
 hermes -s hermes-agent-dev,github-auth
-hermes chat -s github-pr-workflow -q "open a draft PR"
+lydia chat -s github-pr-workflow -q "open a draft PR"
 
 # 恢复之前的会话
 hermes --continue             # 恢复最近的 CLI 会话（-c）
 hermes --resume <session_id>  # 通过 ID 恢复指定会话（-r）
 
 # 详细模式（调试输出）
-hermes chat --verbose
+lydia chat --verbose
 
 # 隔离的 git worktree（用于并行运行多个 agent）
 hermes -w                         # 在 worktree 中以交互模式运行
@@ -59,7 +59,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 一个持久状态栏位于输入区域上方，实时更新：
 
 ```
- ⚕ claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
+ 🌹 claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
 ```
 
 | 元素 | 描述 |
@@ -165,7 +165,7 @@ quick_commands:
 
 ```bash
 hermes -s hermes-agent-dev,github-auth
-hermes chat -s github-pr-workflow -s github-auth
+lydia chat -s github-pr-workflow -s github-auth
 ```
 
 Hermes 会在第一轮对话前将每个指定的 skill 加载到会话 prompt 中。该标志在交互模式和单次查询模式下均有效。
@@ -282,7 +282,7 @@ display:
 在 Unix 系统上，按 **`Ctrl+Z`** 将 Hermes 挂起到后台——与任何终端进程一样。shell 会打印确认信息：
 
 ```
-Hermes Agent has been suspended. Run `fg` to bring Hermes Agent back.
+Lydia Agent has been suspended. Run `fg` to bring Lydia Agent back.
 ```
 
 在 shell 中输入 `fg` 即可从中断处恢复会话。Windows 不支持此功能。
@@ -407,7 +407,7 @@ Hermes 立即确认任务并将提示符还给你：
 后台任务完成时，结果会以面板形式出现在终端中：
 
 ```
-╭─ ⚕ Hermes (background #1) ──────────────────────────────────╮
+╭─ 🌹 Hermes (background #1) ──────────────────────────────────╮
 │ Found 3 errors in syslog from today:                         │
 │ 1. OOM killer invoked at 03:22 — killed process nginx        │
 │ 2. Disk I/O error on /dev/sda1 at 07:15                      │
@@ -436,5 +436,5 @@ Hermes 立即确认任务并将提示符还给你：
 
 如需调试输出：
 ```bash
-hermes chat --verbose
+lydia chat --verbose
 ```

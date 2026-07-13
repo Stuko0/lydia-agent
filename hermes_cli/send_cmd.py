@@ -221,7 +221,7 @@ def _load_hermes_env() -> None:
     2. Bridge top-level simple values from ``~/.hermes/config.yaml`` into
        ``os.environ`` (without overriding existing env vars). This is where
        ``TELEGRAM_HOME_CHANNEL`` and friends live when the user saved them
-       via ``hermes config set``.
+       via ``lydia config set``.
 
     See ``gateway/run.py`` for the canonical version of this bridge — we
     intentionally reimplement the minimum needed here so ``hermes send``

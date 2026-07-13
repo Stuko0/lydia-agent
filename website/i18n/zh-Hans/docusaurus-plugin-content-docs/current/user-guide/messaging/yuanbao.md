@@ -1,7 +1,7 @@
 ---
 sidebar_position: 16
 title: "Yuanbao"
-description: "通过 WebSocket gateway 将 Hermes Agent 连接到元宝企业消息平台"
+description: "通过 WebSocket gateway 将 Lydia Agent 连接到元宝企业消息平台"
 ---
 
 # Yuanbao
@@ -330,7 +330,7 @@ HERMES_LOG_LEVEL=debug hermes gateway
 从 CLI 向元宝发送消息：
 
 ```bash
-hermes chat -q "Send 'Hello from CLI' to yuanbao:group:group_code"
+lydia chat -q "Send 'Hello from CLI' to yuanbao:group:group_code"
 ```
 
 ## 相关文档

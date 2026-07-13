@@ -30,10 +30,10 @@ The tool's `check_fn` runs the xAI credential resolver every time the model's to
 
 ## Enabling the tool
 
-Auto-enables when xAI credentials (OAuth token or `XAI_API_KEY`) are present. Disable explicitly via `hermes tools` → Search → x_search if you don't want this.
+Auto-enables when xAI credentials (OAuth token or `XAI_API_KEY`) are present. Disable explicitly via `lydia native` → Search → x_search if you don't want this.
 
 ```bash
-hermes tools
+lydia native
 # → 🐦 X (Twitter) Search   (press space to toggle on)
 ```
 
@@ -124,7 +124,7 @@ The configured `x_search.model` doesn't have access to the server-side `x_search
 
 Two possible causes:
 
-1. **Toolset not enabled.** Run `hermes tools` and confirm `🐦 X (Twitter) Search` is checked.
+1. **Toolset not enabled.** Run `lydia native` and confirm `🐦 X (Twitter) Search` is checked.
 2. **No xAI credentials.** The check_fn returns False, so the schema stays hidden. Run `hermes auth status` to confirm xai-oauth login state, and check that `XAI_API_KEY` is set (if you're using the API-key path).
 
 ### `degraded: true` — answer with no citations

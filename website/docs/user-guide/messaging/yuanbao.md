@@ -1,7 +1,7 @@
 ---
 sidebar_position: 16
 title: "Yuanbao"
-description: "Connect Hermes Agent to the Yuanbao enterprise messaging platform via WebSocket gateway"
+description: "Connect Lydia Agent to the Yuanbao enterprise messaging platform via WebSocket gateway"
 ---
 
 # Yuanbao
@@ -330,7 +330,7 @@ Run long operations without blocking the conversation:
 Send a message from CLI to Yuanbao:
 
 ```bash
-hermes chat -q "Send 'Hello from CLI' to yuanbao:group:group_code"
+lydia chat -q "Send 'Hello from CLI' to yuanbao:group:group_code"
 ```
 
 ## Related Documentation

@@ -6,7 +6,7 @@ description: "Project context files — .hermes.md, AGENTS.md, CLAUDE.md, global
 
 # Context Files
 
-Hermes Agent automatically discovers and loads context files that shape how it behaves. Some are project-local and discovered from your working directory. `SOUL.md` is now global to the Hermes instance and is loaded from `HERMES_HOME` only.
+Lydia Agent automatically discovers and loads context files that shape how it behaves. Some are project-local and discovered from your working directory. `SOUL.md` is now global to the Hermes instance and is loaded from `HERMES_HOME` only.
 
 ## Supported Context Files
 
@@ -88,7 +88,7 @@ This is a Next.js 14 web application with a Python FastAPI backend.
 
 Important details:
 
-- Hermes seeds a default `SOUL.md` automatically if one does not exist yet
+- Lydia seeds a default `SOUL.md` automatically if one does not exist yet
 - Hermes loads `SOUL.md` only from `HERMES_HOME`
 - Hermes does not probe the working directory for `SOUL.md`
 - If the file is empty, nothing from `SOUL.md` is added to the prompt

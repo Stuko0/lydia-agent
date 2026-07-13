@@ -6,7 +6,7 @@ description: "Runtime behavior of the tool registry, toolsets, dispatch, and ter
 
 # Tools Runtime
 
-Hermes tools are self-registering functions grouped into toolsets and executed through a central registry/dispatch system.
+Lydia native are self-registering functions grouped into toolsets and executed through a central registry/dispatch system.
 
 Primary files:
 

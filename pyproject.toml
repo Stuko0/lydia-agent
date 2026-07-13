@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lydia-agent"
 version = "0.17.0"
-description = "Lydia — AI agent fork for Arquant, based on Hermes Agent"
+description = "Lydia — AI agent fork for Arquant, based on Lydia Agent"
 readme = "README.md"
 # Upper bound is load-bearing, not cosmetic. uv resolves the project's
 # Python from `requires-python`, and an inherited `UV_PYTHON` env var (or a
@@ -142,7 +142,7 @@ dependencies = [
 # OpenRouter or other aggregators).
 anthropic = ["anthropic==0.87.0"]  # CVE-2026-34450, CVE-2026-34452
 # Web search backends — each only loaded when the user picks it as their
-# search provider (configured via `hermes tools` or config.yaml).
+# search provider (configured via `lydia native` or config.yaml).
 exa = ["exa-py==2.10.2"]
 firecrawl = ["firecrawl-py==4.17.0"]
 parallel-web = ["parallel-web==0.4.2"]
@@ -207,7 +207,7 @@ homeassistant = ["aiohttp==3.13.4"]
 sms = ["aiohttp==3.13.4"]
 teams = ["microsoft-teams-apps==2.0.13.4", "aiohttp==3.13.4"]
 # Computer use — macOS background desktop control via cua-driver (MCP stdio).
-# The cua-driver binary itself is installed via `hermes tools` post-setup
+# The cua-driver binary itself is installed via `lydia native` post-setup
 # (curl install script); this extra just pins the MCP client used to talk
 # to it, which is already provided by the `mcp` extra.
 computer-use = ["mcp==1.26.0", "starlette==1.0.1"]  # starlette: CVE-2026-48710

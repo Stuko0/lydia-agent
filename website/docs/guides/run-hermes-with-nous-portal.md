@@ -1,16 +1,16 @@
 ---
 sidebar_position: 1
-title: "Run Hermes Agent with Nous Portal"
+title: "Run Lydia Agent with Nous Portal"
 description: "Start-to-finish walkthrough: subscribe, set up, switch models, enable gateway tools, and verify routing"
 ---
 
-# Run Hermes Agent with Nous Portal
+# Run Lydia Agent with Nous Portal
 
-This guide walks you through running Hermes Agent on a [Nous Portal](https://portal.nousresearch.com) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [Nous Portal integration page](/integrations/nous-portal). This page is the task script.
+This guide walks you through running Lydia Agent on a [Nous Portal](https://portal.nousresearch.com) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [Nous Portal integration page](/integrations/nous-portal). This page is the task script.
 
 ## Prerequisites
 
-- Hermes Agent installed ([Quickstart](/getting-started/quickstart))
+- Lydia Agent installed ([Quickstart](/getting-started/quickstart))
 - A web browser on the machine you're setting up (or SSH port forwarding — see [OAuth over SSH](/guides/oauth-over-ssh))
 - About 5 minutes
 
@@ -25,7 +25,7 @@ Already subscribed? Skip to step 2.
 ## 2. Run the one-shot setup
 
 ```bash
-hermes setup --portal
+lydia setup --portal
 ```
 
 This single command does five things:
@@ -45,11 +45,11 @@ OAuth needs a browser, but the loopback callback runs on the machine where Herme
 ```bash
 # Option A: SSH port forwarding (preferred)
 ssh -N -L 8642:127.0.0.1:8642 user@remote-host    # in a local terminal
-hermes setup --portal                              # on the remote, open the printed URL in your local browser
+lydia setup --portal                              # on the remote, open the printed URL in your local browser
 
 # Option B: manual paste (for Cloud Shell, Codespaces, EC2 Instance Connect)
 hermes auth add nous --type oauth --manual-paste
-# Then re-run `hermes setup --portal` to wire the provider + gateway
+# Then re-run `lydia setup --portal` to wire the provider + gateway
 ```
 
 See [OAuth over SSH / Remote Hosts](/guides/oauth-over-ssh) for the full walkthrough including ProxyJump chains, mosh/tmux, and ControlMaster gotchas.
@@ -82,20 +82,20 @@ If any line shows something other than "via Nous Portal" or the auth line says "
 ## 4. Run your first conversation
 
 ```bash
-hermes chat
+lydia chat
 ```
 
 Try something that exercises both the model and the Tool Gateway:
 
 ```
-Hey, search the web for "Hermes Agent release notes" and summarize the top 3 hits.
+Hey, search the web for "Lydia Agent release notes" and summarize the top 3 hits.
 ```
 
 You should see Hermes call `web_search` (Firecrawl-backed, through the gateway) and respond with a summary. If the search runs and the response makes sense, you're done — the Portal is wired up end to end.
 
 ## 5. Pick the model you actually want
 
-`hermes setup --portal` lets you pick a model during setup, but the whole point of the subscription is access to the full catalog — switch any time with `/model` mid-session:
+`lydia setup --portal` lets you pick a model during setup, but the whole point of the subscription is access to the full catalog — switch any time with `/model` mid-session:
 
 ```bash
 /model anthropic/claude-sonnet-4.6     # best general-purpose agentic
@@ -115,12 +115,12 @@ Pick a different default permanently:
 
 ```bash
 # in your terminal, outside any session
-hermes config set model.default anthropic/claude-sonnet-4.6
+lydia config set model.default anthropic/claude-sonnet-4.6
 ```
 
 ### Don't pick Hermes-4 for agent work
 
-Hermes-4-70B and Hermes-4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [Nous Chat](https://chat.nousresearch.com) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Hermes Agent itself, stick to the frontier agentic models above.
+Hermes-4-70B and Hermes-4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [Nous Chat](https://chat.nousresearch.com) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Lydia Agent itself, stick to the frontier agentic models above.
 
 The Portal's own [info page](https://portal.nousresearch.com/info) carries this warning too — it's the official Nous guidance, not just a Hermes-side opinion.
 
@@ -129,14 +129,14 @@ The Portal's own [info page](https://portal.nousresearch.com/info) carries this 
 The gateway is opt-in per tool, not all-or-nothing. If you already have a Browserbase account and want to keep using it while routing web search and image generation through Nous, that's supported:
 
 ```bash
-hermes tools
+lydia native
 # → Web search       → "Nous Subscription"     (recommended)
 # → Image generation → "Nous Subscription"     (recommended)
 # → Browser          → "Browserbase"           (your existing key)
 # → TTS              → "Nous Subscription"     (recommended)
 ```
 
-These rows appear in `hermes tools` even before you've logged into Nous Portal — if you pick "Nous Subscription" without an active session, Hermes runs the Portal login inline (without changing your inference provider or your other tools).
+These rows appear in `lydia native` even before you've logged into Nous Portal — if you pick "Nous Subscription" without an active session, Hermes runs the Portal login inline (without changing your inference provider or your other tools).
 
 Verify your mix with:
 
@@ -151,7 +151,7 @@ You'll see per-tool routing — `via Nous Portal` for the ones routed through th
 Because the Tool Gateway includes OpenAI TTS, [voice mode](/user-guide/features/voice-mode) works without a separate OpenAI key:
 
 ```bash
-hermes setup voice
+lydia setup voice
 # → pick "Nous Subscription" for TTS
 # → pick a speech-to-text backend (local faster-whisper is free, no setup)
 ```
@@ -178,7 +178,7 @@ For team setups where multiple humans share a machine, each human has their own 
 
 ## Troubleshooting
 
-### `hermes portal info` shows "not logged in" after `hermes setup --portal`
+### `hermes portal info` shows "not logged in" after `lydia setup --portal`
 
 The OAuth flow didn't complete. Re-run it:
 
@@ -193,13 +193,13 @@ If your browser doesn't open or the callback fails, you're likely on a remote/he
 Your local config drifted. The OAuth worked but `model.provider` is still pointing at a different provider. Fix:
 
 ```bash
-hermes config set model.provider nous
+lydia config set model.provider nous
 ```
 
 Or interactively:
 
 ```bash
-hermes model
+lydia model
 # pick Nous Portal
 ```
 
@@ -210,7 +210,7 @@ Re-verify with `hermes portal info`.
 Per-tool config is overriding the gateway. Run:
 
 ```bash
-hermes tools
+lydia native
 # pick "Nous Subscription" for any tool you want gateway-routed
 ```
 
@@ -270,7 +270,7 @@ That's the deal. If you're using more than two of those backends anyway, the sub
 
 - **[Nous Portal integration page](/integrations/nous-portal)** — Overview of what's in the subscription
 - **[Tool Gateway](/user-guide/features/tool-gateway)** — Full details on every gateway-routed tool
-- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Hermes tools
+- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Lydia native
 - **[Voice mode](/user-guide/features/voice-mode)** — Set up voice conversations on the Portal subscription
 - **[OAuth over SSH](/guides/oauth-over-ssh)** — Remote / headless login patterns
 - **[Profiles](/user-guide/profiles)** — Share one Portal login across multiple Hermes configurations

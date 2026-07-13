@@ -182,7 +182,7 @@ class ResponsesApiTransport(ProviderTransport):
         # message is emitted, and ``_normalize_codex_response`` correctly
         # sees reasoning-with-no-answer and reports ``incomplete``.  The
         # turn then burns 3 continuation retries and fails with "Codex
-        # response remained incomplete after 3 continuation attempts".
+        # response remained incomplete after 10 continuation attempts".
         # Verified live against grok-composer-2.5-fast (2026-06).
         #
         # Fix: when the agent HAS a client-side ``web_search`` function (i.e.

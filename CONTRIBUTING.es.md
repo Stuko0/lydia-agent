@@ -1,6 +1,6 @@
-# Contribuir a Hermes Agent
+# Contribuir a Lydia Agent
 
-¡Gracias por contribuir a Hermes Agent! Esta guía cubre todo lo que necesitas: configurar tu entorno de desarrollo, entender la arquitectura, decidir qué construir y conseguir que tu PR sea aceptado.
+¡Gracias por contribuir a Lydia Agent! Esta guía cubre todo lo que necesitas: configurar tu entorno de desarrollo, entender la arquitectura, decidir qué construir y conseguir que tu PR sea aceptado.
 
 ---
 
@@ -114,8 +114,8 @@ mkdir -p ~/.local/bin
 ln -sf "$(pwd)/venv/bin/hermes" ~/.local/bin/hermes
 
 # Verificar
-hermes doctor
-hermes chat -q "Hola"
+lydia doctor
+lydia chat -q "Hola"
 ```
 
 ### Ejecutar tests

@@ -265,8 +265,8 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           }
 
           echo "=== Checking HERMES_MANAGED guards ==="
-          check_blocked "config set" ${hermes-agent}/bin/hermes config set model foo
-          check_blocked "config edit" ${hermes-agent}/bin/hermes config edit
+          check_blocked "config set" ${hermes-agent}/bin/lydia config set model foo
+          check_blocked "config edit" ${hermes-agent}/bin/lydia config edit
 
           echo "=== All guard checks passed ==="
           mkdir -p $out

@@ -12,7 +12,7 @@ Hermes 使用两类模型槽位：
 本页介绍如何通过仪表板配置上述两类模型。如需使用配置文件或 CLI，请跳至底部的[其他方法](#alternative-methods)。
 
 :::tip 最快路径：Nous Portal
-[Nous Portal](/user-guide/features/tool-gateway) 在单一订阅下提供 300+ 个模型。全新安装后，运行 `hermes setup --portal` 即可登录并一键将 Nous 设为提供商。使用 `hermes portal info` 查看当前配置。
+[Nous Portal](/user-guide/features/tool-gateway) 在单一订阅下提供 300+ 个模型。全新安装后，运行 `lydia setup --portal` 即可登录并一键将 Nous 设为提供商。使用 `hermes portal info` 查看当前配置。
 :::
 
 ## Models 页面
@@ -123,7 +123,7 @@ auxiliary:
 
 ## 何时生效？
 
-- **CLI**（`hermes chat`）：下次执行 `hermes chat` 时生效。
+- **CLI**（`lydia chat`）：下次执行 `lydia chat` 时生效。
 - **Gateway**（Telegram、Discord、Slack 等）：下一个*新*会话生效。现有会话保持原有模型。如需强制所有会话使用新配置，重启 gateway（`hermes gateway restart`）。
 - **仪表板聊天标签页**（`/chat`）：下一个新 PTY 生效。当前打开的聊天保持原有模型 — 在聊天内使用 `/model` 进行热切换。
 
@@ -133,7 +133,7 @@ auxiliary:
 
 ### 选择器中显示"No authenticated providers"
 
-Hermes 仅列出具有有效凭据的提供商。检查侧边栏中的 **Keys** — 应存在以下之一：API key、成功的 OAuth 或自定义端点 URL。若所需提供商不在列表中，运行 `hermes setup` 进行配置，或前往 **Keys** 添加环境变量。
+Hermes 仅列出具有有效凭据的提供商。检查侧边栏中的 **Keys** — 应存在以下之一：API key、成功的 OAuth 或自定义端点 URL。若所需提供商不在列表中，运行 `lydia setup` 进行配置，或前往 **Keys** 添加环境变量。
 
 ### 主模型在运行中的聊天里未发生变化
 
@@ -155,7 +155,7 @@ Hermes 仅列出具有有效凭据的提供商。检查侧边栏中的 **Keys** 
 
 ### CLI 斜杠命令
 
-在任意 `hermes chat` 会话内：
+在任意 `lydia chat` 会话内：
 
 ```
 /model gpt-5.4 --provider openrouter             # 仅当前会话
@@ -182,21 +182,21 @@ model_aliases:
 或通过 shell 命令（简写形式，`provider/model`）：
 
 ```bash
-hermes config set model.aliases.fav anthropic/claude-opus-4.6
-hermes config set model.aliases.grok x-ai/grok-4
+lydia config set model.aliases.fav anthropic/claude-opus-4.6
+lydia config set model.aliases.grok x-ai/grok-4
 ```
 
 然后在聊天中使用 `/model fav` 或 `/model grok`。用户别名会覆盖内置短名称（`sonnet`、`kimi`、`opus` 等）。完整参考请见[自定义模型别名](/reference/slash-commands#custom-model-aliases)。
 
-### `hermes model` 子命令
+### `lydia model` 子命令
 
 ```bash
-hermes model            # 交互式提供商 + 模型选择器（切换默认值的标准方式）
+lydia model            # 交互式提供商 + 模型选择器（切换默认值的标准方式）
 ```
 
-`hermes model` 引导你选择提供商、完成认证（OAuth 流程会打开浏览器；API key 提供商会提示输入密钥），然后从该提供商的精选目录中选择具体模型。选择结果写入 `~/.hermes/config.yaml` 的 `model.provider` 和 `model.model` 字段。
+`lydia model` 引导你选择提供商、完成认证（OAuth 流程会打开浏览器；API key 提供商会提示输入密钥），然后从该提供商的精选目录中选择具体模型。选择结果写入 `~/.hermes/config.yaml` 的 `model.provider` 和 `model.model` 字段。
 
-如需在不启动选择器的情况下列出提供商/模型，请使用仪表板或下方的 REST 端点。查看 CLI 当前实际使用的配置：`hermes config get model` 和 `hermes status`。
+如需在不启动选择器的情况下列出提供商/模型，请使用仪表板或下方的 REST 端点。查看 CLI 当前实际使用的配置：`lydia config get model` 和 `hermes status`。
 
 ### 直接编辑配置文件
 

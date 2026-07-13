@@ -26,10 +26,10 @@ sidebar_position: 7
 
 ## 启用工具
 
-当 xAI 凭据（OAuth token 或 `XAI_API_KEY`）存在时自动启用。如不需要，可通过 `hermes tools` → Search → x_search 显式禁用。
+当 xAI 凭据（OAuth token 或 `XAI_API_KEY`）存在时自动启用。如不需要，可通过 `lydia native` → Search → x_search 显式禁用。
 
 ```bash
-hermes tools
+lydia native
 # → 🐦 X (Twitter) Search   (press space to toggle on)
 ```
 
@@ -120,7 +120,7 @@ agent 将：
 
 可能有两个原因：
 
-1. **工具集未启用。** 运行 `hermes tools`，确认 `🐦 X (Twitter) Search` 已勾选。
+1. **工具集未启用。** 运行 `lydia native`，确认 `🐦 X (Twitter) Search` 已勾选。
 2. **无 xAI 凭据。** `check_fn` 返回 False，schema 保持隐藏。运行 `hermes auth status` 确认 xai-oauth 登录状态，并检查 `XAI_API_KEY` 是否已设置（如使用 API 密钥路径）。
 
 ### `degraded: true` — 回答无引用来源

@@ -6,7 +6,7 @@ description: "外部记忆提供者插件 — Honcho、OpenViking、Mem0、Hinds
 
 # Memory Providers
 
-Hermes Agent 内置 8 个外部记忆提供者插件，为 Agent 提供跨会话的持久化知识，超越内置的 MEMORY.md 和 USER.md。同一时间只能激活**一个**外部提供者——内置记忆始终与其并行工作。
+Lydia Agent 内置 8 个外部记忆提供者插件，为 Agent 提供跨会话的持久化知识，超越内置的 MEMORY.md 和 USER.md。同一时间只能激活**一个**外部提供者——内置记忆始终与其并行工作。
 
 ## 快速开始
 
@@ -282,7 +282,7 @@ openviking-server
 # 然后配置 Hermes
 hermes memory setup    # 选择 "openviking"
 # 或手动配置：
-hermes config set memory.provider openviking
+lydia config set memory.provider openviking
 echo "OPENVIKING_ENDPOINT=http://localhost:1933" >> ~/.hermes/.env
 ```
 
@@ -310,7 +310,7 @@ echo "OPENVIKING_ENDPOINT=http://localhost:1933" >> ~/.hermes/.env
 ```bash
 hermes memory setup    # 选择 "mem0"
 # 或手动配置：
-hermes config set memory.provider mem0
+lydia config set memory.provider mem0
 echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -340,7 +340,7 @@ echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
 ```bash
 hermes memory setup    # 选择 "hindsight"
 # 或手动配置：
-hermes config set memory.provider hindsight
+lydia config set memory.provider hindsight
 echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -359,7 +359,7 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 | `auto_retain` | `true` | 自动保留对话轮次 |
 | `auto_recall` | `true` | 每轮对话前自动召回记忆 |
 | `retain_async` | `true` | 在服务器上异步处理保留操作 |
-| `retain_context` | `conversation between Hermes Agent and the User` | 保留记忆的上下文标签 |
+| `retain_context` | `conversation between Lydia Agent and the User` | 保留记忆的上下文标签 |
 | `retain_tags` | — | 应用于保留记忆的默认标签；与每次工具调用的标签合并 |
 | `retain_source` | — | 附加到保留记忆的可选 `metadata.source` |
 | `retain_user_prefix` | `User` | 自动保留的对话记录中用户轮次前的标签 |
@@ -387,7 +387,7 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 ```bash
 hermes memory setup    # 选择 "holographic"
 # 或手动配置：
-hermes config set memory.provider holographic
+lydia config set memory.provider holographic
 ```
 
 **配置：** `plugins.hermes-memory-store` 下的 `config.yaml`
@@ -423,7 +423,7 @@ hermes config set memory.provider holographic
 ```bash
 hermes memory setup    # 选择 "retaindb"
 # 或手动配置：
-hermes config set memory.provider retaindb
+lydia config set memory.provider retaindb
 echo "RETAINDB_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -450,7 +450,7 @@ curl -fsSL https://byterover.dev/install.sh | sh
 # 然后配置 Hermes
 hermes memory setup    # 选择 "byterover"
 # 或手动配置：
-hermes config set memory.provider byterover
+lydia config set memory.provider byterover
 ```
 
 **主要特性：**
@@ -477,7 +477,7 @@ hermes config set memory.provider byterover
 ```bash
 hermes memory setup    # 选择 "supermemory"
 # 或手动配置：
-hermes config set memory.provider supermemory
+lydia config set memory.provider supermemory
 echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
 ```
 

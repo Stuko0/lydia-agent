@@ -2,7 +2,7 @@
 sidebar_position: 12
 sidebar_label: "内置插件"
 title: "内置插件"
-description: "随 Hermes Agent 附带并通过生命周期 hook 自动运行的插件——disk-cleanup 等"
+description: "随 Lydia Agent 附带并通过生命周期 hook 自动运行的插件——disk-cleanup 等"
 ---
 
 # 内置插件
@@ -145,13 +145,13 @@ HERMES_LANGFUSE_BASE_URL=https://cloud.langfuse.com   # 或你的自托管 URL
 | `pre_tool_call` | 启动一个带有经过清理的 `args` 的 `tool` 子 observation。 |
 | `post_tool_call` | 关闭 tool observation，附加经过清理的 `result`。`read_file` 的内容会被摘要化（头部 + 尾部 + 省略行数），以使大文件读取保持在 `HERMES_LANGFUSE_MAX_CHARS` 以内。 |
 
-会话分组基于 Hermes 会话 ID（或子 agent 的任务 ID），通过 `langfuse.propagate_attributes` 实现，因此单次 `hermes chat` 会话中的所有内容都归属于同一个 Langfuse session。
+会话分组基于 Hermes 会话 ID（或子 agent 的任务 ID），通过 `langfuse.propagate_attributes` 实现，因此单次 `lydia chat` 会话中的所有内容都归属于同一个 Langfuse session。
 
 **验证：**
 
 ```bash
 hermes plugins list                 # observability/langfuse 应显示 "enabled"
-hermes chat -q "hello"              # 在 Langfuse UI 中检查是否有 "Hermes turn" trace
+lydia chat -q "hello"              # 在 Langfuse UI 中检查是否有 "Hermes turn" trace
 ```
 
 **可选调优**（在 `.env` 中）：

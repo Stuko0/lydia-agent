@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "更新与卸载"
-description: "如何将 Hermes Agent 更新至最新版本或将其卸载"
+description: "如何将 Lydia Agent 更新至最新版本或将其卸载"
 ---
 
 # 更新与卸载
@@ -17,7 +17,7 @@ hermes update
 此命令会从 `main` 拉取最新代码、更新依赖项，并提示你配置自上次更新以来新增的选项。
 
 :::tip
-`hermes update` 会自动检测新的配置选项并提示你添加。如果跳过了该提示，可手动运行 `hermes config check` 查看缺失的选项，再运行 `hermes config migrate` 以交互方式添加。
+`hermes update` 会自动检测新的配置选项并提示你添加。如果跳过了该提示，可手动运行 `lydia config check` 查看缺失的选项，再运行 `lydia config migrate` 以交互方式添加。
 :::
 
 ### 更新过程
@@ -76,7 +76,7 @@ $ hermes update
 
 ```
 $ hermes update
-Updating Hermes Agent...
+Updating Lydia Agent...
 📥 Pulling latest code...
 Already up to date.  (or: Updating abc1234..def5678)
 📦 Updating dependencies...
@@ -85,7 +85,7 @@ Already up to date.  (or: Updating abc1234..def5678)
 ✅ Config is up to date  (or: Found 2 new options — running migration...)
 🔄 Restarting gateways...
 ✅ Gateway restarted
-✅ Hermes Agent updated successfully!
+✅ Lydia Agent updated successfully!
 ```
 
 ### 更新后建议的验证步骤
@@ -93,7 +93,7 @@ Already up to date.  (or: Updating abc1234..def5678)
 `hermes update` 处理主要的更新流程，但快速验证可确认一切正常落地：
 
 1. `git status --short` — 若工作树出现意外的脏状态，请在继续前检查
-2. `hermes doctor` — 检查配置、依赖项和服务健康状态
+2. `lydia doctor` — 检查配置、依赖项和服务健康状态
 3. `hermes --version` — 确认版本已按预期更新
 4. 如果使用 gateway：`hermes gateway status`
 5. 如果 `doctor` 报告 npm audit 问题：在标记的目录中运行 `npm audit fix`
@@ -150,8 +150,8 @@ git pull origin main
 uv pip install -e ".[all]"
 
 # Check for new config options
-hermes config check
-hermes config migrate   # Interactively add any missing options
+lydia config check
+lydia config migrate   # Interactively add any missing options
 ```
 
 ### 回滚说明
@@ -180,7 +180,7 @@ uv pip install -e ".[all]"
 ```
 
 :::warning
-如果新增了配置选项，回滚可能导致配置不兼容。回滚后运行 `hermes config check`，如果遇到错误，请从 `config.yaml` 中删除无法识别的选项。
+如果新增了配置选项，回滚可能导致配置不兼容。回滚后运行 `lydia config check`，如果遇到错误，请从 `config.yaml` 中删除无法识别的选项。
 :::
 
 ### Nix 用户注意事项

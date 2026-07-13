@@ -2186,7 +2186,7 @@ class QQAdapter(BasePlatformAdapter):
                                  or ("glm-asr" if provider in {"zai", "glm"} else "whisper-1"),
                     }
 
-        # 2. QQ-specific env vars (set by `hermes setup gateway` / `hermes gateway`)
+        # 2. QQ-specific env vars (set by `lydia setup gateway` / `hermes gateway`)
         qq_stt_key = os.getenv("QQ_STT_API_KEY", "")
         if qq_stt_key:
             base_url = os.getenv(
@@ -2709,7 +2709,7 @@ class QQAdapter(BasePlatformAdapter):
         del session_key, metadata  # present for contract parity only.
 
         default_hint = f" (default: {default})" if default else ""
-        content = f"⚕ **Update Needs Your Input**\n\n{prompt}{default_hint}"
+        content = f"🌹 **Update Needs Your Input**\n\n{prompt}{default_hint}"
         msg_id = self._last_msg_id.get(chat_id)
         return await self.send_with_keyboard(
             chat_id,

@@ -6,7 +6,7 @@ description: "External memory provider plugins — Honcho, OpenViking, Mem0, Hin
 
 # Memory Providers
 
-Hermes Agent ships with 8 external memory provider plugins that give the agent persistent, cross-session knowledge beyond the built-in MEMORY.md and USER.md. Only **one** external provider can be active at a time — the built-in memory is always active alongside it.
+Lydia Agent ships with 8 external memory provider plugins that give the agent persistent, cross-session knowledge beyond the built-in MEMORY.md and USER.md. Only **one** external provider can be active at a time — the built-in memory is always active alongside it.
 
 ## Quick Start
 
@@ -299,7 +299,7 @@ openviking-server
 # Then configure Hermes
 hermes memory setup    # select "openviking"
 # Or manually:
-hermes config set memory.provider openviking
+lydia config set memory.provider openviking
 echo "OPENVIKING_ENDPOINT=http://localhost:1933" >> ~/.hermes/.env
 # Authenticated servers should use a user/admin API key:
 echo "OPENVIKING_API_KEY=..." >> ~/.hermes/.env
@@ -332,7 +332,7 @@ Server-side LLM fact extraction with semantic search, reranking, and automatic d
 ```bash
 hermes memory setup    # select "mem0" → "Platform"
 # Or manually:
-hermes config set memory.provider mem0
+lydia config set memory.provider mem0
 echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -386,7 +386,7 @@ Long-term memory with knowledge graph, entity resolution, and multi-strategy ret
 ```bash
 hermes memory setup    # select "hindsight"
 # Or manually:
-hermes config set memory.provider hindsight
+lydia config set memory.provider hindsight
 echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -405,7 +405,7 @@ The setup wizard installs dependencies automatically and only installs what's ne
 | `auto_retain` | `true` | Automatically retain conversation turns |
 | `auto_recall` | `true` | Automatically recall memories before each turn |
 | `retain_async` | `true` | Process retain asynchronously on the server |
-| `retain_context` | `conversation between Hermes Agent and the User` | Context label for retained memories |
+| `retain_context` | `conversation between Lydia Agent and the User` | Context label for retained memories |
 | `retain_tags` | — | Default tags applied to retained memories; merged with per-call tool tags |
 | `retain_source` | — | Optional `metadata.source` attached to retained memories |
 | `retain_user_prefix` | `User` | Label used before user turns in auto-retained transcripts |
@@ -433,7 +433,7 @@ Local SQLite fact store with FTS5 full-text search, trust scoring, and HRR (Holo
 ```bash
 hermes memory setup    # select "holographic"
 # Or manually:
-hermes config set memory.provider holographic
+lydia config set memory.provider holographic
 ```
 
 **Config:** `config.yaml` under `plugins.hermes-memory-store`
@@ -469,7 +469,7 @@ Cloud memory API with hybrid search (Vector + BM25 + Reranking), 7 memory types,
 ```bash
 hermes memory setup    # select "retaindb"
 # Or manually:
-hermes config set memory.provider retaindb
+lydia config set memory.provider retaindb
 echo "RETAINDB_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
@@ -496,7 +496,7 @@ curl -fsSL https://byterover.dev/install.sh | sh
 # Then configure Hermes
 hermes memory setup    # select "byterover"
 # Or manually:
-hermes config set memory.provider byterover
+lydia config set memory.provider byterover
 ```
 
 **Key features:**
@@ -523,7 +523,7 @@ Semantic long-term memory with profile recall, semantic search, explicit memory 
 ```bash
 hermes memory setup    # select "supermemory"
 # Or manually:
-hermes config set memory.provider supermemory
+lydia config set memory.provider supermemory
 echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
 ```
 
@@ -583,7 +583,7 @@ Structured long-term memory using Memori Cloud, with background completed-turn c
 ```bash
 pip install hermes-memori
 hermes-memori install
-hermes config set memory.provider memori
+lydia config set memory.provider memori
 hermes memory setup
 ```
 

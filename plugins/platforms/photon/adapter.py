@@ -1,5 +1,5 @@
 """
-Photon Spectrum (iMessage) platform adapter for Hermes Agent.
+Photon Spectrum (iMessage) platform adapter for Lydia Agent.
 
 Both directions of traffic flow through a small supervised Node sidecar
 (see ``sidecar/index.mjs``) that runs the ``spectrum-ts`` SDK — the SDK is
@@ -132,7 +132,7 @@ def check_requirements() -> bool:
     if not (_SIDECAR_DIR / "node_modules").exists():
         # spectrum-ts not installed yet — `hermes photon setup` will
         # install it.  check_fn still returns False so the gateway
-        # surfaces the missing-deps state in `hermes setup` / status.
+        # surfaces the missing-deps state in `lydia setup` / status.
         return False
     return True
 

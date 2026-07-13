@@ -58,7 +58,7 @@ class TestGatewayLifecyclePattern:
         "restart the server application",
         "hermes cron list",
         "hermes update",
-        "hermes config set model claude",
+        "lydia config set model claude",
         "echo 'just a normal cron job'",
         "run the backup script",
         "gateway is running fine",

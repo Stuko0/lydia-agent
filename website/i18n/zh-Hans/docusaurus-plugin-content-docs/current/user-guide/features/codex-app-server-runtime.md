@@ -83,7 +83,7 @@ Hermes 将自身注册为 MCP server，以便 Codex 能够回调获取 Codex 自
 
 ### Kanban（多 agent 工作树分发）
 
-**在此运行时上可用，但有一个细微依赖。** Kanban 分发器将每个 worker 生成为独立的 `hermes chat -q` 子进程，该子进程读取用户配置——这意味着如果全局设置了 `model.openai_runtime: codex_app_server`，worker 也会在 Codex 运行时上启动。
+**在此运行时上可用，但有一个细微依赖。** Kanban 分发器将每个 worker 生成为独立的 `lydia chat -q` 子进程，该子进程读取用户配置——这意味着如果全局设置了 `model.openai_runtime: codex_app_server`，worker 也会在 Codex 运行时上启动。
 
 Codex 运行时 worker 内可用的功能：
 - Codex 完整工具集（shell、apply_patch、update_plan、view_image、web_search）——worker 原生完成实际任务
@@ -297,7 +297,7 @@ default_permissions = ":workspace"
 
 ```bash
 # 在 work 配置文件中，你可以这样包装 hermes：
-CODEX_HOME=~/.hermes/profiles/work/codex hermes chat
+CODEX_HOME=~/.hermes/profiles/work/codex lydia chat
 ```
 
 你需要在设置了该 `CODEX_HOME` 的情况下重新运行一次 `codex login`，以便 OAuth token 落入配置文件范围的位置。之后，`hermes -p work` 将在隔离的 Codex 状态下运行。
@@ -373,7 +373,7 @@ tool_timeout_sec = 600.0
 
 ## 限制
 
-此运行时为**可选启用的 beta 功能**。以下功能在 Hermes Agent 2026.5 + Codex CLI 0.130.0 上已验证可用：
+此运行时为**可选启用的 beta 功能**。以下功能在 Lydia Agent 2026.5 + Codex CLI 0.130.0 上已验证可用：
 
 - 多轮对话
 - 通过 Hermes UI 进行 `commandExecution` 和 `fileChange`（apply_patch）审批

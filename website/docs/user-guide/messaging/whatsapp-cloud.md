@@ -1,7 +1,7 @@
 ---
 sidebar_position: 6
 title: "WhatsApp Business (Cloud API)"
-description: "Set up Hermes Agent as a WhatsApp bot via Meta's official Business Cloud API"
+description: "Set up Lydia Agent as a WhatsApp bot via Meta's official Business Cloud API"
 ---
 
 # WhatsApp Business Cloud API Setup
@@ -359,7 +359,7 @@ Same 401 root causes as outbound (`graph error 190`) — the access token is inv
 
 ### Bot replies appear as raw JSON / tool-call leakage
 
-Common cause: the toolset configured for `whatsapp_cloud` is missing the tools the agent wants to call.  Check `hermes tools list` and verify the platform is using `hermes-whatsapp` (the default Cloud adapter toolset, same as Baileys).
+Common cause: the toolset configured for `whatsapp_cloud` is missing the tools the agent wants to call.  Check `lydia native list` and verify the platform is using `hermes-whatsapp` (the default Cloud adapter toolset, same as Baileys).
 
 If the model emits tool-call-shaped text instead of a structured call, it usually means the toolset was effectively empty.  See `hermes_cli/platforms.py` for the platform → default toolset mapping.
 
@@ -368,8 +368,8 @@ If the model emits tool-call-shaped text instead of a structured call, it usuall
 The default `stt.provider: local` requires `pip install faster-whisper`.  If you're a Nous subscriber, you can route STT through Meta's managed audio gateway instead:
 
 ```bash
-hermes config set stt.provider openai
-hermes config set stt.use_gateway true
+lydia config set stt.provider openai
+lydia config set stt.use_gateway true
 hermes gateway restart
 ```
 

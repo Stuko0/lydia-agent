@@ -24,7 +24,7 @@ next to the memory-provider dropdown.
 
 Or manually:
 ```bash
-hermes config set memory.provider honcho
+lydia config set memory.provider honcho
 echo "HONCHO_API_KEY=***" >> ~/.hermes/.env
 ```
 

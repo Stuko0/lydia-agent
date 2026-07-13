@@ -11,9 +11,10 @@ import subprocess
 import threading
 import time
 from pathlib import Path
-from urllib.parse import urlparse
-from hermes_constants import get_hermes_home
 from typing import TYPE_CHECKING, Dict, List, Optional
+from urllib.parse import urlparse
+
+from hermes_constants import get_hermes_home
 
 # rich and prompt_toolkit are imported lazily (inside the functions that use
 # them) rather than at module level.  Importing this module is on the TUI
@@ -41,6 +42,7 @@ def cprint(text: str):
     """Print ANSI-colored text through prompt_toolkit's renderer."""
     from prompt_toolkit import print_formatted_text as _pt_print
     from prompt_toolkit.formatted_text import ANSI as _PT_ANSI
+
     _pt_print(_PT_ANSI(text))
 
 
@@ -48,27 +50,32 @@ def cprint(text: str):
 # Skin-aware color helpers
 # =========================================================================
 
+
 def _skin_color(key: str, fallback: str) -> str:
     """Get a color from the active skin, or return fallback."""
     try:
         from hermes_cli.skin_engine import get_active_skin
+
         return get_active_skin().get_color(key, fallback)
     except Exception:
         return fallback
+
+
 # =========================================================================
 # ASCII Art & Branding
 # =========================================================================
 
-from hermes_cli import __version__ as VERSION, __release_date__ as RELEASE_DATE
+from hermes_cli import __release_date__ as RELEASE_DATE
+from hermes_cli import __version__ as VERSION
 
-HERMES_AGENT_LOGO = """[bold #FFD700]██╗  ██╗███████╗██████╗ ███╗   ███╗███████╗███████╗       █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
-[bold #FFD700]██║  ██║██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
-[#FFBF00]███████║█████╗  ██████╔╝██╔████╔██║█████╗  ███████╗█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
-[#FFBF00]██╔══██║██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ╚════██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
-[#CD7F32]██║  ██║███████╗██║  ██║██║ ╚═╝ ██║███████╗███████║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
-[#CD7F32]╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]"""
+LYDIA_AGENT_LOGO = """[bold #FFD700]██╗     ██╗   ██╗██████╗ ██╗█████╗         █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
+[bold #FFD700]██║     ╚██╗ ██╔╝██╔══██╗██║██╔══██╗       ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
+[#FFBF00]██║      ╚████╔╝ ██║  ██║██║███████║█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
+[#FFBF00]██║       ╚██╔╝  ██║  ██║██║██╔══██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
+[#CD7F32]███████╗   ██║   ██████╔╝██║██║  ██║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
+[#CD7F32]╚══════╝   ╚═╝   ╚═════╝ ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]"""
 
-HERMES_GOTHIC_L = """[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+LYDIA_GOTHIC_L = """[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
 [#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
 [#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
 [#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⣰⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
@@ -86,10 +93,10 @@ HERMES_GOTHIC_L = """[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀�
 [#B8860B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡋⠀⠀[/]"""
 
 
-
 # =========================================================================
 # Skills scanning
 # =========================================================================
+
 
 def get_available_skills() -> Dict[str, List[str]]:
     """Return skills grouped by category, filtered by platform and disabled state.
@@ -100,6 +107,7 @@ def get_available_skills() -> Dict[str, List[str]]:
     """
     try:
         from tools.skills_tool import _find_all_skills
+
         all_skills = _find_all_skills()  # already filtered
     except Exception:
         return {}
@@ -132,9 +140,9 @@ def _canonical_github_remote(url: str | None) -> str:
         return ""
     value = url.strip()
     if value.startswith("git@github.com:"):
-        value = "github.com/" + value[len("git@github.com:"):]
+        value = "github.com/" + value[len("git@github.com:") :]
     elif value.startswith("ssh://git@github.com/"):
-        value = "github.com/" + value[len("ssh://git@github.com/"):]
+        value = "github.com/" + value[len("ssh://git@github.com/") :]
     else:
         parsed = urlparse(value)
         if parsed.netloc and parsed.path:
@@ -153,7 +161,10 @@ def _is_ssh_remote(url: str | None) -> bool:
 
 
 def _is_official_ssh_remote(url: str | None) -> bool:
-    return _is_ssh_remote(url) and _canonical_github_remote(url) == _OFFICIAL_REPO_CANONICAL
+    return (
+        _is_ssh_remote(url)
+        and _canonical_github_remote(url) == _OFFICIAL_REPO_CANONICAL
+    )
 
 
 def _git_stdout(args: list[str], *, cwd: Path, timeout: int = 5) -> Optional[str]:
@@ -181,7 +192,9 @@ def _check_via_rev(local_rev: str) -> Optional[int]:
     try:
         result = subprocess.run(
             ["git", "ls-remote", _UPSTREAM_REPO_URL, "refs/heads/main"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
     except Exception:
         return None
@@ -224,7 +237,8 @@ def _check_via_local_git(repo_dir: Path) -> Optional[int]:
         fetch_args.append("--quiet")
         subprocess.run(
             fetch_args,
-            capture_output=True, timeout=10,
+            capture_output=True,
+            timeout=10,
             cwd=str(repo_dir),
         )
     except Exception:
@@ -235,10 +249,9 @@ def _check_via_local_git(repo_dir: Path) -> Optional[int]:
         # be a tracking ref in a `clone --depth 1`, so prefer FETCH_HEAD (just
         # updated by the fetch above) and fall back to origin/main.
         head_rev = _git_stdout(["rev-parse", "HEAD"], cwd=repo_dir)
-        target_rev = (
-            _git_stdout(["rev-parse", "FETCH_HEAD"], cwd=repo_dir)
-            or _git_stdout(["rev-parse", "origin/main"], cwd=repo_dir)
-        )
+        target_rev = _git_stdout(
+            ["rev-parse", "FETCH_HEAD"], cwd=repo_dir
+        ) or _git_stdout(["rev-parse", "origin/main"], cwd=repo_dir)
         if not head_rev or not target_rev:
             return None
         return 0 if head_rev == target_rev else UPDATE_AVAILABLE_NO_COUNT
@@ -246,7 +259,9 @@ def _check_via_local_git(repo_dir: Path) -> Optional[int]:
     try:
         result = subprocess.run(
             ["git", "rev-list", "--count", "HEAD..origin/main"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True,
+            text=True,
+            timeout=5,
             cwd=str(repo_dir),
         )
         if result.returncode == 0:
@@ -271,6 +286,7 @@ def _fetch_pypi_latest(package: str = "hermes-agent") -> Optional[str]:
     """Fetch the latest version of a package from PyPI. Returns None on failure."""
     try:
         import urllib.request
+
         url = f"https://pypi.org/pypi/{package}/json"
         req = urllib.request.Request(url, headers={"Accept": "application/json"})
         with urllib.request.urlopen(req, timeout=5) as resp:
@@ -327,6 +343,7 @@ def check_for_updates() -> Optional[int]:
     # (branding.tsx, guarded on `typeof === 'number' && > 0`) show nothing.
     try:
         from hermes_cli.config import detect_install_method
+
         if detect_install_method() == "docker":
             return None
     except Exception:
@@ -366,7 +383,12 @@ def check_for_updates() -> Optional[int]:
 
     try:
         cache_file.write_text(
-            json.dumps({"ts": now, "behind": behind, "rev": embedded_rev, "ver": VERSION})
+            json.dumps({
+                "ts": now,
+                "behind": behind,
+                "rev": embedded_rev,
+                "ver": VERSION,
+            })
         )
     except Exception:
         pass
@@ -424,6 +446,7 @@ def get_git_banner_state(repo_dir: Optional[Path] = None) -> Optional[dict]:
         # No git checkout — try the baked build SHA (Docker image path).
         try:
             from hermes_cli.build_info import get_build_sha
+
             baked = get_build_sha(short=8)
             if baked:
                 return {"upstream": baked, "local": baked, "ahead": 0}
@@ -438,6 +461,7 @@ def get_git_banner_state(repo_dir: Optional[Path] = None) -> Optional[dict]:
         # Fall back to the baked build SHA if available.
         try:
             from hermes_cli.build_info import get_build_sha
+
             baked = get_build_sha(short=8)
             if baked:
                 return {"upstream": baked, "local": baked, "ahead": 0}
@@ -510,7 +534,7 @@ def get_latest_release_tag(repo_dir: Optional[Path] = None) -> Optional[tuple]:
 
 def format_banner_version_label() -> str:
     """Return the version label shown in the startup banner title."""
-    base = f"Hermes Agent v{VERSION} ({RELEASE_DATE})"
+    base = f"Lydia Agent v{VERSION} ({RELEASE_DATE})"
     state = get_git_banner_state()
     if not state:
         return base
@@ -536,10 +560,12 @@ _update_check_done = threading.Event()
 
 def prefetch_update_check():
     """Kick off update check in a background daemon thread."""
+
     def _run():
         global _update_result
         _update_result = check_for_updates()
         _update_check_done.set()
+
     t = threading.Thread(target=_run, daemon=True)
     t.start()
 
@@ -553,6 +579,7 @@ def get_update_result(timeout: float = 0.5) -> Optional[int]:
 # =========================================================================
 # Welcome banner
 # =========================================================================
+
 
 def _format_context_length(tokens: int) -> str:
     """Format a token count for display (e.g. 128000 → '128K', 1048576 → '1M')."""
@@ -575,20 +602,20 @@ def _display_toolset_name(toolset_name: str) -> str:
     """Normalize internal/legacy toolset identifiers for banner display."""
     if not toolset_name:
         return "unknown"
-    return (
-        toolset_name[:-6]
-        if toolset_name.endswith("_tools")
-        else toolset_name
-    )
+    return toolset_name[:-6] if toolset_name.endswith("_tools") else toolset_name
 
 
-def build_welcome_banner(console: "Console", model: str, cwd: str,
-                         tools: List[dict] = None,
-                         enabled_toolsets: List[str] = None,
-                         session_id: str = None,
-                         get_toolset_for_tool=None,
-                         context_length: int = None,
-                         provider: str = None):
+def build_welcome_banner(
+    console: "Console",
+    model: str,
+    cwd: str,
+    tools: List[dict] = None,
+    enabled_toolsets: List[str] = None,
+    session_id: str = None,
+    get_toolset_for_tool=None,
+    context_length: int = None,
+    provider: str = None,
+):
     """Build and print a welcome banner with caduceus on left and info on right.
 
     Args:
@@ -604,9 +631,11 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
             preset name and the banner renders the aggregator instead of a
             bare model slug.
     """
-    from model_tools import check_tool_availability, TOOLSET_REQUIREMENTS
     from rich.panel import Panel
     from rich.table import Table
+
+    from model_tools import TOOLSET_REQUIREMENTS, check_tool_availability
+
     if get_toolset_for_tool is None:
         from model_tools import get_toolset_for_tool
 
@@ -623,7 +652,8 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     _enabled_ts = {str(t) for t in enabled_toolsets}
     if _enabled_ts:
         unavailable_toolsets = [
-            item for item in unavailable_toolsets
+            item
+            for item in unavailable_toolsets
             if str(item.get("id", item.get("name", ""))) in _enabled_ts
         ]
     disabled_tools = set()
@@ -653,11 +683,16 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     # Use skin's custom gothic L art if provided
     try:
         from hermes_cli.skin_engine import get_active_skin
+
         _bskin = get_active_skin()
-        _hero = _bskin.banner_hero if hasattr(_bskin, 'banner_hero') and _bskin.banner_hero else HERMES_GOTHIC_L
+        _hero = (
+            _bskin.banner_hero
+            if hasattr(_bskin, "banner_hero") and _bskin.banner_hero
+            else LYDIA_GOTHIC_L
+        )
     except Exception:
         _bskin = None
-        _hero = HERMES_GOTHIC_L
+        _hero = LYDIA_GOTHIC_L
     left_lines = ["", _hero, ""]
     if (provider or "").strip().lower() == "moa":
         # MoA virtual provider: ``model`` is a preset name. Show the preset and
@@ -679,19 +714,33 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
         if len(preset_name) > 28:
             preset_name = preset_name[:25] + "..."
         agg_str = f" [dim {dim}]·[/] [dim {dim}]agg {agg_label}[/]" if agg_label else ""
-        ctx_str = f" [dim {dim}]·[/] [dim {dim}]{_format_context_length(context_length)} context[/]" if context_length else ""
-        left_lines.append(f"[{accent}]MoA: {preset_name}[/]{agg_str}{ctx_str} [dim {dim}]·[/] [dim {dim}]Nous Research[/]")
+        ctx_str = (
+            f" [dim {dim}]·[/] [dim {dim}]{_format_context_length(context_length)} context[/]"
+            if context_length
+            else ""
+        )
+        left_lines.append(
+            f"[{accent}]MoA: {preset_name}[/]{agg_str}{ctx_str} [dim {dim}]·[/] [dim {dim}]Nous Research[/]"
+        )
     else:
         model_short = model.split("/")[-1] if "/" in model else model
         if model_short.endswith(".gguf"):
             model_short = model_short[:-5]
         if len(model_short) > 28:
             model_short = model_short[:25] + "..."
-        ctx_str = f" [dim {dim}]·[/] [dim {dim}]{_format_context_length(context_length)} context[/]" if context_length else ""
-        left_lines.append(f"[{accent}]{model_short}[/]{ctx_str} [dim {dim}]·[/] [dim {dim}]Nous Research[/]")
+        ctx_str = (
+            f" [dim {dim}]·[/] [dim {dim}]{_format_context_length(context_length)} context[/]"
+            if context_length
+            else ""
+        )
+        left_lines.append(
+            f"[{accent}]{model_short}[/]{ctx_str} [dim {dim}]·[/] [dim {dim}]Nous Research[/]"
+        )
 
     if os.getenv("HERMES_YOLO_MODE"):
-        left_lines.append(f"[bold red]⚠ YOLO mode[/] [dim {dim}]— all approval prompts bypassed[/]")
+        left_lines.append(
+            f"[bold red]⚠ YOLO mode[/] [dim {dim}]— all approval prompts bypassed[/]"
+        )
     left_lines.append(f"[dim {dim}]{cwd}[/]")
     if session_id:
         left_lines.append(f"[dim {session_color}]Session: {session_id}[/]")
@@ -759,6 +808,7 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     # MCP Servers section (only if configured)
     try:
         from tools.mcp_tool import get_mcp_status
+
         mcp_status = get_mcp_status()
     except Exception:
         mcp_status = []
@@ -836,6 +886,7 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     try:
         from hermes_cli.codex_runtime_switch import get_current_runtime
         from hermes_cli.config import load_config as _load_cfg
+
         if get_current_runtime(_load_cfg()) == "codex_app_server":
             right_lines.append(
                 f"[bold {accent}]Runtime:[/] [{text}]codex app-server[/] "
@@ -846,6 +897,7 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     # Show active profile name when not 'default'
     try:
         from hermes_cli.profiles import get_active_profile_name
+
         _profile_name = get_active_profile_name()
         if _profile_name and _profile_name != "default":
             right_lines.append(f"[bold {accent}]Profile:[/] [{text}]{_profile_name}[/]")
@@ -858,7 +910,11 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     try:
         behind = get_update_result(timeout=0.5)
         if behind is not None and behind != 0:
-            from hermes_cli.config import get_managed_update_command, recommended_update_command
+            from hermes_cli.config import (
+                get_managed_update_command,
+                recommended_update_command,
+            )
+
             if behind > 0:
                 commits_word = "commit" if behind == 1 else "commits"
                 right_lines.append(
@@ -883,6 +939,7 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     # self-update, and issue triage don't behave correctly. Warn, don't block.
     try:
         from hermes_cli.config import detect_install_method
+
         if detect_install_method() == "pip":
             right_lines.append(
                 "[bold yellow]⚠ pip install not officially supported[/]"
@@ -914,7 +971,11 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     console.print()
     term_width = shutil.get_terminal_size().columns
     if term_width >= 95:
-        _logo = _bskin.banner_logo if _bskin and hasattr(_bskin, 'banner_logo') and _bskin.banner_logo else HERMES_AGENT_LOGO
+        _logo = (
+            _bskin.banner_logo
+            if _bskin and hasattr(_bskin, "banner_logo") and _bskin.banner_logo
+            else LYDIA_AGENT_LOGO
+        )
         console.print(_logo)
         console.print()
     console.print(outer_panel)

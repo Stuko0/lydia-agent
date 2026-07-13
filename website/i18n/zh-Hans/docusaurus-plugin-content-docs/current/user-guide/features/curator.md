@@ -55,10 +55,10 @@ curator:
 
 Curator 的 LLM 审查 pass 是一个常规辅助任务槽——`auxiliary.curator`——与 Vision、Compression、Session Search 等并列。"Auto" 表示"使用我的主聊天模型"；可覆盖该槽以为审查 pass 指定特定的 provider + model。
 
-**最简单——`hermes model`：**
+**最简单——`lydia model`：**
 
 ```bash
-hermes model                   # → "Auxiliary models — side-task routing"
+lydia model                   # → "Auxiliary models — side-task routing"
                                # → pick "Curator" → pick provider → pick model
 ```
 
@@ -77,7 +77,7 @@ auxiliary:
 保持 `provider: auto`（默认值）会将审查 pass 路由到主聊天模型，与所有其他辅助任务的行为一致。
 
 :::note 旧版配置
-早期版本使用独立的 `curator.auxiliary.{provider,model}` 块。该路径仍然有效，但会输出一条弃用日志——请迁移到上方的 `auxiliary.curator`，使 curator 与其他所有辅助任务共享相同的管道（`hermes model`、控制台 Models 标签页、`base_url`、`api_key`、`timeout`、`extra_body`）。
+早期版本使用独立的 `curator.auxiliary.{provider,model}` 块。该路径仍然有效，但会输出一条弃用日志——请迁移到上方的 `auxiliary.curator`，使 curator 与其他所有辅助任务共享相同的管道（`lydia model`、控制台 Models 标签页、`base_url`、`api_key`、`timeout`、`extra_body`）。
 :::
 
 ## CLI

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Profiles: Running Multiple Agents
 
-Run multiple independent Hermes agents on the same machine — each with its own config, API keys, memory, sessions, skills, and gateway state.
+Run multiple independent Lydia Agents on the same machine — each with its own config, API keys, memory, sessions, skills, and gateway state.
 
 ## What are profiles?
 
@@ -25,7 +25,7 @@ That's it. `coder` is now its own Hermes profile with its own config, memory, an
 ## Creating a profile
 
 :::tip
-Quickest setup: run `hermes setup --portal` inside the new profile to wire up models + tools at once. See [Nous Portal](/integrations/nous-portal).
+Quickest setup: run `lydia setup --portal` inside the new profile to wire up models + tools at once. See [Nous Portal](/integrations/nous-portal).
 :::
 
 ### Blank profile
@@ -100,15 +100,15 @@ You can also target a profile explicitly with any command:
 ```bash
 hermes -p coder chat
 hermes --profile=coder doctor
-hermes chat -p coder -q "hello"    # works in any position
+lydia chat -p coder -q "hello"    # works in any position
 ```
 
 ### Sticky default (`hermes profile use`)
 
 ```bash
 hermes profile use coder
-hermes chat                   # now targets coder
-hermes tools                  # configures coder's tools
+lydia chat                   # now targets coder
+lydia native                  # configures coder's tools
 hermes profile use default    # switch back
 ```
 
@@ -221,10 +221,10 @@ to edit a profile from the dashboard, use the switcher instead.
 
 ## Updating
 
-`hermes update` pulls code once (shared) and syncs new bundled skills to **all** profiles automatically:
+`lydia update` pulls code once (shared) and syncs new bundled skills to **all** profiles automatically:
 
 ```bash
-hermes update
+lydia update
 # → Code updated (12 commits)
 # → Skills synced: default (up to date), coder (+2 new), assistant (+2 new)
 ```

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "Android / Termux"
-description: "Run Hermes Agent directly on an Android phone with Termux"
+description: "Run Lydia Agent directly on an Android phone with Termux"
 ---
 
 # Hermes on Android with Termux
@@ -10,7 +10,7 @@ description: "Run Hermes Agent directly on an Android phone with Termux"
 Termux (Android) is a [Tier 2 platform](./platform-support.md#tier-2). The installer script and documentation here are maintained on a best-effort basis only. Commits to `main` may break these packages at any point in time.
 :::
 
-Hermes Agent can run directly on an Android phone through [Termux](https://termux.dev/).
+Lydia Agent can run directly on an Android phone through [Termux](https://termux.dev/).
 
 It gives you a working local CLI on the phone, plus the core extras that are currently known to install cleanly on Android.
 
@@ -126,7 +126,7 @@ ln -sf "$PWD/venv/bin/hermes" "$PREFIX/bin/hermes"
 
 ```bash
 hermes version
-hermes doctor
+lydia doctor
 ```
 
 ### 7. Start Hermes
@@ -142,7 +142,7 @@ hermes
 ### Configure a model
 
 ```bash
-hermes model
+lydia model
 ```
 
 Or set keys directly in `~/.hermes/.env`.
@@ -150,7 +150,7 @@ Or set keys directly in `~/.hermes/.env`.
 ### Re-run the full interactive setup wizard later
 
 ```bash
-hermes setup
+lydia setup
 ```
 
 ### Install optional Node dependencies manually
@@ -205,7 +205,7 @@ export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
 python -m pip install -e '.[termux]' -c constraints-termux.txt
 ```
 
-### `hermes doctor` says ripgrep or Node is missing
+### `lydia doctor` says ripgrep or Node is missing
 
 Install them with Termux packages:
 
@@ -241,5 +241,5 @@ If you hit a new Android-specific issue, please open a GitHub issue with:
 - your Android version
 - `termux-info`
 - `python --version`
-- `hermes doctor`
+- `lydia doctor`
 - the exact install command and full error output

@@ -4261,7 +4261,7 @@ def interactive_setup() -> None:
 
             manifest = _build_full_manifest(
                 bot_name="Hermes",
-                bot_description="Your Hermes agent on Slack",
+                bot_description="Your Lydia Agent on Slack",
             )
             target = Path(get_hermes_home()) / "slack-manifest.json"
             target.parent.mkdir(parents=True, exist_ok=True)

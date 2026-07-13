@@ -248,7 +248,7 @@ def apply(
         msg_lines.append(
             "OpenAI/Codex turns now run through `codex app-server` "
             "(terminal/file ops/patching inside Codex; "
-            "Hermes tools available via MCP callback)."
+            "Lydia native available via MCP callback)."
         )
         msg_lines.append(
             "Effective on next session — current cached agent keeps "

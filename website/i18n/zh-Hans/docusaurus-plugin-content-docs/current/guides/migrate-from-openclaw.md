@@ -1,24 +1,24 @@
 ---
 sidebar_position: 10
 title: "从 OpenClaw 迁移"
-description: "将 OpenClaw / Clawdbot 配置迁移到 Hermes Agent 的完整指南——包括迁移内容、配置键映射及迁移后的检查事项。"
+description: "将 OpenClaw / Clawdbot 配置迁移到 Lydia Agent 的完整指南——包括迁移内容、配置键映射及迁移后的检查事项。"
 ---
 
 # 从 OpenClaw 迁移
 
-`hermes claw migrate` 将你的 OpenClaw（或旧版 Clawdbot/Moldbot）配置导入 Hermes。本指南详细说明迁移内容、配置键映射以及迁移后的验证步骤。
+`lydia claw migrate` 将你的 OpenClaw（或旧版 Clawdbot/Moldbot）配置导入 Hermes。本指南详细说明迁移内容、配置键映射以及迁移后的验证步骤。
 
 ## 快速开始
 
 ```bash
 # 预览后迁移（始终先显示预览，再要求确认）
-hermes claw migrate
+lydia claw migrate
 
 # 仅预览，不做任何更改
-hermes claw migrate --dry-run
+lydia claw migrate --dry-run
 
 # 完整迁移，包含 API 密钥，跳过确认
-hermes claw migrate --preset full --migrate-secrets --yes
+lydia claw migrate --preset full --migrate-secrets --yes
 ```
 
 迁移操作在执行任何更改前，始终会显示完整的导入预览。请检查列表后确认继续。
@@ -211,7 +211,7 @@ OpenClaw 配置中 token 和 API 密钥的值支持三种格式：
 "channels": { "telegram": { "botToken": { "source": "env", "id": "TELEGRAM_BOT_TOKEN" } } }
 ```
 
-迁移会解析所有三种格式。对于环境变量模板和 `source: "env"` 的 SecretRef 对象，会从 `~/.openclaw/.env` 和 `openclaw.json` 的 env 子对象中查找值。`source: "file"` 或 `source: "exec"` 的 SecretRef 对象无法自动解析——迁移会对此发出警告，相关值需通过 `hermes config set` 手动添加至 Hermes。
+迁移会解析所有三种格式。对于环境变量模板和 `source: "env"` 的 SecretRef 对象，会从 `~/.openclaw/.env` 和 `openclaw.json` 的 env 子对象中查找值。`source: "file"` 或 `source: "exec"` 的 SecretRef 对象无法自动解析——迁移会对此发出警告，相关值需通过 `lydia config set` 手动添加至 Hermes。
 
 ## 迁移后
 
@@ -225,11 +225,11 @@ OpenClaw 配置中 token 和 API 密钥的值支持三种格式：
 
 5. **测试消息平台** — 若迁移了平台 token，重启 gateway：`systemctl --user restart hermes-gateway`
 
-6. **检查会话策略** — 验证 `hermes config get session_reset` 是否符合预期。
+6. **检查会话策略** — 验证 `lydia config get session_reset` 是否符合预期。
 
 7. **重新配对 WhatsApp** — WhatsApp 使用二维码配对（Baileys），不支持 token 迁移。运行 `hermes whatsapp` 进行配对。
 
-8. **清理归档** — 确认一切正常后，运行 `hermes claw cleanup` 将残留的 OpenClaw 目录重命名为 `.pre-migration/`（防止状态混淆）。
+8. **清理归档** — 确认一切正常后，运行 `lydia claw cleanup` 将残留的 OpenClaw 目录重命名为 `.pre-migration/`（防止状态混淆）。
 
 ## 故障排查
 
@@ -239,7 +239,7 @@ OpenClaw 配置中 token 和 API 密钥的值支持三种格式：
 
 ### "No provider API keys found"
 
-根据 OpenClaw 版本不同，密钥可能存储在多个位置：`openclaw.json` 中 `models.providers.*.apiKey` 内联、`~/.openclaw/.env`、`openclaw.json` 的 `"env"` 子对象，或 `agents/main/agent/auth-profiles.json`。迁移会检查所有四个位置。若密钥使用 `source: "file"` 或 `source: "exec"` 的 SecretRef，则无法自动解析——请通过 `hermes config set` 手动添加。
+根据 OpenClaw 版本不同，密钥可能存储在多个位置：`openclaw.json` 中 `models.providers.*.apiKey` 内联、`~/.openclaw/.env`、`openclaw.json` 的 `"env"` 子对象，或 `agents/main/agent/auth-profiles.json`。迁移会检查所有四个位置。若密钥使用 `source: "file"` 或 `source: "exec"` 的 SecretRef，则无法自动解析——请通过 `lydia config set` 手动添加。
 
 ### 迁移后 skills 未出现
 
@@ -247,4 +247,4 @@ OpenClaw 配置中 token 和 API 密钥的值支持三种格式：
 
 ### TTS 语音未迁移
 
-OpenClaw 在两处存储 TTS 设置：`messages.tts.providers.*` 和顶层 `talk` 配置。迁移会检查两处。若你的 voice ID 是通过 OpenClaw UI 设置的（存储路径不同），可能需要手动设置：`hermes config set tts.elevenlabs.voice_id YOUR_VOICE_ID`。
+OpenClaw 在两处存储 TTS 设置：`messages.tts.providers.*` 和顶层 `talk` 配置。迁移会检查两处。若你的 voice ID 是通过 OpenClaw UI 设置的（存储路径不同），可能需要手动设置：`lydia config set tts.elevenlabs.voice_id YOUR_VOICE_ID`。
