@@ -143,10 +143,10 @@ credential_pool_strategies:
 
 自定义 OpenAI 兼容端点（Together.ai、RunPod、本地服务器）拥有各自的池，以 `config.yaml` 中 `custom_providers` 的端点名称作为键。
 
-通过 `hermes model` 设置自定义端点时，会自动生成类似 "Together.ai" 或 "Local (localhost:8080)" 的名称，该名称即成为池的键。
+通过 `lydia model` 设置自定义端点时，会自动生成类似 "Together.ai" 或 "Local (localhost:8080)" 的名称，该名称即成为池的键。
 
 ```bash
-# After setting up a custom endpoint via hermes model:
+# After setting up a custom endpoint via lydia model:
 hermes auth list
 # Shows:
 #   Together.ai (1 credential):

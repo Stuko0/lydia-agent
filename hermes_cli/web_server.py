@@ -263,7 +263,9 @@ app.include_router(_memory_oauth_router)
 # injected into the SPA HTML so only the legitimate web UI can use it.
 # ---------------------------------------------------------------------------
 _SESSION_TOKEN = os.environ.get("HERMES_DASHBOARD_SESSION_TOKEN") or secrets.token_urlsafe(32)
-_SESSION_HEADER_NAME = "X-Hermes-Session-Token"
+_SESSION_HEADER_NAME = "X-Lydia-Session-Token"
+# Backward compat: the desktop build (app.asar) still sends X-Hermes-*.
+_HERMES_LEGACY_HEADER = "X-Hermes-Session-Token"
 
 # In-browser Chat tab (/chat, /api/pty, /api/ws, …).  Always enabled: the
 # desktop app and the dashboard's own Chat tab both drive the agent over the
@@ -318,6 +320,14 @@ def _has_valid_session_token(request: Request) -> bool:
     session_header = request.headers.get(_SESSION_HEADER_NAME, "")
     if session_header and hmac.compare_digest(
         session_header.encode(),
+        _SESSION_TOKEN.encode(),
+    ):
+        return True
+
+    # Legacy: desktop build (app.asar) still sends X-Hermes-Session-Token.
+    legacy = request.headers.get(_HERMES_LEGACY_HEADER, "")
+    if legacy and hmac.compare_digest(
+        legacy.encode(),
         _SESSION_TOKEN.encode(),
     ):
         return True

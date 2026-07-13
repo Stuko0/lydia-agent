@@ -1,12 +1,12 @@
 ---
 sidebar_position: 3
 title: "创建 Skill"
-description: "如何为 Hermes Agent 创建 skill——SKILL.md 格式、规范与发布"
+description: "如何为 Lydia Agent 创建 skill——SKILL.md 格式、规范与发布"
 ---
 
 # 创建 Skill
 
-Skill 是为 Hermes Agent 添加新能力的首选方式。与 tool 相比，skill 更易于创建，无需修改 agent 代码，且可与社区共享。
+Skill 是为 Lydia Agent 添加新能力的首选方式。与 tool 相比，skill 更易于创建，无需修改 agent 代码，且可与社区共享。
 
 ## 应该创建 Skill 还是 Tool？
 
@@ -200,7 +200,7 @@ metadata:
 - `key`（必需）——配置项的点路径（例如 `myplugin.path`）
 - `description`（必需）——说明该配置项的作用
 - `default`（可选）——用户未配置时的默认值
-- `prompt`（可选）——`hermes config migrate` 时显示的提示文本；若未设置则回退到 `description`
+- `prompt`（可选）——`lydia config migrate` 时显示的提示文本；若未设置则回退到 `description`
 
 **工作原理：**
 
@@ -212,7 +212,7 @@ metadata:
          path: ~/my-data
    ```
 
-2. **发现：** `hermes config migrate` 扫描所有已启用的 skill，找出未配置的项并提示用户。配置项也会在 `hermes config show` 的"Skill Settings"部分显示。
+2. **发现：** `lydia config migrate` 扫描所有已启用的 skill，找出未配置的项并提示用户。配置项也会在 `lydia config show` 的"Skill Settings"部分显示。
 
 3. **运行时注入：** Skill 加载时，其 config 值会被解析并追加到 skill 消息中：
    ```
@@ -224,7 +224,7 @@ metadata:
 
 4. **手动配置：** 用户也可直接设置值：
    ```bash
-   hermes config set skills.config.myplugin.path ~/my-data
+   lydia config set skills.config.myplugin.path ~/my-data
    ```
 
 :::tip 如何选择
@@ -320,7 +320,7 @@ skills:
 运行 skill 并验证 agent 是否正确遵循指令：
 
 ```bash
-hermes chat --toolsets skills -q "Use the X skill to do Y"
+lydia chat --toolsets skills -q "Use the X skill to do Y"
 ```
 
 ## Skill 应放在哪里？

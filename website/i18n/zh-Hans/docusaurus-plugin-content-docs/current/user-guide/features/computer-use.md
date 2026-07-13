@@ -5,7 +5,7 @@ sidebar_position: 16
 
 # 电脑操控（macOS）
 
-Hermes Agent 可以在**后台**驱动你的 Mac 桌面——点击、输入、滚动、拖拽。你的光标不会移动，键盘焦点不会改变，macOS 也不会切换 Spaces。你和 Agent 可以在同一台机器上协同工作。
+Lydia Agent 可以在**后台**驱动你的 Mac 桌面——点击、输入、滚动、拖拽。你的光标不会移动，键盘焦点不会改变，macOS 也不会切换 Spaces。你和 Agent 可以在同一台机器上协同工作。
 
 与大多数电脑操控集成不同，这适用于**任何支持工具调用的模型**——Claude、GPT、Gemini，或本地 vLLM 端点上的开源模型。无需关心 Anthropic 原生 schema。
 
@@ -35,7 +35,7 @@ hermes computer-use install
 
 **方式二：通过交互式界面启用工具集。**
 
-1. 运行 `hermes tools`，选择 `🖱️ Computer Use (macOS)` → `cua-driver (background)`。
+1. 运行 `lydia native`，选择 `🖱️ Computer Use (macOS)` → `cua-driver (background)`。
 2. 安装程序将运行上游安装脚本（与方式一相同）。
 
 安装完成后，无论采用哪种方式，继续执行以下步骤：
@@ -129,7 +129,7 @@ HERMES_COMPUTER_USE_BACKEND=noop   # records calls, no side effects
 
 ## 故障排查
 
-**`computer_use backend unavailable: cua-driver is not installed`** — 运行 `hermes computer-use install` 获取 cua-driver 二进制文件，或运行 `hermes tools` 并启用 Computer Use 工具集。
+**`computer_use backend unavailable: cua-driver is not installed`** — 运行 `hermes computer-use install` 获取 cua-driver 二进制文件，或运行 `lydia native` 并启用 Computer Use 工具集。
 
 **点击似乎没有效果** — 截图并验证。可能有一个你未注意到的模态框正在阻止输入。使用 `escape` 或关闭按钮将其关闭。
 

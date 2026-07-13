@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Profiles：运行多个 Agent
 
-在同一台机器上运行多个独立的 Hermes agent——每个 agent 拥有各自的配置、API 密钥、记忆、会话、技能和 gateway 状态。
+在同一台机器上运行多个独立的 Lydia Agent——每个 agent 拥有各自的配置、API 密钥、记忆、会话、技能和 gateway 状态。
 
 ## 什么是 profile？
 
@@ -96,15 +96,15 @@ coder config set model.default anthropic/claude-sonnet-4
 ```bash
 hermes -p coder chat
 hermes --profile=coder doctor
-hermes chat -p coder -q "hello"    # 可在任意位置使用
+lydia chat -p coder -q "hello"    # 可在任意位置使用
 ```
 
 ### 粘性默认值（`hermes profile use`）
 
 ```bash
 hermes profile use coder
-hermes chat                   # 现在指向 coder
-hermes tools                  # 配置 coder 的工具
+lydia chat                   # 现在指向 coder
+lydia native                  # 配置 coder 的工具
 hermes profile use default    # 切换回默认
 ```
 
@@ -203,10 +203,10 @@ coder config set terminal.cwd /absolute/path/to/project
 
 ## 更新
 
-`hermes update` 拉取一次代码（共享），并自动将新的内置技能同步到**所有** profile：
+`lydia update` 拉取一次代码（共享），并自动将新的内置技能同步到**所有** profile：
 
 ```bash
-hermes update
+lydia update
 # → Code updated (12 commits)
 # → Skills synced: default (up to date), coder (+2 new), assistant (+2 new)
 ```

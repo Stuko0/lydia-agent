@@ -6,7 +6,7 @@ description: "Programmatic Python execution with RPC tool access — collapse mu
 
 # Code Execution (Programmatic Tool Calling)
 
-The `execute_code` tool lets the agent write Python scripts that call Hermes tools programmatically, collapsing multi-step workflows into a single LLM turn. The script runs in a child process on the agent host, communicating with Hermes over a Unix domain socket RPC.
+The `execute_code` tool lets the agent write Python scripts that call Lydia native programmatically, collapsing multi-step workflows into a single LLM turn. The script runs in a child process on the agent host, communicating with Hermes over a Unix domain socket RPC.
 
 ## How It Works
 
@@ -289,7 +289,7 @@ Hermes always writes the script and the auto-generated `hermes_tools.py` RPC stu
 | Interactive/background processes | ❌ | ✅ |
 | Needs API keys in environment | ⚠️ Only via [passthrough](/user-guide/security#environment-variable-passthrough) | ✅ (most pass through) |
 
-**Rule of thumb:** Use `execute_code` when you need to call Hermes tools programmatically with logic between calls. Use `terminal` for running shell commands, builds, and processes.
+**Rule of thumb:** Use `execute_code` when you need to call Lydia native programmatically with logic between calls. Use `terminal` for running shell commands, builds, and processes.
 
 ## Platform Support
 

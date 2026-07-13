@@ -1,6 +1,6 @@
 # Context Compression and Caching
 
-Hermes Agent uses a dual compression system and Anthropic prompt caching to
+Lydia Agent uses a dual compression system and Anthropic prompt caching to
 manage context window usage efficiently across long conversations.
 
 Source files: `agent/context_engine.py` (ABC), `agent/context_compressor.py` (default engine),
@@ -116,7 +116,7 @@ command. Only this exact route is affected; gpt-5.5 on any other provider keeps
 your global `threshold`. To opt back down to the global value:
 
 ```bash
-hermes config set compression.codex_gpt55_autoraise false
+lydia config set compression.codex_gpt55_autoraise false
 ```
 
 ### Computed Values (for a 200K context model at defaults)

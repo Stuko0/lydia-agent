@@ -64,7 +64,7 @@ Body section order (omit a section only if it genuinely has no content):
    do, and the key dependency stance (e.g. "stdlib only").
 2. "## When to Use" — bullet list of concrete trigger phrases.
 3. "## Prerequisites" — exact env vars, install steps, credentials.
-4. "## How to Run" — the canonical invocation, framed through Hermes tools.
+4. "## How to Run" — the canonical invocation, framed through Lydia native.
 5. "## Quick Reference" — a flat command/endpoint list, no narration.
 6. "## Procedure" — numbered steps with copy-paste-exact commands.
 7. "## Pitfalls" — known limits, rate limits, things that look broken but aren't.
@@ -72,7 +72,7 @@ Body section order (omit a section only if it genuinely has no content):
 
 Hermes-tool framing (this is what makes it a skill, not shell docs):
 - Frame running scripts as "invoke through the `terminal` tool".
-- Reference Hermes tools by name in backticks: `terminal`, `read_file`,
+- Reference Lydia native by name in backticks: `terminal`, `read_file`,
   `write_file`, `search_files`, `patch`, `web_extract`, `web_search`,
   `vision_analyze`, `browser_navigate`, `delegate_task`, `image_generate`,
   `text_to_speech`, `cronjob`, `memory`, `skill_view`, `execute_code`.

@@ -656,7 +656,7 @@ class CredentialPool:
         When a Codex OAuth access token expires (or the ChatGPT account hits
         its 5h/weekly quota), the pool entry gets marked ``STATUS_EXHAUSTED``
         with a ``last_error_reset_at`` that can be many hours in the future.
-        Meanwhile the user may run ``hermes model`` / ``hermes auth`` which
+        Meanwhile the user may run ``lydia model`` / ``hermes auth`` which
         performs a fresh device-code login and writes new tokens to
         ``auth.json`` under ``_auth_store_lock``.  Without this sync the pool
         entry stays frozen until ``last_error_reset_at`` elapses — even
@@ -1370,7 +1370,7 @@ class CredentialPool:
                     entry = synced
                     cleared_any = True
             # For openai-codex entries, same pattern: the user may have
-            # re-authed via `hermes model` / `hermes auth` after a 429/401,
+            # re-authed via `lydia model` / `hermes auth` after a 429/401,
             # leaving fresh tokens on disk while the pool entry is still
             # frozen behind last_error_reset_at (can be hours in the
             # future for ChatGPT weekly windows).
@@ -1383,7 +1383,7 @@ class CredentialPool:
                     cleared_any = True
             # For xai-oauth singleton-seeded entries, identical pattern:
             # an entry frozen as exhausted may simply be holding stale
-            # tokens that another process (or a fresh `hermes model` ->
+            # tokens that another process (or a fresh `lydia model` ->
             # xAI Grok OAuth login) has since rotated in auth.json.
             if (self.provider == "xai-oauth"
                     and entry.source == "loopback_pkce"
@@ -1764,7 +1764,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         except ImportError:
             pass
 
-        # API-key vs OAuth is a user-visible choice at `hermes setup` ("Claude
+        # API-key vs OAuth is a user-visible choice at `lydia setup` ("Claude
         # Pro/Max subscription" vs "Anthropic API key").  The signal that the
         # user picked the API-key path is: ANTHROPIC_API_KEY set in the env,
         # AND no OAuth env vars set — `save_anthropic_api_key()` writes the
@@ -1779,7 +1779,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         # explicitly opted into the API-key path are explicitly opting OUT of
         # that masquerade.  Prefer ~/.hermes/.env over os.environ for the
         # same reason `_seed_from_env` does — that's the authoritative file
-        # that `hermes setup` writes.
+        # that `lydia setup` writes.
         _env_file = load_env()
 
         def _env_val(key: str) -> str:
@@ -2031,7 +2031,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             )
 
     elif provider == "xai-oauth":
-        # When the user logs in via ``hermes model`` -> xAI Grok OAuth,
+        # When the user logs in via ``lydia model`` -> xAI Grok OAuth,
         # tokens are written to the auth.json singleton
         # (``providers["xai-oauth"]``).  Surface them in the pool too so
         # ``hermes auth list`` reflects the logged-in state and so the pool

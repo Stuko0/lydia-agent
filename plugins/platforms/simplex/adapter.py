@@ -39,7 +39,7 @@ Optional environment variables:
                                Telegram's text batching.
 
 The ``websockets`` Python package is imported lazily — the plugin is
-discoverable and ``hermes setup`` can describe it even when websockets is
+discoverable and ``lydia setup`` can describe it even when websockets is
 not installed. ``check_requirements()`` returns False until the package
 is present, so the gateway will not attempt to instantiate the adapter.
 """
@@ -1219,7 +1219,7 @@ async def _standalone_send(
 
 
 def interactive_setup() -> None:
-    """Minimal stdin wizard for ``hermes setup gateway`` → SimpleX.
+    """Minimal stdin wizard for ``lydia setup gateway`` → SimpleX.
 
     Prompts for the WebSocket URL and the optional allowlist / groups /
     auto-accept / home channel. Writes to ``~/.hermes/.env`` via

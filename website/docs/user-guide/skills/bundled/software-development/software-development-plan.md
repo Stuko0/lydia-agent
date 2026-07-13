@@ -17,7 +17,7 @@ Plan mode: write an actionable markdown plan to .hermes/plans/, no execution. Bi
 | Source | Bundled (installed by default) |
 | Path | `skills/software-development/plan` |
 | Version | `2.0.0` |
-| Author | Hermes Agent (writing-craft adapted from obra/superpowers) |
+| Author | Lydia Agent (writing-craft adapted from obra/superpowers) |
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `planning`, `plan-mode`, `implementation`, `workflow`, `design`, `documentation` |
@@ -209,7 +209,7 @@ Read and understand:
 
 ### Step 2: Explore the Codebase
 
-Use Hermes tools to understand the project:
+Use Lydia native to understand the project:
 
 ```python
 # Understand project structure

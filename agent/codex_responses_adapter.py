@@ -1135,7 +1135,7 @@ def _normalize_codex_response(
     # grok-composer invokes server-side search is misclassified as
     # ``finish_reason="incomplete"`` and burns 3 fruitless continuation
     # retries before failing with "Codex response remained incomplete
-    # after 3 continuation attempts".  client-side function/custom tool
+    # after 10 continuation attempts".  client-side function/custom tool
     # calls keep their own in_progress handling below (they are skipped,
     # not awaited).
     _SERVER_SIDE_TOOL_CALL_TYPES = {

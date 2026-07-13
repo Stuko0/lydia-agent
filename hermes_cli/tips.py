@@ -66,21 +66,21 @@ TIPS = [
     "hermes -c resumes your most recent CLI session. hermes -c \"project name\" resumes by title.",
     "hermes -w creates an isolated git worktree — perfect for parallel agent workflows.",
     "hermes -w -q \"Fix issue #42\" combines worktree isolation with a one-shot query.",
-    "hermes chat -t web,terminal enables only specific toolsets for a focused session.",
-    "hermes chat -s github-pr-workflow preloads a skill at launch.",
-    "hermes chat -q \"query\" runs a single non-interactive query and exits.",
-    "hermes chat --max-turns 200 overrides the default 90-iteration limit per turn.",
-    "hermes chat --checkpoints enables filesystem snapshots before every destructive file change.",
+    "lydia chat -t web,terminal enables only specific toolsets for a focused session.",
+    "lydia chat -s github-pr-workflow preloads a skill at launch.",
+    "lydia chat -q \"query\" runs a single non-interactive query and exits.",
+    "lydia chat --max-turns 200 overrides the default 90-iteration limit per turn.",
+    "lydia chat --checkpoints enables filesystem snapshots before every destructive file change.",
     "hermes --yolo bypasses all dangerous command approval prompts for the entire session.",
-    "hermes chat --source telegram tags the session for filtering in hermes sessions list.",
+    "lydia chat --source telegram tags the session for filtering in hermes sessions list.",
     "hermes -p work chat runs under a specific profile without changing your default.",
 
     # --- CLI Subcommands ---
-    "hermes doctor --fix diagnoses and auto-repairs config and dependency issues.",
+    "lydia doctor --fix diagnoses and auto-repairs config and dependency issues.",
     "hermes dump outputs a compact setup summary — great for bug reports.",
-    "hermes config set KEY VALUE auto-routes secrets to .env and everything else to config.yaml.",
-    "hermes config edit opens config.yaml in your default editor.",
-    "hermes config check scans for missing or stale configuration options.",
+    "lydia config set KEY VALUE auto-routes secrets to .env and everything else to config.yaml.",
+    "lydia config edit opens config.yaml in your default editor.",
+    "lydia config check scans for missing or stale configuration options.",
     "hermes sessions browse opens an interactive session picker with search.",
     "hermes sessions stats shows session counts by platform and database size.",
     "hermes sessions prune --older-than 30 cleans up old sessions.",
@@ -100,9 +100,9 @@ TIPS = [
     "hermes gateway install sets up Hermes as a system service (systemd/launchd).",
     "hermes memory setup lets you configure an external memory provider (Honcho, Mem0, etc.).",
     "hermes webhook subscribe creates event-driven webhook routes with HMAC validation.",
-    "Save money: hermes tools disables unused tools, hermes skills config trims skills down.",
+    "Save money: lydia native disables unused tools, hermes skills config trims skills down.",
     "/reasoning low or /reasoning minimal cuts thinking depth below the default (medium) — faster, cheaper responses.",
-    "hermes models routes vision, compression, and aux tasks to cheaper models — cuts background token cost 85%+ without downgrading your main chat model.",
+    "lydia models routes vision, compression, and aux tasks to cheaper models — cuts background token cost 85%+ without downgrading your main chat model.",
 
     # --- Configuration ---
     "Set display.bell_on_complete: true in config.yaml to hear a bell when long tasks finish.",
@@ -128,7 +128,7 @@ TIPS = [
     "provider_routing controls OpenRouter provider sorting, whitelisting, and blacklisting.",
 
     # --- Tools & Capabilities ---
-    "execute_code runs Python scripts that call Hermes tools programmatically — results stay out of context.",
+    "execute_code runs Python scripts that call Lydia native programmatically — results stay out of context.",
     "delegate_task spawns up to 3 concurrent sub-agents by default (delegation.max_concurrent_children) with isolated contexts for parallel work.",
     "web_extract works on PDF URLs — pass any PDF link and it converts to markdown.",
     "search_files is ripgrep-backed and faster than grep — use it instead of terminal grep.",
@@ -232,7 +232,7 @@ TIPS = [
     "hermes mcp install <name> installs a catalog entry, prompts for credentials, and lets you pick which of its tools to enable.",
     "MCP servers are configured in config.yaml — both stdio and HTTP transports supported.",
     "Per-server tool filtering: tools.include whitelists and tools.exclude blacklists specific tools.",
-    "MCP servers auto-generate toolsets at runtime — hermes tools can toggle them per platform.",
+    "MCP servers auto-generate toolsets at runtime — lydia native can toggle them per platform.",
     "MCP OAuth support: auth: oauth enables browser-based authorization with PKCE.",
 
     # --- Checkpoints & Rollback ---
@@ -243,7 +243,7 @@ TIPS = [
 
     # --- Batch & Data ---
     "batch_runner.py processes hundreds of prompts in parallel for training data generation.",
-    "hermes chat -Q enables quiet mode for programmatic use — suppresses banner and spinner.",
+    "lydia chat -Q enables quiet mode for programmatic use — suppresses banner and spinner.",
     "Trajectory saving (--save-trajectories) captures full tool-use traces for model training.",
 
     # --- Plugins ---
@@ -328,12 +328,12 @@ TIPS = [
     "GPT-5 and Codex use 'developer' role instead of 'system' in the message format.",
     "Per-task auxiliary overrides: auxiliary.vision.provider, auxiliary.compression.model, etc. in config.yaml.",
     "The auxiliary client treats 'main' as a provider alias — resolves to your actual primary provider + model.",
-    "hermes claw migrate --dry-run previews OpenClaw migration without writing anything.",
+    "lydia claw migrate --dry-run previews OpenClaw migration without writing anything.",
     "File paths pasted with quotes or escaped spaces are handled automatically — no manual cleanup needed.",
     "Slash commands never trigger the large-paste collapse — /command with big arguments works correctly.",
     "In interrupt mode, slash commands typed during agent execution bypass interrupt logic and run immediately.",
     "HERMES_DEV=1 bypasses container mode detection for local development.",
-    "Each MCP server gets its own toolset (mcp-servername) that can be toggled independently via hermes tools.",
+    "Each MCP server gets its own toolset (mcp-servername) that can be toggled independently via lydia native.",
     "MCP ${ENV_VAR} placeholders in config are resolved at server spawn — including vars from ~/.hermes/.env.",
     "Skills from trusted repos (NousResearch) get a 'trusted' security level; community skills get extra scanning.",
     "The skills quarantine at ~/.hermes/skills/.hub/quarantine/ holds skills pending security review.",
@@ -427,16 +427,16 @@ TIPS = [
 
     # --- CLI Subcommands & Flags ---
     'hermes -z "<prompt>" is the purest one-shot: final answer on stdout, nothing else — ideal for piping in scripts.',
-    'hermes chat --pass-session-id injects the session ID into the system prompt so the agent can self-reference it.',
-    'hermes chat --image path/to/pic.png attaches a local image to a single -q query without a separate upload step.',
-    'hermes chat --ignore-user-config skips the active user config — reproducible bug reports and CI runs.',
-    "hermes chat --source tool tags programmatic chats so they don't clutter hermes sessions list.",
+    'lydia chat --pass-session-id injects the session ID into the system prompt so the agent can self-reference it.',
+    'lydia chat --image path/to/pic.png attaches a local image to a single -q query without a separate upload step.',
+    'lydia chat --ignore-user-config skips the active user config — reproducible bug reports and CI runs.',
+    "lydia chat --source tool tags programmatic chats so they don't clutter hermes sessions list.",
     'hermes dump --show-keys includes redacted API key fingerprints for deeper support debugging.',
     'hermes sessions rename <ID> "new title" renames any past session; hermes sessions delete <ID> removes one.',
     'hermes import restores a session export or profile archive produced by sessions export or profile export.',
     'hermes fallback manages the fallback_model chain interactively — no hand-editing config.yaml.',
     'hermes pairing rotates the DM pairing token — the first messager after rotation claims access to the bot.',
-    'hermes setup walks first-time users through provider, keys, and platform wiring in one interactive flow.',
+    'lydia setup walks first-time users through provider, keys, and platform wiring in one interactive flow.',
     'hermes status --deep runs the full health sweep across every component; plain hermes status is the quick view.',
 
     # --- Agent Behavior Env Vars ---

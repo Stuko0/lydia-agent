@@ -7,20 +7,20 @@ Unlike Hermes' built-in OAuth integrations (Google, GitHub Copilot, Codex), Spot
 ## Prerequisites
 
 - A Spotify account. **Free** works for search, playlist, library, and activity tools. **Premium** is required for playback control (play, pause, skip, seek, volume, queue add, transfer).
-- Hermes Agent installed and running.
+- Lydia Agent installed and running.
 - For playback tools: an **active Spotify Connect device** — the Spotify app must be open on at least one device (phone, desktop, web player, speaker) so the Web API has something to control. If nothing is active you'll get a `403 Forbidden` with a "no active device" message; open Spotify on any device and retry.
 
 ## Setup
 
-### One-shot: `hermes tools` or first-run setup
+### One-shot: `lydia native` or first-run setup
 
 The fastest path. Run:
 
 ```bash
-hermes tools
+lydia native
 ```
 
-Scroll to `🎵 Spotify`, press space to toggle it on, then `s` to save. The same toggle is also available during the first-run `hermes setup` / `hermes setup tools` flow. Spotify stays opt-in, so enabling it there runs the same provider-aware configuration as `hermes tools`.
+Scroll to `🎵 Spotify`, press space to toggle it on, then `s` to save. The same toggle is also available during the first-run `lydia setup` / `lydia setup tools` flow. Spotify stays opt-in, so enabling it there runs the same provider-aware configuration as `lydia native`.
 
 Hermes drops you straight into the OAuth flow — if you don't have a Spotify app yet, it walks you through creating one inline. Once you finish, the toolset is enabled AND authenticated in one pass.
 
@@ -31,7 +31,7 @@ If you prefer to do the steps separately (or you're re-authing later), use the t
 #### 1. Enable the toolset
 
 ```bash
-hermes tools
+lydia native
 ```
 
 Toggle `🎵 Spotify` on, save, and when the inline wizard opens, dismiss it (Ctrl+C). The toolset stays on; only the auth step is deferred.
@@ -185,7 +185,7 @@ Read-only tools work on Free accounts. Anything that mutates playback or the que
 
 ## Scheduling: Spotify + cron
 
-Because Spotify tools are regular Hermes tools, a cron job running in a Hermes session can trigger playback on any schedule. No new code needed.
+Because Spotify tools are regular Lydia native, a cron job running in a Hermes session can trigger playback on any schedule. No new code needed.
 
 ### Morning wake-up playlist
 
@@ -214,7 +214,7 @@ hermes cron add \
 
 - **An active device must exist when the cron fires.** If no Spotify client is running (phone/desktop/Connect speaker), playback actions return `403 no active device`. For morning playlists, the trick is to target a device that's always on (Sonos, Echo, a smart speaker) rather than your phone.
 - **Premium required for anything that mutates playback** — play, pause, skip, volume, transfer. Read-only cron jobs (scheduled "email me my recently played tracks") work fine on Free.
-- **The cron agent inherits your active toolsets.** Spotify must be enabled in `hermes tools` for the cron session to see the Spotify tools.
+- **The cron agent inherits your active toolsets.** Spotify must be enabled in `lydia native` for the cron session to see the Spotify tools.
 - **Cron jobs run with `skip_memory=True`** so they don't write to your memory store.
 
 Full cron reference: [Cron Jobs](./cron).

@@ -17,7 +17,7 @@ Delegate coding to xAI Grok Build CLI (features, PRs).
 | Source | Optional — install with `hermes skills install official/autonomous-ai-agents/grok` |
 | Path | `optional-skills/autonomous-ai-agents/grok` |
 | Version | `0.1.0` |
-| Author | Matt Maximo (MattMaximo), Hermes Agent |
+| Author | Matt Maximo (MattMaximo), Lydia Agent |
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `Coding-Agent`, `Grok`, `xAI`, `Code-Review`, `Refactoring`, `Automation` |
@@ -185,7 +185,7 @@ terminal(command="grok --no-auto-update -c -p 'What did you change last time?'",
 To have Grok review local artifacts and return a clean markdown note (for
 Obsidian or a repo) without mutating anything:
 
-1. Prepare stable input files first with Hermes tools (`read_file`,
+1. Prepare stable input files first with Lydia native (`read_file`,
    `write_file`). Snapshot only the relevant context into a temp file rather
    than dumping raw paths.
 2. Run Grok headless **without** `--always-approve` so it cannot auto-write, and
@@ -301,7 +301,7 @@ Put global preferences in `~/.grok/config.toml` (not project-scoped
    `mktemp -d && git init` for scratch commit tasks.
 9. **Clean up tmux sessions** with `tmux kill-session -t <name>` when done.
 
-## Rules for Hermes Agents
+## Rules for Lydia Agents
 
 1. **Prefer headless `-p`** for single tasks — cleanest integration, structured
    output via `--output-format json`.

@@ -19,7 +19,7 @@ _CANCELLED = -1
 
 
 # ---------------------------------------------------------------------------
-# Curses-based interactive picker (same pattern as hermes tools)
+# Curses-based interactive picker (same pattern as lydia native)
 # ---------------------------------------------------------------------------
 
 def _curses_select(

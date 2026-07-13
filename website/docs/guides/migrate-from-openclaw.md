@@ -1,28 +1,28 @@
 ---
 sidebar_position: 10
 title: "Migrate from OpenClaw"
-description: "Complete guide to migrating your OpenClaw / Clawdbot setup to Hermes Agent — what gets migrated, how config maps, and what to check after."
+description: "Complete guide to migrating your OpenClaw / Clawdbot setup to Lydia Agent — what gets migrated, how config maps, and what to check after."
 ---
 
 # Migrate from OpenClaw
 
-`hermes claw migrate` imports your OpenClaw (or legacy Clawdbot/Moldbot) setup into Hermes. This guide covers exactly what gets migrated, the config key mappings, and what to verify after migration.
+`lydia claw migrate` imports your OpenClaw (or legacy Clawdbot/Moldbot) setup into Hermes. This guide covers exactly what gets migrated, the config key mappings, and what to verify after migration.
 
 :::tip
-If your OpenClaw setup was multi-provider, `hermes setup --portal` collapses it to one OAuth — 300+ models plus the Tool Gateway in a single login. See [Nous Portal](/integrations/nous-portal).
+If your OpenClaw setup was multi-provider, `lydia setup --portal` collapses it to one OAuth — 300+ models plus the Tool Gateway in a single login. See [Nous Portal](/integrations/nous-portal).
 :::
 
 ## Quick start
 
 ```bash
 # Preview then migrate (always shows a preview first, then asks to confirm)
-hermes claw migrate
+lydia claw migrate
 
 # Preview only, no changes
-hermes claw migrate --dry-run
+lydia claw migrate --dry-run
 
 # Full migration including API keys, skip confirmation
-hermes claw migrate --preset full --migrate-secrets --yes
+lydia claw migrate --preset full --migrate-secrets --yes
 ```
 
 The migration always shows a full preview of what will be imported before making any changes. Review the list, then confirm to proceed.
@@ -215,7 +215,7 @@ OpenClaw config values for tokens and API keys can be in three formats:
 "channels": { "telegram": { "botToken": { "source": "env", "id": "TELEGRAM_BOT_TOKEN" } } }
 ```
 
-The migration resolves all three formats. For env templates and SecretRef objects with `source: "env"`, it looks up the value in `~/.openclaw/.env` and the `openclaw.json` env sub-object. SecretRef objects with `source: "file"` or `source: "exec"` can't be resolved automatically — the migration warns about these, and those values must be added to Hermes manually via `hermes config set`.
+The migration resolves all three formats. For env templates and SecretRef objects with `source: "env"`, it looks up the value in `~/.openclaw/.env` and the `openclaw.json` env sub-object. SecretRef objects with `source: "file"` or `source: "exec"` can't be resolved automatically — the migration warns about these, and those values must be added to Hermes manually via `lydia config set`.
 
 ## After migration
 
@@ -229,11 +229,11 @@ The migration resolves all three formats. For env templates and SecretRef object
 
 5. **Test messaging** — if you migrated platform tokens, restart the gateway: `systemctl --user restart hermes-gateway`
 
-6. **Check session policies** — run `hermes config show` and verify the `session_reset` value matches your expectations.
+6. **Check session policies** — run `lydia config show` and verify the `session_reset` value matches your expectations.
 
 7. **Re-pair WhatsApp** — WhatsApp uses QR code pairing (Baileys), not token migration. Run `hermes whatsapp` to pair.
 
-8. **Archive cleanup** — after confirming everything works, run `hermes claw cleanup` to rename leftover OpenClaw directories to `.pre-migration/` (prevents state confusion).
+8. **Archive cleanup** — after confirming everything works, run `lydia claw cleanup` to rename leftover OpenClaw directories to `.pre-migration/` (prevents state confusion).
 
 ## Troubleshooting
 
@@ -243,7 +243,7 @@ The migration checks `~/.openclaw/`, then `~/.clawdbot/`, then `~/.moltbot/`. If
 
 ### "No provider API keys found"
 
-Keys might be stored in several places depending on your OpenClaw version: inline in `openclaw.json` under `models.providers.*.apiKey`, in `~/.openclaw/.env`, in the `openclaw.json` `"env"` sub-object, or in `agents/main/agent/auth-profiles.json`. The migration checks all four. If keys use `source: "file"` or `source: "exec"` SecretRefs, they can't be resolved automatically — add them via `hermes config set`.
+Keys might be stored in several places depending on your OpenClaw version: inline in `openclaw.json` under `models.providers.*.apiKey`, in `~/.openclaw/.env`, in the `openclaw.json` `"env"` sub-object, or in `agents/main/agent/auth-profiles.json`. The migration checks all four. If keys use `source: "file"` or `source: "exec"` SecretRefs, they can't be resolved automatically — add them via `lydia config set`.
 
 ### Skills not appearing after migration
 
@@ -251,4 +251,4 @@ Imported skills land in `~/.hermes/skills/openclaw-imports/`. Start a new sessio
 
 ### TTS voice not migrated
 
-OpenClaw stores TTS settings in two places: `messages.tts.providers.*` and the top-level `talk` config. The migration checks both. If your voice ID was set via the OpenClaw UI (stored in a different path), you may need to set it manually: `hermes config set tts.elevenlabs.voice_id YOUR_VOICE_ID`.
+OpenClaw stores TTS settings in two places: `messages.tts.providers.*` and the top-level `talk` config. The migration checks both. If your voice ID was set via the OpenClaw UI (stored in a different path), you may need to set it manually: `lydia config set tts.elevenlabs.voice_id YOUR_VOICE_ID`.

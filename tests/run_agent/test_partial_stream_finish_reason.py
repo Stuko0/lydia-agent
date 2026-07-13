@@ -369,9 +369,9 @@ class TestContentFilterStallActivatesFallback:
     (e.g. MiniMax ``output new_sensitive (1027)``) terminates a streaming
     response mid-delivery.  The raw error is swallowed into a
     finish_reason=length partial-stream stub, so before the fix the loop
-    burned 3 continuation retries against the SAME primary (re-hitting the
+    burned 10 continuation retries against the SAME primary (re-hitting the
     content-deterministic filter every time) and gave up with
-    ``"Response remained truncated after 3 continuation attempts"`` — the
+    ``"Response remained truncated after 10 continuation attempts"`` — the
     configured fallback chain was never consulted.
 
     The fix has three layers:

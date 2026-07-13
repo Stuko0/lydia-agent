@@ -40,25 +40,25 @@ def _inherited_flag(parser, *args, **kwargs):
 _EPILOGUE = """
 Examples:
     hermes                        Start interactive chat
-    hermes chat -q "Hello"        Single query mode
+    lydia chat -q "Hello"        Single query mode
     hermes --tui                  Launch the modern TUI (or set display.interface: tui)
     hermes --cli                  Force the classic REPL (overrides display.interface: tui)
     hermes -c                     Resume the most recent session
     hermes -c "my project"        Resume a session by name (latest in lineage)
     hermes --resume <session_id>  Resume a specific session by ID
-    hermes setup                  Run setup wizard
+    lydia setup                  Run setup wizard
     hermes logout                 Clear stored authentication
     hermes auth add <provider>    Add a pooled credential
     hermes auth list              List pooled credentials
     hermes auth remove <p> <t>    Remove pooled credential by index, id, or label
     hermes auth reset <provider>  Clear exhaustion status for a provider
-    hermes model                  Select default model
+    lydia model                  Select default model
     hermes fallback [list]        Show fallback provider chain
-    hermes fallback add           Add a fallback provider (same picker as `hermes model`)
+    hermes fallback add           Add a fallback provider (same picker as `lydia model`)
     hermes fallback remove        Remove a fallback provider from the chain
-    hermes config                 View configuration
-    hermes config edit            Edit config in $EDITOR
-    hermes config set model gpt-4 Set a config value
+    lydia config                 View configuration
+    lydia config edit            Edit config in $EDITOR
+    lydia config set model gpt-4 Set a config value
     hermes gateway                Run messaging gateway
     hermes -s hermes-agent-dev,github-auth
     hermes -w                     Start in isolated git worktree
@@ -90,7 +90,7 @@ def build_top_level_parser():
     """
     parser = argparse.ArgumentParser(
         prog="hermes",
-        description="Hermes Agent - AI assistant with tool-calling capabilities",
+        description="Lydia Agent - AI assistant with tool-calling capabilities",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=_EPILOGUE,
     )
@@ -114,7 +114,7 @@ def build_top_level_parser():
     # --model / --provider are accepted at the top level so they can pair
     # with -z without needing the `chat` subcommand.  If neither -z nor a
     # subcommand consumes them, they fall through harmlessly as None.
-    # Mirrors `hermes chat --model ... --provider ...` semantics.
+    # Mirrors `lydia chat --model ... --provider ...` semantics.
     _inherited_flag(
         parser,
         "-m",
@@ -132,7 +132,7 @@ def build_top_level_parser():
         help=(
             "Provider override for this invocation (e.g. openrouter, anthropic). "
             "Applies to -z/--oneshot and --tui. The persistent provider lives in config.yaml "
-            "under model.provider — use `hermes setup` or edit the file to change it."
+            "under model.provider — use `lydia setup` or edit the file to change it."
         ),
     )
     parser.add_argument(
@@ -251,7 +251,7 @@ def build_top_level_parser():
     chat_parser = subparsers.add_parser(
         "chat",
         help="Interactive chat with the agent",
-        description="Start an interactive chat session with Hermes Agent",
+        description="Start an interactive chat session with Lydia Agent",
     )
     chat_parser.add_argument(
         "-q", "--query", help="Single query (non-interactive mode)"

@@ -3065,7 +3065,7 @@ class TestChatCompletionsAgentIncomplete:
             "completed": False,
             "partial": True,
             "failed": True,
-            "error": "Response remained truncated after 3 continuation attempts",
+            "error": "Response remained truncated after 10 continuation attempts",
             "messages": [],
             "api_calls": 1,
         }

@@ -1,12 +1,12 @@
 ---
 sidebar_position: 3
 title: "Android / Termux"
-description: "通过 Termux 在 Android 手机上直接运行 Hermes Agent"
+description: "通过 Termux 在 Android 手机上直接运行 Lydia Agent"
 ---
 
 # 在 Android 上通过 Termux 运行 Hermes
 
-这是在 Android 手机上通过 [Termux](https://termux.dev/) 直接运行 Hermes Agent 的已验证路径。
+这是在 Android 手机上通过 [Termux](https://termux.dev/) 直接运行 Lydia Agent 的已验证路径。
 
 它为你提供手机上可用的本地 CLI，以及目前已知可在 Android 上干净安装的核心扩展功能。
 
@@ -119,7 +119,7 @@ ln -sf "$PWD/venv/bin/hermes" "$PREFIX/bin/hermes"
 
 ```bash
 hermes version
-hermes doctor
+lydia doctor
 ```
 
 ### 7. 启动 Hermes
@@ -135,7 +135,7 @@ hermes
 ### 配置模型
 
 ```bash
-hermes model
+lydia model
 ```
 
 或直接在 `~/.hermes/.env` 中设置密钥。
@@ -143,7 +143,7 @@ hermes model
 ### 稍后重新运行完整的交互式设置向导
 
 ```bash
-hermes setup
+lydia setup
 ```
 
 ### 手动安装可选的 Node 依赖
@@ -197,7 +197,7 @@ export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
 python -m pip install -e '.[termux]' -c constraints-termux.txt
 ```
 
-### `hermes doctor` 提示缺少 ripgrep 或 Node
+### `lydia doctor` 提示缺少 ripgrep 或 Node
 
 使用 Termux 包安装：
 
@@ -232,5 +232,5 @@ python -m pip install -e '.[termux]' -c constraints-termux.txt
 - 你的 Android 版本
 - `termux-info`
 - `python --version`
-- `hermes doctor`
+- `lydia doctor`
 - 确切的安装命令及完整错误输出

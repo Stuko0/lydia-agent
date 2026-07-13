@@ -250,7 +250,7 @@ kanban_complete(summary="decomposed into 2 research tasks + 1 writer; linked dep
 2. **无 shell 引用脆弱性。** 通过 shlex + argparse 传递 `--metadata '{"files": [...]}'` 是潜在的隐患。结构化工具参数完全绕过了这个问题。
 3. **更好的错误处理。** 工具结果是模型可以推理的结构化 JSON，而不是需要解析的 stderr 字符串。
 
-**对普通会话零 schema 占用。** 普通的 `hermes chat` 会话在其 schema 中没有任何 `kanban_*` 工具，除非活动配置文件为编排器工作显式启用了 `kanban` 工具集。调度器启动的任务 worker 因为设置了 `HERMES_KANBAN_TASK` 而获得任务范围的工具；编排器配置文件通过配置获得更广泛的路由界面。对于从不使用 kanban 的用户，没有工具膨胀。
+**对普通会话零 schema 占用。** 普通的 `lydia chat` 会话在其 schema 中没有任何 `kanban_*` 工具，除非活动配置文件为编排器工作显式启用了 `kanban` 工具集。调度器启动的任务 worker 因为设置了 `HERMES_KANBAN_TASK` 而获得任务范围的工具；编排器配置文件通过配置获得更广泛的路由界面。对于从不使用 kanban 的用户，没有工具膨胀。
 
 自动注入的 kanban 指引教导模型何时调用哪个工具以及调用顺序。
 
@@ -567,7 +567,7 @@ hermes kanban gc [--event-retention-days N]            # 工作区 + 旧事件 +
 
 ## `/kanban` 斜杠命令 {#kanban-slash-command}
 
-每个 `hermes kanban <action>` 动词也可以作为 `/kanban <action>` 访问 —— 从交互式 `hermes chat` 会话内部**以及**从任何 gateway 平台（Telegram、Discord、Slack、WhatsApp、Signal、Matrix、Mattermost、电子邮件、SMS）。两个界面都调用完全相同的 `hermes_cli.kanban.run_slash()` 入口点，该入口点复用 `hermes kanban` argparse 树，因此参数界面、标志和输出格式在 CLI、`/kanban` 和 `hermes kanban` 之间完全相同。你不必离开聊天来驱动看板。
+每个 `hermes kanban <action>` 动词也可以作为 `/kanban <action>` 访问 —— 从交互式 `lydia chat` 会话内部**以及**从任何 gateway 平台（Telegram、Discord、Slack、WhatsApp、Signal、Matrix、Mattermost、电子邮件、SMS）。两个界面都调用完全相同的 `hermes_cli.kanban.run_slash()` 入口点，该入口点复用 `hermes kanban` argparse 树，因此参数界面、标志和输出格式在 CLI、`/kanban` 和 `hermes kanban` 之间完全相同。你不必离开聊天来驱动看板。
 
 ```
 /kanban list

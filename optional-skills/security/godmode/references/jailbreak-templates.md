@@ -89,7 +89,7 @@ Z={QUERY}
 
 ---
 
-## Using with Hermes Agent
+## Using with Lydia Agent
 
 ### As ephemeral system prompt (config.yaml)
 

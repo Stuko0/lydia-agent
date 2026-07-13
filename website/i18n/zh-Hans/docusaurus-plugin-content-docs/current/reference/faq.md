@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "常见问题与故障排查"
-description: "Hermes Agent 常见问题解答及常见问题解决方案"
+description: "Lydia Agent 常见问题解答及常见问题解决方案"
 ---
 
 # 常见问题与故障排查
@@ -14,7 +14,7 @@ description: "Hermes Agent 常见问题解答及常见问题解决方案"
 
 ### Hermes 支持哪些 LLM 提供商？
 
-Hermes Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商包括：
+Lydia Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商包括：
 
 - **[OpenRouter](https://openrouter.ai/)** — 通过一个 API key 访问数百个模型（推荐，灵活性强）
 - **Nous Portal** — Nous Research 自有推理端点
@@ -26,11 +26,11 @@ Hermes Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商
 - **MiniMax** — 全球及中国区端点
 - **本地模型** — 通过 [Ollama](https://ollama.com/)、[vLLM](https://docs.vllm.ai/)、[llama.cpp](https://github.com/ggerganov/llama.cpp)、[SGLang](https://github.com/sgl-project/sglang) 或任何兼容 OpenAI 的服务器
 
-使用 `hermes model` 设置提供商，或直接编辑 `~/.hermes/.env`。所有提供商 key 请参阅[环境变量](./environment-variables.md)参考文档。
+使用 `lydia model` 设置提供商，或直接编辑 `~/.hermes/.env`。所有提供商 key 请参阅[环境变量](./environment-variables.md)参考文档。
 
 ### 支持 Windows 吗？
 
-**原生不支持。** Hermes Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 Hermes。标准安装命令在 WSL2 中可完美运行：
+**原生不支持。** Lydia Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 Hermes。标准安装命令在 WSL2 中可完美运行：
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
@@ -70,14 +70,14 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 ### 我的数据会被发送到哪里？
 
-API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。Hermes Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.hermes/` 目录中。
+API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。Lydia Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.hermes/` 目录中。
 
 ### 可以离线使用 / 使用本地模型吗？
 
-可以。运行 `hermes model`，选择**自定义端点**，然后输入您服务器的 URL：
+可以。运行 `lydia model`，选择**自定义端点**，然后输入您服务器的 URL：
 
 ```bash
-hermes model
+lydia model
 # 选择：Custom endpoint（手动输入 URL）
 # API base URL: http://localhost:11434/v1
 # API key: ollama
@@ -108,11 +108,11 @@ Hermes 会自动检测本地端点并放宽流式传输超时（读取超时从 
 
 ### 费用是多少？
 
-Hermes Agent 本身**免费且开源**（MIT 许可证）。您只需为所选提供商的 LLM API 用量付费。本地模型完全免费运行。
+Lydia Agent 本身**免费且开源**（MIT 许可证）。您只需为所选提供商的 LLM API 用量付费。本地模型完全免费运行。
 
 ### 多人可以使用同一个实例吗？
 
-可以。[消息网关](../user-guide/messaging/index.md)允许多个用户通过 Telegram、Discord、Slack、WhatsApp 或 Home Assistant 与同一个 Hermes Agent 实例交互。访问权限通过白名单（特定用户 ID）和私信配对（第一个发消息的用户获得访问权）来控制。
+可以。[消息网关](../user-guide/messaging/index.md)允许多个用户通过 Telegram、Discord、Slack、WhatsApp 或 Home Assistant 与同一个 Lydia Agent 实例交互。访问权限通过白名单（特定用户 ID）和私信配对（第一个发消息的用户获得访问权）来控制。
 
 ### 记忆（memory）和技能（skills）有什么区别？
 
@@ -236,24 +236,24 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 **原因：** 会话内的 `/model` 只能在您**已配置**的提供商之间切换。如果您只设置了 OpenRouter，`/model` 就只会显示 OpenRouter。
 
-**解决方案：** 退出当前会话，在终端中使用 `hermes model` 添加新提供商：
+**解决方案：** 退出当前会话，在终端中使用 `lydia model` 添加新提供商：
 
 ```bash
 # 先退出 Hermes 聊天会话（Ctrl+C 或 /quit）
 
 # 运行完整的提供商设置向导
-hermes model
+lydia model
 
 # 此命令可以：添加提供商、运行 OAuth、输入 API key、配置端点
 ```
 
-通过 `hermes model` 添加新提供商后，启动新的聊天会话 — `/model` 将显示所有已配置的提供商。
+通过 `lydia model` 添加新提供商后，启动新的聊天会话 — `/model` 将显示所有已配置的提供商。
 
 :::tip 快速参考
 | 目标 | 使用方式 |
 |-----------|-----|
-| 添加新提供商 | `hermes model`（从终端） |
-| 输入/更改 API key | `hermes model`（从终端） |
+| 添加新提供商 | `lydia model`（从终端） |
+| 输入/更改 API key | `lydia model`（从终端） |
 | 会话中途切换模型 | `/model <name>`（会话内） |
 | 切换到其他已配置的提供商 | `/model provider:model`（会话内） |
 :::
@@ -265,13 +265,13 @@ hermes model
 **解决方案：**
 ```bash
 # 检查您的配置
-hermes config show
+lydia config show
 
 # 重新配置您的提供商
-hermes model
+lydia model
 
 # 或直接设置
-hermes config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
+lydia config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 ```
 
 :::warning
@@ -285,13 +285,13 @@ hermes config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 **解决方案：**
 ```bash
 # 列出您的提供商可用的模型
-hermes model
+lydia model
 
 # 设置有效的模型
-hermes config set HERMES_MODEL anthropic/claude-opus-4.7
+lydia config set HERMES_MODEL anthropic/claude-opus-4.7
 
 # 或按会话指定
-hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
+lydia chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 ```
 
 #### 速率限制（429 错误）
@@ -301,7 +301,7 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 **解决方案：** 稍等片刻后重试。对于持续使用，请考虑：
 - 升级您的提供商套餐
 - 切换到其他模型或提供商
-- 使用 `hermes chat --provider <alternative>` 路由到其他后端
+- 使用 `lydia chat --provider <alternative>` 路由到其他后端
 
 #### 上下文长度超限
 
@@ -313,10 +313,10 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 /compress
 
 # 或开始新会话
-hermes chat
+lydia chat
 
 # 使用上下文窗口更大的模型
-hermes chat --model openrouter/google/gemini-3-flash-preview
+lydia chat --model openrouter/google/gemini-3-flash-preview
 ```
 
 如果在第一次长对话时就出现此问题，Hermes 可能检测到了错误的模型上下文长度。检查检测结果：
@@ -368,7 +368,7 @@ custom_providers:
 **解决方案：**
 - 在消息中避免使用 `sudo` — 请智能体寻找替代方案
 - 如果必须使用 `sudo`，在 `/etc/sudoers` 中为特定命令配置免密 sudo
-- 或切换到终端界面执行管理任务：`hermes chat`
+- 或切换到终端界面执行管理任务：`lydia chat`
 
 #### Docker 后端无法连接
 
@@ -443,7 +443,7 @@ cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"  # Telegram、Disc
 lsof -i :8080
 
 # 验证配置
-hermes config show
+lydia config show
 ```
 
 #### WSL：网关持续断开连接或 `hermes gateway start` 失败
@@ -508,8 +508,8 @@ hermes gateway start      # 检测到更新的 plist 并重新加载
 **原因：** 模型较大、API 服务器距离较远，或系统 prompt（提示词）包含过多工具。
 
 **解决方案：**
-- 尝试更快/更小的模型：`hermes chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
-- 减少激活的工具集：`hermes chat -t "terminal"`
+- 尝试更快/更小的模型：`lydia chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
+- 减少激活的工具集：`lydia chat -t "terminal"`
 - 检查到提供商的网络延迟
 - 对于本地模型，确保有足够的 GPU VRAM
 
@@ -540,10 +540,10 @@ hermes gateway start      # 检测到更新的 plist 并重新加载
 /compress
 
 # 开始新会话并引用旧会话
-hermes chat
+lydia chat
 
 # 如需稍后继续特定会话
-hermes chat --continue
+lydia chat --continue
 ```
 
 ---
@@ -588,10 +588,10 @@ mcp_servers:
 
 ```bash
 # 验证 MCP 服务器已配置
-hermes config show | grep -A 12 mcp_servers
+lydia config show | grep -A 12 mcp_servers
 
 # 更改配置后重启 Hermes 或重新加载 MCP
-hermes chat
+lydia chat
 ```
 
 另请参阅：
@@ -628,9 +628,9 @@ Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命
 
 不共享。每个 profile 都有自己独立的记忆存储、会话数据库和技能目录，完全隔离。如果您想用现有的记忆和会话创建新 profile，请使用 `hermes profile create newname --clone-all` 从当前 profile 复制所有内容，或添加 `--clone-from <profile>` 从指定源 profile 复制。
 
-### 运行 `hermes update` 时会发生什么？
+### 运行 `lydia update` 时会发生什么？
 
-`hermes update` 拉取最新代码并重新安装依赖项**一次**（不是每个 profile 各一次）。然后自动将更新的技能同步到所有 profiles。您只需运行一次 `hermes update` — 它覆盖机器上的每个 profile。
+`lydia update` 拉取最新代码并重新安装依赖项**一次**（不是每个 profile 各一次）。然后自动将更新的技能同步到所有 profiles。您只需运行一次 `lydia update` — 它覆盖机器上的每个 profile。
 
 ### 可以运行多少个 profiles？
 
@@ -748,7 +748,7 @@ skills:
 
 **解决方案：**
 
-1. 在新机器上安装 Hermes Agent：
+1. 在新机器上安装 Lydia Agent：
    ```bash
    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
    ```
@@ -768,7 +768,7 @@ skills:
    hermes import ~/hermes-backup-<timestamp>.zip
    ```
 
-4. 在新机器上运行 `hermes setup` 以验证 API key 和提供商配置是否正常工作。
+4. 在新机器上运行 `lydia setup` 以验证 API key 和提供商配置是否正常工作。
 
 ### 将单个 profile 迁移到另一台机器
 
@@ -837,13 +837,13 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 **解决方案：**
 ```bash
 # 检查已配置的模型和提供商
-hermes config show | head -20
+lydia config show | head -20
 
 # 重新运行模型选择
-hermes model
+lydia model
 
 # 或使用已知可用的模型测试
-hermes chat -q "hello" --model anthropic/claude-opus-4.7
+lydia chat -q "hello" --model anthropic/claude-opus-4.7
 ```
 
 如果使用 OpenRouter，请确保您的 API key 有余额。OpenRouter 返回 400 通常意味着该模型需要付费套餐，或模型 ID 有拼写错误。

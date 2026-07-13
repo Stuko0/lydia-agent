@@ -1,12 +1,12 @@
 ---
 sidebar_position: 16
 title: "xAI Grok OAuth (SuperGrok / X Premium+)"
-description: "Sign in with your SuperGrok or X Premium+ subscription to use Grok models in Hermes Agent — no API key required"
+description: "Sign in with your SuperGrok or X Premium+ subscription to use Grok models in Lydia Agent — no API key required"
 ---
 
 # xAI Grok OAuth (SuperGrok / X Premium+)
 
-Hermes Agent supports xAI Grok through a browser-based OAuth login flow against [accounts.x.ai](https://accounts.x.ai), using either a **SuperGrok subscription** ([grok.com](https://x.ai/grok)) or an **X Premium+ subscription** (linked X account). No `XAI_API_KEY` is required — log in once and Hermes automatically refreshes your session in the background.
+Lydia Agent supports xAI Grok through a browser-based OAuth login flow against [accounts.x.ai](https://accounts.x.ai), using either a **SuperGrok subscription** ([grok.com](https://x.ai/grok)) or an **X Premium+ subscription** (linked X account). No `XAI_API_KEY` is required — log in once and Hermes automatically refreshes your session in the background.
 
 When you sign in with an X account that has Premium+, xAI automatically links the subscription status to your xAI session, so the OAuth flow works the same as it does for direct SuperGrok subscribers.
 
@@ -31,7 +31,7 @@ The same OAuth bearer token is also reused by every direct-to-xAI surface in Her
 ## Prerequisites
 
 - Python 3.9+
-- Hermes Agent installed
+- Lydia Agent installed
 - An active **SuperGrok** subscription on your xAI account, **or** an **X Premium+** subscription on the X account you sign in with (xAI links the subscription automatically)
 - A browser available on the local machine (or use `--no-browser` for remote sessions)
 
@@ -43,7 +43,7 @@ xAI's backend enforces its own allowlist on the OAuth API surface and has been s
 
 ```bash
 # Launch the provider and model picker
-hermes model
+lydia model
 # → Select "xAI Grok OAuth (SuperGrok / X Premium+)" from the provider list
 # → Hermes opens your browser to accounts.x.ai
 # → Approve access in the browser
@@ -89,7 +89,7 @@ If you don't have a regular SSH client (e.g. you're running Hermes inside GCP Cl
 ```bash
 hermes auth add xai-oauth --manual-paste
 # Or via the model picker:
-hermes model --manual-paste
+lydia model --manual-paste
 ```
 
 See [OAuth over SSH / Remote Hosts](./oauth-over-ssh.md#browser-only-remote-cloud-shell--codespaces--ec2-instance-connect) for the full walkthrough. Regression fix for [#26923](https://github.com/NousResearch/hermes-agent/issues/26923).
@@ -106,7 +106,7 @@ If the consent page renders the authorization code directly on the page (xAI's c
 ## Checking Login Status
 
 ```bash
-hermes doctor
+lydia doctor
 ```
 
 The `◆ Auth Providers` section will show the current state of every provider, including `xai-oauth`.
@@ -114,7 +114,7 @@ The `◆ Auth Providers` section will show the current state of every provider, 
 ## Switching Models
 
 ```bash
-hermes model
+lydia model
 # → Select "xAI Grok OAuth (SuperGrok / X Premium+)"
 # → Pick from the model list (grok-build-0.1 is pinned to the top)
 ```
@@ -122,8 +122,8 @@ hermes model
 Or set the model directly:
 
 ```bash
-hermes config set model.default grok-build-0.1
-hermes config set model.provider xai-oauth
+lydia config set model.default grok-build-0.1
+lydia config set model.provider xai-oauth
 ```
 
 ## Configuration Reference
@@ -155,7 +155,7 @@ Once you're logged in via OAuth, every direct-to-xAI tool reuses the same bearer
 To pick a backend for each tool:
 
 ```bash
-hermes tools
+lydia native
 # → Text-to-Speech       → "xAI TTS"
 # → Image Generation     → "xAI Grok Imagine (image)"
 # → Video Generation     → "xAI Grok Imagine"
@@ -165,11 +165,11 @@ hermes tools
 If OAuth tokens are already stored, the picker confirms it and skips the credential prompt. If neither OAuth nor `XAI_API_KEY` is set, the picker offers a 3-choice menu: OAuth login, paste API key, or skip.
 
 :::note Video generation is off by default
-The `video_gen` toolset is disabled by default. Enable it in `hermes tools` → `🎬 Video Generation` (press space) before the agent can call `video_generate`. Otherwise the agent may fall back to the bundled ComfyUI skill, which is also tagged for video generation.
+The `video_gen` toolset is disabled by default. Enable it in `lydia native` → `🎬 Video Generation` (press space) before the agent can call `video_generate`. Otherwise the agent may fall back to the bundled ComfyUI skill, which is also tagged for video generation.
 :::
 
 :::note X search auto-enables when xAI credentials are present
-The `x_search` toolset auto-enables whenever xAI credentials (a SuperGrok / X Premium+ OAuth token or `XAI_API_KEY`) are configured. Disable explicitly via `hermes tools` → `🐦 X (Twitter) Search` (press space) if you don't want this. The tool routes through xAI's built-in `x_search` Responses API — it works with **either** your SuperGrok / X Premium+ OAuth login or a paid `XAI_API_KEY`, and prefers OAuth when both are configured (uses your subscription quota instead of API spend). The tool schema is hidden from the model when no xAI credentials are configured, regardless of whether the toolset is enabled.
+The `x_search` toolset auto-enables whenever xAI credentials (a SuperGrok / X Premium+ OAuth token or `XAI_API_KEY`) are configured. Disable explicitly via `lydia native` → `🐦 X (Twitter) Search` (press space) if you don't want this. The tool routes through xAI's built-in `x_search` Responses API — it works with **either** your SuperGrok / X Premium+ OAuth login or a paid `XAI_API_KEY`, and prefers OAuth when both are configured (uses your subscription quota instead of API spend). The tool schema is hidden from the model when no xAI credentials are configured, regardless of whether the toolset is enabled.
 :::
 
 ### Models
@@ -195,7 +195,7 @@ The chat catalog is derived live from the on-disk `models.dev` cache; new xAI re
 |----------|--------|
 | `XAI_BASE_URL` | Override the default `https://api.x.ai/v1` endpoint (rarely needed). |
 
-To select xAI as the active provider, set `model.provider: xai-oauth` in `config.yaml` (use `hermes setup` for the guided flow) or pass `--provider xai-oauth` for a single invocation.
+To select xAI as the active provider, set `model.provider: xai-oauth` in `config.yaml` (use `lydia setup` for the guided flow) or pass `--provider xai-oauth` for a single invocation.
 
 ## Troubleshooting
 
@@ -211,7 +211,7 @@ When the refresh failure is terminal (HTTP 4xx, `invalid_grant`, revoked grant, 
 
 The loopback listener has a finite expiry window (default 180 s). If you don't approve the login in time, Hermes raises a timeout error.
 
-**Fix:** re-run `hermes auth add xai-oauth` (or `hermes model`). The flow starts fresh.
+**Fix:** re-run `hermes auth add xai-oauth` (or `lydia model`). The flow starts fresh.
 
 ### State mismatch (possible CSRF)
 
@@ -237,13 +237,13 @@ Full walkthrough (jump boxes, mosh/tmux, port conflicts): [OAuth over SSH / Remo
 
 OAuth completed in the browser, tokens are saved, but inference or token refresh returns `HTTP 403` with a message similar to *"The caller does not have permission to execute the specified operation"*.
 
-This is **not** a stale-token problem — re-running `hermes model` won't change it. xAI's backend has been seen to restrict OAuth API access to specific SuperGrok tiers despite the in-app subscription being active (issue [#26847](https://github.com/NousResearch/hermes-agent/issues/26847)).
+This is **not** a stale-token problem — re-running `lydia model` won't change it. xAI's backend has been seen to restrict OAuth API access to specific SuperGrok tiers despite the in-app subscription being active (issue [#26847](https://github.com/NousResearch/hermes-agent/issues/26847)).
 
 **Fix:** set `XAI_API_KEY` and switch to the API-key path:
 
 ```bash
 export XAI_API_KEY=xai-...
-hermes config set model.provider xai
+lydia config set model.provider xai
 ```
 
 Or upgrade your subscription at [x.ai/grok](https://x.ai/grok) if the OAuth route is required.
@@ -252,7 +252,7 @@ Or upgrade your subscription at [x.ai/grok](https://x.ai/grok) if the OAuth rout
 
 The auth store has no `xai-oauth` entry and no `XAI_API_KEY` is set. You haven't logged in yet, or the credential file was deleted.
 
-**Fix:** run `hermes model` and pick the xAI Grok OAuth provider, or run `hermes auth add xai-oauth`.
+**Fix:** run `lydia model` and pick the xAI Grok OAuth provider, or run `hermes auth add xai-oauth`.
 
 ## Logging Out
 

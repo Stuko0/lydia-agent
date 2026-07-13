@@ -2,12 +2,12 @@
 sidebar_position: 3
 sidebar_label: "Git Worktrees"
 title: "Git Worktrees"
-description: "Run multiple Hermes agents safely on the same repository using git worktrees and isolated checkouts"
+description: "Run multiple Lydia Agents safely on the same repository using git worktrees and isolated checkouts"
 ---
 
 # Git Worktrees
 
-Hermes Agent is often used on large, long‑lived repositories. When you want to:
+Lydia Agent is often used on large, long‑lived repositories. When you want to:
 
 - Run **multiple agents in parallel** on the same project, or
 - Keep experimental refactors isolated from your main branch,
@@ -20,7 +20,7 @@ This page shows how to combine worktrees with Hermes so each session has a clean
 
 Hermes treats the **current working directory** as the project root:
 
-- CLI: the directory where you run `hermes` or `hermes chat`
+- CLI: the directory where you run `hermes` or `lydia chat`
 - Messaging gateways: the directory set by `terminal.cwd` in `~/.hermes/config.yaml`
 
 If you run multiple agents in the **same checkout**, their changes can interfere with each other:

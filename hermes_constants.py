@@ -1,4 +1,4 @@
-"""Shared constants for Hermes Agent.
+"""Shared constants for Lydia Agent.
 
 Import-safe module with no dependencies — can be imported from anywhere
 without risk of circular imports.
@@ -44,12 +44,28 @@ def get_hermes_home_override() -> str | None:
 
 
 def _get_platform_default_hermes_home() -> Path:
-    """Return the platform-native default Hermes home path."""
+    """Return the platform-native default Hermes home path.
+
+    Prefers ``~/.lydia`` (POSIX) / ``%LOCALAPPDATA%\\lydia`` (Windows) for
+    new installs.  Falls back to the legacy ``~/.hermes`` /
+    ``%LOCALAPPDATA%\\hermes`` path when the legacy directory already exists
+    with content, so existing installs keep working without migration.
+    """
     if sys.platform == "win32":
         local_appdata = os.environ.get("LOCALAPPDATA", "").strip()
         base = Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
-        return base / "hermes"
-    return Path.home() / ".hermes"
+        new_path = base / "lydia"
+        legacy_path = base / "hermes"
+        # Prefer legacy path if it exists with content (backward compat)
+        if not new_path.exists() and legacy_path.exists():
+            return legacy_path
+        return new_path
+    new_path = Path.home() / ".lydia"
+    legacy_path = Path.home() / ".hermes"
+    # Prefer legacy path if it exists with content (backward compat)
+    if not new_path.exists() and legacy_path.exists():
+        return legacy_path
+    return new_path
 
 
 def get_hermes_home() -> Path:
@@ -633,12 +649,12 @@ def display_hermes_home() -> str:
 
     Uses ``~/`` shorthand for readability::
 
-        default:  ``~/.hermes``
-        profile:  ``~/.hermes/profiles/coder``
+        default:  ``~/.lydia`` (or ``~/.hermes`` for legacy installs)
+        profile:  ``~/.lydia/profiles/coder``
         custom:   ``/opt/hermes-custom``
 
     Use this in **user-facing** print/log messages instead of hardcoding
-    ``~/.hermes``.  For code that needs a real ``Path``, use
+    a path.  For code that needs a real ``Path``, use
     :func:`get_hermes_home` instead.
     """
     home = get_hermes_home()

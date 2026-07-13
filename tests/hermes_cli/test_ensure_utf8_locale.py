@@ -1,13 +1,13 @@
 """Regression tests for hermes_cli._ensure_utf8().
 
 Covers the crash class where the setup wizard (and other banner-printing
-commands) emit box-drawing characters and the ⚕ glyph, which raise
+commands) emit box-drawing characters and the 🌹 glyph, which raise
 UnicodeEncodeError when stdout/stderr are bound to a non-UTF-8 codec.
 
 Historically the repair was gated on ``sys.platform == "win32"`` and only
 caught the Windows cp1252 case. Linux hosts with a latin-1 / C / POSIX locale
 (common on minimal Debian installs and Raspberry Pi) hit the identical crash
-in ``hermes setup`` because the repair returned early. See the Raspberry Pi
+in ``lydia setup`` because the repair returned early. See the Raspberry Pi
 report: latin-1 locale → UnicodeEncodeError before the wizard could start.
 """
 
@@ -19,7 +19,7 @@ import hermes_cli
 
 
 # The exact glyphs the setup wizard / banners print (setup.py ~line 2962+).
-_BANNER = "┌─────┐\n│ ⚕ Hermes │\n└─────┘"
+_BANNER = "┌─────┐\n│ 🌹 Hermes │\n└─────┘"
 
 
 class _FakeStream:
@@ -81,7 +81,7 @@ def test_latin1_stdout_is_repaired_to_utf8(monkeypatch):
     assert sys.stderr.encoding.lower().replace("-", "") == "utf8"
     # The banner now encodes without raising.
     sys.stdout.write(_BANNER)
-    assert "⚕".encode("utf-8") in sys.stdout.getvalue()
+    assert "🌹".encode("utf-8") in sys.stdout.getvalue()
 
 
 def test_ascii_posix_locale_is_repaired(monkeypatch):
@@ -151,7 +151,7 @@ def test_fallback_when_reconfigure_unavailable(monkeypatch, tmp_path):
     sys.stdout.write(_BANNER)
     sys.stdout.flush()
     fh.close()
-    assert "⚕".encode("utf-8") in real_path.read_bytes()
+    assert "🌹".encode("utf-8") in real_path.read_bytes()
 
 
 def test_broken_stream_does_not_raise(monkeypatch):

@@ -1,5 +1,5 @@
 """
-Lazy dependency installer for opt-in Hermes Agent backends.
+Lazy dependency installer for opt-in Lydia Agent backends.
 
 Many Hermes features (Mistral TTS, ElevenLabs TTS, Honcho memory, Bedrock,
 Slack, Matrix, etc.) require Python packages that not every user needs. The
@@ -20,7 +20,7 @@ top of their first-import path. If the deps are missing, ``ensure`` checks
 the ``security.allow_lazy_installs`` config flag (default true) and runs
 a venv-scoped pip install. If the user has explicitly disabled lazy
 installs, ``ensure`` raises :class:`FeatureUnavailable` with a clear
-remediation hint pointing at ``hermes tools`` or the manual pip command.
+remediation hint pointing at ``lydia native`` or the manual pip command.
 
 Security model:
 

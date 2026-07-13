@@ -40,7 +40,7 @@ hermes auth add xai-oauth --manual-paste
 # → 在终端的 "Callback URL:" 提示处粘贴。
 ```
 
-同样的标志也适用于集成模型选择器的 `hermes model --manual-paste`。如果不想粘贴完整 URL，也可以只接受裸的 `?code=...&state=...` 查询片段。
+同样的标志也适用于集成模型选择器的 `lydia model --manual-paste`。如果不想粘贴完整 URL，也可以只接受裸的 `?code=...&state=...` 查询片段。
 
 Hermes 对两种路径使用**相同的 PKCE verifier、state 和 nonce**，因此上游 OAuth 流程在字节层面完全一致——`--manual-paste` 纯粹是回调跳转的传输方式变更，不会降低安全性。
 

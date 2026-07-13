@@ -1,7 +1,7 @@
 ---
 sidebar_position: 11
 title: "图像生成 Provider 插件"
-description: "如何为 Hermes Agent 构建图像生成后端插件"
+description: "如何为 Lydia Agent 构建图像生成后端插件"
 ---
 
 # 构建图像生成 Provider 插件
@@ -20,9 +20,9 @@ Hermes 在三个位置扫描图像生成后端：
 2. **用户** — `~/.hermes/plugins/image_gen/<name>/`（通过 `plugins.enabled` 选择启用）
 3. **Pip** — 声明了 `hermes_agent.plugins` 入口点的包
 
-每个插件的 `register(ctx)` 函数调用 `ctx.register_image_gen_provider(...)` — 将其注册到 `agent/image_gen_registry.py` 中的注册表。活跃 provider 由 `config.yaml` 中的 `image_gen.provider` 指定；`hermes tools` 会引导用户完成选择。
+每个插件的 `register(ctx)` 函数调用 `ctx.register_image_gen_provider(...)` — 将其注册到 `agent/image_gen_registry.py` 中的注册表。活跃 provider 由 `config.yaml` 中的 `image_gen.provider` 指定；`lydia native` 会引导用户完成选择。
 
-`image_generate` 工具包装器向注册表请求活跃 provider 并分发调用。若未注册任何 provider，工具会显示一条有用的错误信息，指引用户使用 `hermes tools`。
+`image_generate` 工具包装器向注册表请求活跃 provider 并分发调用。若未注册任何 provider，工具会显示一条有用的错误信息，指引用户使用 `lydia native`。
 
 ## 目录结构
 
@@ -61,7 +61,7 @@ class MyBackendImageGenProvider(ImageGenProvider):
 
     @property
     def display_name(self) -> str:
-        # Human label shown in `hermes tools`. Defaults to name.title() if omitted.
+        # Human label shown in `lydia native`. Defaults to name.title() if omitted.
         return "My Backend"
 
     def is_available(self) -> bool:
@@ -76,7 +76,7 @@ class MyBackendImageGenProvider(ImageGenProvider):
         return True
 
     def list_models(self) -> List[Dict[str, Any]]:
-        # Catalog shown in `hermes tools` model picker.
+        # Catalog shown in `lydia native` model picker.
         return [
             {
                 "id": "my-model-fast",
@@ -98,7 +98,7 @@ class MyBackendImageGenProvider(ImageGenProvider):
         return "my-model-fast"
 
     def get_setup_schema(self) -> Dict[str, Any]:
-        # Metadata for the `hermes tools` picker — keys to prompt for at setup.
+        # Metadata for the `lydia native` picker — keys to prompt for at setup.
         return {
             "name": "My Backend",
             "badge": "paid",        # optional; shown as a short tag in the picker
@@ -200,9 +200,9 @@ requires_env:
 | 成员 | 必须 | 默认值 | 用途 |
 |---|---|---|---|
 | `name` | ✅ | — | 在 `image_gen.provider` 配置中使用的稳定 id |
-| `display_name` | — | `name.title()` | 在 `hermes tools` 中显示的标签 |
+| `display_name` | — | `name.title()` | 在 `lydia native` 中显示的标签 |
 | `is_available()` | — | `True` | 缺少凭据/依赖时的拦截门控 |
-| `list_models()` | — | `[]` | `hermes tools` 模型选择器的目录 |
+| `list_models()` | — | `[]` | `lydia native` 模型选择器的目录 |
 | `default_model()` | — | `list_models()` 的第一项 | 未配置模型时的回退 |
 | `get_setup_schema()` | — | 最小值 | 选择器元数据 + 环境变量提示 |
 | `generate(prompt, aspect_ratio, **kwargs)` | ✅ | — | 实际调用 |
@@ -263,7 +263,7 @@ echo "  provider: my-backend" >> $HERMES_HOME/config.yaml
 hermes -z "Generate an image of a corgi in a spacesuit"
 ```
 
-或交互式操作：`hermes tools` → "Image Generation" → 选择 `my-backend` → 根据提示输入 API key。
+或交互式操作：`lydia native` → "Image Generation" → 选择 `my-backend` → 根据提示输入 API key。
 
 ## 参考实现
 

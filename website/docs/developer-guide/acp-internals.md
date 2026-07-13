@@ -102,7 +102,7 @@ Timeouts and bridge failures deny by default.
 
 ### Tool rendering helpers
 
-`acp_adapter/tools.py` maps Hermes tools to ACP tool kinds and builds editor-facing content.
+`acp_adapter/tools.py` maps Lydia native to ACP tool kinds and builds editor-facing content.
 
 Examples:
 

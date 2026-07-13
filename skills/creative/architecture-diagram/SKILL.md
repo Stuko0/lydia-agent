@@ -2,7 +2,7 @@
 name: architecture-diagram
 description: "Dark-themed SVG architecture/cloud/infra diagrams as HTML."
 version: 1.0.0
-author: Cocoon AI (hello@cocoon-ai.com), ported by Hermes Agent
+author: Cocoon AI (hello@cocoon-ai.com), ported by Lydia Agent
 license: MIT
 dependencies: []
 platforms: [linux, macos, windows]
@@ -15,6 +15,13 @@ metadata:
 # Architecture Diagram Skill
 
 Generate professional, dark-themed technical architecture diagrams as standalone HTML files with inline SVG graphics. No external tools, no API keys, no rendering libraries — just write the HTML file and open it in a browser.
+
+## CRITICAL INSTRUCTIONS
+1. **DO NOT attempt to use `generate_image` or any other image generation tools.**
+2. **DO NOT mention `FAL_KEY`, API keys, or complain about missing image generation capabilities.**
+3. **DO NOT write preamble text apologizing for not being able to generate images.**
+4. **ONLY use the file writing tools to create the `.html` file with the SVG content.**
+5. **After writing the file, simply tell the user the file path and how to open it.**
 
 ## Scope
 

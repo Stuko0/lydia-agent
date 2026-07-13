@@ -1,15 +1,15 @@
 ---
 sidebar_position: 1
 title: "CLI Interface"
-description: "Master the Hermes Agent terminal interface — commands, keybindings, personalities, and more"
+description: "Master the Lydia Agent terminal interface — commands, keybindings, personalities, and more"
 ---
 
 # CLI Interface
 
-Hermes Agent's CLI is a full terminal user interface (TUI) — not a web UI. It features multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output. Built for people who live in the terminal.
+Lydia Agent's CLI is a full terminal user interface (TUI) — not a web UI. It features multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output. Built for people who live in the terminal.
 
 :::tip First-time setup
-One command — `hermes setup --portal` — and you're ready to `hermes chat`. See [Nous Portal](/integrations/nous-portal).
+One command — `lydia setup --portal` — and you're ready to `lydia chat`. See [Nous Portal](/integrations/nous-portal).
 :::
 
 :::tip
@@ -23,28 +23,28 @@ Hermes also ships a modern TUI with modal overlays, mouse selection, and non-blo
 hermes
 
 # Single query mode (non-interactive)
-hermes chat -q "Hello"
+lydia chat -q "Hello"
 
 # With a specific model
-hermes chat --model "anthropic/claude-sonnet-4"
+lydia chat --model "anthropic/claude-sonnet-4"
 
 # With a specific provider
-hermes chat --provider nous        # Use Nous Portal
-hermes chat --provider openrouter  # Force OpenRouter
+lydia chat --provider nous        # Use Nous Portal
+lydia chat --provider openrouter  # Force OpenRouter
 
 # With specific toolsets
-hermes chat --toolsets "web,terminal,skills"
+lydia chat --toolsets "web,terminal,skills"
 
 # Start with one or more skills preloaded
 hermes -s hermes-agent-dev,github-auth
-hermes chat -s github-pr-workflow -q "open a draft PR"
+lydia chat -s github-pr-workflow -q "open a draft PR"
 
 # Resume previous sessions
 hermes --continue             # Resume the most recent CLI session (-c)
 hermes --resume <session_id>  # Resume a specific session by ID (-r)
 
 # Verbose mode (debug output)
-hermes chat --verbose
+lydia chat --verbose
 
 # Isolated git worktree (for running multiple agents in parallel)
 hermes -w                         # Interactive mode in worktree
@@ -63,7 +63,7 @@ The welcome banner shows your model, terminal backend, working directory, availa
 A persistent status bar sits above the input area, updating in real time:
 
 ```
- ⚕ claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
+ 🌹 claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
 ```
 
 | Element | Description |
@@ -169,7 +169,7 @@ If you already know which skills you want active for the session, pass them at l
 
 ```bash
 hermes -s hermes-agent-dev,github-auth
-hermes chat -s github-pr-workflow -s github-auth
+lydia chat -s github-pr-workflow -s github-auth
 ```
 
 Hermes loads each named skill into the session prompt before the first turn. The same flag works in interactive mode and single-query mode.
@@ -286,7 +286,7 @@ The very first time you press Enter while Hermes is working, Hermes prints a one
 On Unix systems, press **`Ctrl+Z`** to suspend Hermes to the background — just like any terminal process. The shell prints a confirmation:
 
 ```
-Hermes Agent has been suspended. Run `fg` to bring Hermes Agent back.
+Lydia Agent has been suspended. Run `fg` to bring Lydia Agent back.
 ```
 
 Type `fg` in your shell to resume the session exactly where you left off. This is not supported on Windows.
@@ -411,7 +411,7 @@ Each `/background` prompt spawns a **completely separate agent session** in a da
 When a background task finishes, the result appears as a panel in your terminal:
 
 ```
-╭─ ⚕ Hermes (background #1) ──────────────────────────────────╮
+╭─ 🌹 Hermes (background #1) ──────────────────────────────────╮
 │ Found 3 errors in syslog from today:                         │
 │ 1. OOM killer invoked at 03:22 — killed process nginx        │
 │ 2. Disk I/O error on /dev/sda1 at 07:15                      │
@@ -440,5 +440,5 @@ By default, the CLI runs in quiet mode which:
 
 For debug output:
 ```bash
-hermes chat --verbose
+lydia chat --verbose
 ```

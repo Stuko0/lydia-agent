@@ -4,12 +4,12 @@ Optional Hermes observability plugin that maps Hermes observer hooks to
 NeMo Relay scopes, LLM spans, tool spans, marks, ATOF, and ATIF.
 
 NeMo Relay is NVIDIA's runtime layer for agent execution boundaries. It does
-not replace Hermes Agent's planner, tools, memory, model provider routing, or
+not replace Lydia Agent's planner, tools, memory, model provider routing, or
 CLI UX. Instead, this plugin lets Hermes emit NeMo Relay lifecycle events for
 the work Hermes already owns: sessions, turns, provider/API calls, tool calls,
 approval prompts, and delegated subagents.
 
-With this plugin enabled, Hermes Agent can:
+With this plugin enabled, Lydia Agent can:
 
 - Preserve Hermes execution as NeMo Relay scopes, LLM spans, tool spans, and
   mark events.
@@ -57,7 +57,7 @@ Runs started with `--ignore_user_config` skip the enabled-plugin state from
 loads `observability/nemo_relay` explicitly another way.
 
 `HERMES_HOME` is the Hermes profile/config home used by both
-`hermes plugins enable ...` and the later `hermes chat ...` run. If unset,
+`hermes plugins enable ...` and the later `lydia chat ...` run. If unset,
 Hermes uses the user's default home, usually `~/.hermes`. For isolated smoke
 tests, choose any writable temporary directory and use the same value for every
 command in that test:
@@ -65,7 +65,7 @@ command in that test:
 ```bash
 export HERMES_HOME=/tmp/hermes-nemo-relay-test
 hermes plugins enable observability/nemo_relay
-hermes chat --query 'Reply exactly ok' --provider custom --model qwen3.6:35b
+lydia chat --query 'Reply exactly ok' --provider custom --model qwen3.6:35b
 ```
 
 For source checkouts, make sure the `hermes` command you run is built from the
@@ -75,7 +75,7 @@ new bundled plugins from your working tree.
 ```bash
 uv sync --extra nemo-relay
 uv run hermes plugins enable observability/nemo_relay
-uv run hermes chat --query 'Reply exactly ok' --provider custom --model qwen3.6:35b
+uv run lydia chat --query 'Reply exactly ok' --provider custom --model qwen3.6:35b
 ```
 
 To ship the updated CLI into another environment, build and install a fresh
@@ -157,7 +157,7 @@ mode = "overwrite"
 enabled = true
 output_directory = ".nemo-relay/atif"
 filename_template = "trajectory-{session_id}.json"
-agent_name = "Hermes Agent"
+agent_name = "Lydia Agent"
 agent_version = "local"
 ```
 
@@ -236,11 +236,11 @@ export HERMES_NEMO_RELAY_ATOF_MODE=overwrite
 export HERMES_NEMO_RELAY_ATIF_ENABLED=1
 export HERMES_NEMO_RELAY_ATIF_OUTPUT_DIRECTORY=/tmp/hermes-nemo-relay-docs/subagent/atif
 export HERMES_NEMO_RELAY_ATIF_FILENAME_TEMPLATE='nested-subagent-atif-{session_id}.json'
-export HERMES_NEMO_RELAY_ATIF_AGENT_NAME='Hermes Agent E2E'
+export HERMES_NEMO_RELAY_ATIF_AGENT_NAME='Lydia Agent E2E'
 export HERMES_NEMO_RELAY_ATIF_AGENT_VERSION=docs-example
 export HERMES_NEMO_RELAY_ATIF_SUBAGENT_EXPORT_MODE=all
 
-hermes chat \
+lydia chat \
   --query 'Use delegate_task exactly once. Ask the child subagent to use the terminal tool exactly once to run printf docs_nested_leaf_function. After the child returns, reply with exactly: parent received nested subagent result.' \
   --provider custom \
   --model qwen3.6:35b \
@@ -272,7 +272,7 @@ Sanitized ATIF excerpt:
 {
   "schema_version": "ATIF-v1.7",
   "session_id": "docs-parent-session",
-  "agent": {"name": "Hermes Agent E2E", "version": "docs-example", "model_name": "qwen3.6:35b"},
+  "agent": {"name": "Lydia Agent E2E", "version": "docs-example", "model_name": "qwen3.6:35b"},
   "steps": [
     {
       "source": "agent",
@@ -322,10 +322,10 @@ export HERMES_NEMO_RELAY_ATOF_MODE=overwrite
 export HERMES_NEMO_RELAY_ATIF_ENABLED=1
 export HERMES_NEMO_RELAY_ATIF_OUTPUT_DIRECTORY=/tmp/hermes-nemo-relay-docs/parallel/atif
 export HERMES_NEMO_RELAY_ATIF_FILENAME_TEMPLATE='parallel-tools-atif-{session_id}.json'
-export HERMES_NEMO_RELAY_ATIF_AGENT_NAME='Hermes Agent E2E'
+export HERMES_NEMO_RELAY_ATIF_AGENT_NAME='Lydia Agent E2E'
 export HERMES_NEMO_RELAY_ATIF_AGENT_VERSION=docs-example
 
-hermes chat \
+lydia chat \
   --query 'Use exactly two read_file tool calls in the same assistant message. Read alpha.txt and beta.txt. Do not call terminal. After both tool results are available, reply with exactly: parallel tools complete.' \
   --provider custom \
   --model qwen3.6:35b \
@@ -358,7 +358,7 @@ Sanitized ATIF excerpt:
 {
   "schema_version": "ATIF-v1.7",
   "session_id": "docs-parallel-session",
-  "agent": {"name": "Hermes Agent E2E", "version": "docs-example", "model_name": "qwen3.6:35b"},
+  "agent": {"name": "Lydia Agent E2E", "version": "docs-example", "model_name": "qwen3.6:35b"},
   "steps": [
     {
       "source": "agent",
@@ -496,7 +496,7 @@ TOML
 
 export HERMES_NEMO_RELAY_PLUGINS_TOML=/tmp/hermes-middleware-test/nemo-relay/plugins.toml
 
-hermes chat \
+lydia chat \
   --query 'Use the terminal tool exactly once to run printf middleware_execution_ok. Then reply with exactly the command output.' \
   --provider custom \
   --model qwen3.6:35b \

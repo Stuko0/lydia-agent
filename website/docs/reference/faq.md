@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "FAQ & Troubleshooting"
-description: "Frequently asked questions and solutions to common issues with Hermes Agent"
+description: "Frequently asked questions and solutions to common issues with Lydia Agent"
 ---
 
 # FAQ & Troubleshooting
@@ -14,7 +14,7 @@ Quick answers and fixes for the most common questions and issues.
 
 ### What LLM providers work with Hermes?
 
-Hermes Agent works with any OpenAI-compatible API. Supported providers include:
+Lydia Agent works with any OpenAI-compatible API. Supported providers include:
 
 - **[OpenRouter](https://openrouter.ai/)** — access hundreds of models through one API key (recommended for flexibility)
 - **[Nous Portal](/integrations/nous-portal)** — Nous Research's subscription gateway — 300+ models plus web/image/TTS/browser through one OAuth login (recommended for newcomers)
@@ -26,7 +26,7 @@ Hermes Agent works with any OpenAI-compatible API. Supported providers include:
 - **MiniMax** — global and China endpoints
 - **Local models** — via [Ollama](https://ollama.com/), [vLLM](https://docs.vllm.ai/), [llama.cpp](https://github.com/ggerganov/llama.cpp), [SGLang](https://github.com/sgl-project/sglang), or any OpenAI-compatible server
 
-Set your provider with `hermes model` or by editing `~/.hermes/.env`. See the [Environment Variables](./environment-variables.md) reference for all provider keys.
+Set your provider with `lydia model` or by editing `~/.hermes/.env`. See the [Environment Variables](./environment-variables.md) reference for all provider keys.
 
 ### Does it work on Windows/Android/Termux/my plataform??
 See **[Platform Support](../getting-started/platform-support.md)** for the full platform availability matrix.
@@ -51,14 +51,14 @@ See:
 
 ### Is my data sent anywhere?
 
-API calls go **only to the LLM provider you configure** (e.g., OpenRouter, your local Ollama instance). Hermes Agent does not collect telemetry, usage data, or analytics. Your conversations, memory, and skills are stored locally in `~/.hermes/`.
+API calls go **only to the LLM provider you configure** (e.g., OpenRouter, your local Ollama instance). Lydia Agent does not collect telemetry, usage data, or analytics. Your conversations, memory, and skills are stored locally in `~/.hermes/`.
 
 ### Can I use it offline / with local models?
 
-Yes. Run `hermes model`, select **Custom endpoint**, and enter your server's URL:
+Yes. Run `lydia model`, select **Custom endpoint**, and enter your server's URL:
 
 ```bash
-hermes model
+lydia model
 # Select: Custom endpoint (enter URL manually)
 # API base URL: http://localhost:11434/v1
 # API key: ollama
@@ -89,11 +89,11 @@ Hermes auto-detects local endpoints and relaxes streaming timeouts (read timeout
 
 ### How much does it cost?
 
-Hermes Agent itself is **free and open-source** (MIT license). You pay only for the LLM API usage from your chosen provider. Local models are completely free to run.
+Lydia Agent itself is **free and open-source** (MIT license). You pay only for the LLM API usage from your chosen provider. Local models are completely free to run.
 
 ### Can multiple people use one instance?
 
-Yes. The [messaging gateway](../user-guide/messaging/index.md) lets multiple users interact with the same Hermes Agent instance via Telegram, Discord, Slack, WhatsApp, or Home Assistant. Access is controlled through allowlists (specific user IDs) and DM pairing (first user to message claims access).
+Yes. The [messaging gateway](../user-guide/messaging/index.md) lets multiple users interact with the same Lydia Agent instance via Telegram, Discord, Slack, WhatsApp, or Home Assistant. Access is controlled through allowlists (specific user IDs) and DM pairing (first user to message claims access).
 
 ### What's the difference between memory and skills?
 
@@ -217,24 +217,24 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 **Cause:** `/model` (inside a chat session) can only switch between providers you've **already configured**. If you've only set up OpenRouter, that's all `/model` will show.
 
-**Solution:** Exit your session and use `hermes model` from your terminal to add new providers:
+**Solution:** Exit your session and use `lydia model` from your terminal to add new providers:
 
 ```bash
 # Exit the Hermes chat session first (Ctrl+C or /quit)
 
 # Run the full provider setup wizard
-hermes model
+lydia model
 
 # This lets you: add providers, run OAuth, enter API keys, configure endpoints
 ```
 
-After adding a new provider via `hermes model`, start a new chat session — `/model` will now show all your configured providers.
+After adding a new provider via `lydia model`, start a new chat session — `/model` will now show all your configured providers.
 
 :::tip Quick reference
 | Want to... | Use |
 |-----------|-----|
-| Add a new provider | `hermes model` (from terminal) |
-| Enter/change API keys | `hermes model` (from terminal) |
+| Add a new provider | `lydia model` (from terminal) |
+| Enter/change API keys | `lydia model` (from terminal) |
 | Switch model mid-session | `/model <name>` (inside session) |
 | Switch to different configured provider | `/model provider:model` (inside session) |
 :::
@@ -246,13 +246,13 @@ After adding a new provider via `hermes model`, start a new chat session — `/m
 **Solution:**
 ```bash
 # Check your configuration
-hermes config show
+lydia config show
 
 # Re-configure your provider
-hermes model
+lydia model
 
 # Or set directly
-hermes config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
+lydia config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 ```
 
 :::warning
@@ -266,13 +266,13 @@ Make sure the key matches the provider. An OpenAI key won't work with OpenRouter
 **Solution:**
 ```bash
 # List available models for your provider
-hermes model
+lydia model
 
 # Set a valid model
-hermes config set HERMES_MODEL anthropic/claude-opus-4.7
+lydia config set HERMES_MODEL anthropic/claude-opus-4.7
 
 # Or specify per-session
-hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
+lydia chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 ```
 
 #### Rate limiting (429 errors)
@@ -282,7 +282,7 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 **Solution:** Wait a moment and retry. For sustained usage, consider:
 - Upgrading your provider plan
 - Switching to a different model or provider
-- Using `hermes chat --provider <alternative>` to route to a different backend
+- Using `lydia chat --provider <alternative>` to route to a different backend
 
 #### Context length exceeded
 
@@ -294,10 +294,10 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 /compress
 
 # Or start a fresh session
-hermes chat
+lydia chat
 
 # Use a model with a larger context window
-hermes chat --model openrouter/google/gemini-3-flash-preview
+lydia chat --model openrouter/google/gemini-3-flash-preview
 ```
 
 If this happens on the first long conversation, Hermes may have the wrong context length for your model. Check what it detected:
@@ -349,7 +349,7 @@ This is working as intended — Hermes never silently runs destructive commands.
 **Solution:**
 - Avoid `sudo` in messaging — ask the agent to find alternatives
 - If you must use `sudo`, configure passwordless sudo for specific commands in `/etc/sudoers`
-- Or switch to the terminal interface for administrative tasks: `hermes chat`
+- Or switch to the terminal interface for administrative tasks: `lydia chat`
 
 #### Docker backend not connecting
 
@@ -424,7 +424,7 @@ cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"  # Telegram, Disco
 lsof -i :8080
 
 # Verify configuration
-hermes config show
+lydia config show
 ```
 
 #### WSL: Gateway keeps disconnecting or `hermes gateway start` fails
@@ -489,8 +489,8 @@ You can verify the plist has the correct PATH:
 **Cause:** Large model, distant API server, or heavy system prompt with many tools.
 
 **Solution:**
-- Try a faster/smaller model: `hermes chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
-- Reduce active toolsets: `hermes chat -t "terminal"`
+- Try a faster/smaller model: `lydia chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
+- Reduce active toolsets: `lydia chat -t "terminal"`
 - Check your network latency to the provider
 - For local models, ensure you have enough GPU VRAM
 
@@ -521,10 +521,10 @@ Use `/compress` regularly during long sessions. It summarizes the conversation h
 /compress
 
 # Start a new session with a reference to the old one
-hermes chat
+lydia chat
 
 # Resume a specific session later if needed
-hermes chat --continue
+lydia chat --continue
 ```
 
 ---
@@ -569,10 +569,10 @@ mcp_servers:
 
 ```bash
 # Verify MCP servers are configured
-hermes config show | grep -A 12 mcp_servers
+lydia config show | grep -A 12 mcp_servers
 
 # Restart Hermes or reload MCP after config changes
-hermes chat
+lydia chat
 ```
 
 See also:
@@ -609,9 +609,9 @@ No. Each messaging platform (Telegram, Discord, etc.) requires exclusive access 
 
 No. Each profile has its own memory store, session database, and skills directory. They are completely isolated. If you want to start a new profile with existing memories and sessions, use `hermes profile create newname --clone-all` to copy everything from the current profile, or add `--clone-from <profile>` to copy from a specific source profile.
 
-### What happens when I run `hermes update`?
+### What happens when I run `lydia update`?
 
-`hermes update` pulls the latest code and reinstalls dependencies **once** (not per-profile). It then syncs updated skills to all profiles automatically. You only need to run `hermes update` once — it covers every profile on the machine.
+`lydia update` pulls the latest code and reinstalls dependencies **once** (not per-profile). It then syncs updated skills to all profiles automatically. You only need to run `lydia update` once — it covers every profile on the machine.
 
 
 ### How many profiles can I run?
@@ -730,7 +730,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
 
 **Solution:**
 
-1. Install Hermes Agent on the new machine:
+1. Install Lydia Agent on the new machine:
    ```bash
    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
    ```
@@ -750,7 +750,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
    hermes import ~/hermes-backup-<timestamp>.zip
    ```
 
-4. On the new machine, run `hermes setup` to verify API keys and provider config are working.
+4. On the new machine, run `lydia setup` to verify API keys and provider config are working.
 
 ### Moving a single profile to another machine
 
@@ -819,13 +819,13 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 **Solution:**
 ```bash
 # Check what model and provider are configured
-hermes config show | head -20
+lydia config show | head -20
 
 # Re-run model selection
-hermes model
+lydia model
 
 # Or test with a known-good model
-hermes chat -q "hello" --model anthropic/claude-opus-4.7
+lydia chat -q "hello" --model anthropic/claude-opus-4.7
 ```
 
 If using OpenRouter, make sure your API key has credits. A 400 from OpenRouter often means the model requires a paid plan or the model ID has a typo.

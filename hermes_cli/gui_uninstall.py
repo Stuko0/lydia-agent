@@ -76,15 +76,15 @@ def desktop_userdata_dir() -> Path:
     """
     home = Path.home()
     if sys.platform == "darwin":
-        return home / "Library" / "Application Support" / "Hermes"
+        return home / "Library" / "Application Support" / "Lydia"
     if sys.platform == "win32":
         appdata = os.environ.get("APPDATA")
         base = Path(appdata) if appdata else (home / "AppData" / "Roaming")
-        return base / "Hermes"
+        return base / "Lydia"
     # Linux / other POSIX — XDG config home.
     xdg = os.environ.get("XDG_CONFIG_HOME")
     base = Path(xdg) if xdg else (home / ".config")
-    return base / "Hermes"
+    return base / "Lydia"
 
 
 def source_built_gui_artifacts(hermes_home: Path) -> "list[Path]":
@@ -119,22 +119,22 @@ def packaged_gui_app_paths() -> "list[Path]":
     paths: list[Path] = []
     if sys.platform == "darwin":
         paths += [
-            Path("/Applications/Hermes.app"),
-            home / "Applications" / "Hermes.app",
+            Path("/Applications/Lydia.app"),
+            home / "Applications" / "Lydia.app",
         ]
     elif sys.platform == "win32":
         local = os.environ.get("LOCALAPPDATA")
         local_base = Path(local) if local else (home / "AppData" / "Local")
         paths += [
             # NSIS per-user install (perMachine=false → Programs\Hermes).
-            local_base / "Programs" / "Hermes",
+            local_base / "Programs" / "Lydia",
             # Older / alternate layout some builds used.
             local_base / "hermes-desktop",
         ]
         program_files = os.environ.get("ProgramFiles")
         if program_files:
             # NSIS per-machine fallback (needs admin to remove).
-            paths.append(Path(program_files) / "Hermes")
+            paths.append(Path(program_files) / "Lydia")
     else:
         # Linux: AppImage is a single file the user placed somewhere; we can
         # only reliably clean the desktop entry + icon we know the name of.
@@ -145,8 +145,8 @@ def packaged_gui_app_paths() -> "list[Path]":
         data = os.environ.get("XDG_DATA_HOME")
         data_base = Path(data) if data else (home / ".local" / "share")
         paths += [
-            data_base / "applications" / "hermes.desktop",
-            data_base / "applications" / "Hermes.desktop",
+            data_base / "applications" / "lydia.desktop",
+            data_base / "applications" / "Lydia.desktop",
         ]
     return paths
 

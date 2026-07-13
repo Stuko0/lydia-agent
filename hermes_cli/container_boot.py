@@ -154,7 +154,7 @@ def reconcile_profile_gateways(
             if not entry.is_dir():
                 continue
             # SOUL.md is always seeded by `hermes profile create` (config.yaml
-            # is not — that comes later via `hermes setup`). Use it as the
+            # is not — that comes later via `lydia setup`). Use it as the
             # "real profile" marker so stray dirs (backups, manual mkdir)
             # aren't picked up.
             if not (entry / "SOUL.md").exists():

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 10
 title: "模型提供商插件"
-description: "如何为 Hermes Agent 构建模型提供商（推理后端）插件"
+description: "如何为 Lydia Agent 构建模型提供商（推理后端）插件"
 ---
 
 # 构建模型提供商插件
@@ -75,9 +75,9 @@ author: Your Name
 |---|---|---|
 | 凭据解析 | `hermes_cli/auth.py` | `PROVIDER_REGISTRY["acme-inference"]` 从 profile 填充 |
 | `--provider` CLI 标志 | `hermes_cli/main.py` | 接受 `acme-inference` |
-| `hermes model` 选择器 | `hermes_cli/models.py` | 出现在 `CANONICAL_PROVIDERS` 中，从 `{base_url}/models` 获取模型列表 |
-| `hermes doctor` | `hermes_cli/doctor.py` | 对 `ACME_API_KEY` 及 `{base_url}/models` 进行健康检查 |
-| `hermes setup` | `hermes_cli/config.py` | `ACME_API_KEY` 出现在 `OPTIONAL_ENV_VARS` 和设置向导中 |
+| `lydia model` 选择器 | `hermes_cli/models.py` | 出现在 `CANONICAL_PROVIDERS` 中，从 `{base_url}/models` 获取模型列表 |
+| `lydia doctor` | `hermes_cli/doctor.py` | 对 `ACME_API_KEY` 及 `{base_url}/models` 进行健康检查 |
+| `lydia setup` | `hermes_cli/config.py` | `ACME_API_KEY` 出现在 `OPTIONAL_ENV_VARS` 和设置向导中 |
 | URL 反向映射 | `agent/model_metadata.py` | 主机名 → 提供商名称，用于自动检测 |
 | 辅助模型 | `agent/auxiliary_client.py` | 使用 `default_aux_model` 进行压缩/摘要 |
 | 运行时解析 | `hermes_cli/runtime_provider.py` | 返回正确的 `base_url`、`api_key`、`api_mode` |
@@ -92,7 +92,7 @@ author: Your Name
 | `name` | str | 规范 ID——与 `config.yaml` 中的 `model.provider` 及 `--provider` 标志匹配 |
 | `aliases` | `tuple[str, ...]` | 由 `get_provider_profile()` 解析的别名（如 `grok` → `xai`） |
 | `api_mode` | str | `chat_completions` \| `codex_responses` \| `anthropic_messages` \| `bedrock_converse` |
-| `display_name` | str | 在 `hermes model` 选择器中显示的人类可读标签 |
+| `display_name` | str | 在 `lydia model` 选择器中显示的人类可读标签 |
 | `description` | str | 选择器副标题 |
 | `signup_url` | str | 首次运行设置时显示（"在此获取 API key"） |
 | `env_vars` | `tuple[str, ...]` | 按优先级排列的 API key 环境变量；最后一个 `*_BASE_URL` 条目用作用户 base URL 覆盖 |
@@ -206,7 +206,7 @@ register_provider(ProviderProfile(
 提供商发现是**懒加载**的——由进程中首次调用 `get_provider_profile()` 或 `list_providers()` 触发。实际上这在启动早期就会发生（`auth.py` 模块加载时会主动扩展 `PROVIDER_REGISTRY`）。若需验证插件是否已加载，运行：
 
 ```bash
-hermes doctor
+lydia doctor
 ```
 
 ——成功的 `auth_type="api_key"` profile 会出现在 Provider Connectivity 部分，并附带 `/models` 探测结果。

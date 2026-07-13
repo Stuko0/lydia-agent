@@ -10,7 +10,7 @@ Hermes can optionally hand `openai/*` and `openai-codex/*` turns to the [Codex C
 This is **opt-in only**. Default Hermes behavior is unchanged unless you flip the flag. Hermes never auto-routes you onto this runtime.
 
 :::tip
-Not using OpenAI Codex? `hermes setup --portal` configures a non-Codex backend with Claude/Gemini/etc. in one step. See [Nous Portal](/integrations/nous-portal).
+Not using OpenAI Codex? `lydia setup --portal` configures a non-Codex backend with Claude/Gemini/etc. in one step. See [Nous Portal](/integrations/nous-portal).
 :::
 
 ## Why
@@ -70,7 +70,7 @@ When the model wants one of these, codex spawns the `hermes_tools_mcp_server` su
 
 ### What's NOT available on this runtime
 
-These four Hermes tools require the running AIAgent context (mid-loop state) to dispatch, and a stateless MCP callback can't drive them. Switch back to the default runtime (`/codex-runtime auto`) when you need any of them:
+These four Lydia native require the running AIAgent context (mid-loop state) to dispatch, and a stateless MCP callback can't drive them. Switch back to the default runtime (`/codex-runtime auto`) when you need any of them:
 
 - **`delegate_task`** — spawn subagents
 - **`memory`** — Hermes' persistent memory store
@@ -87,7 +87,7 @@ These four Hermes tools require the running AIAgent context (mid-loop state) to 
 
 ### Kanban (multi-agent worktree dispatch)
 
-**Works on this runtime, with one subtle dependency.** The kanban dispatcher spawns each worker as a separate `hermes chat -q` subprocess that reads the user's config — which means if `model.openai_runtime: codex_app_server` is set globally, workers also come up on the codex runtime.
+**Works on this runtime, with one subtle dependency.** The kanban dispatcher spawns each worker as a separate `lydia chat -q` subprocess that reads the user's config — which means if `model.openai_runtime: codex_app_server` is set globally, workers also come up on the codex runtime.
 
 What works inside a codex-runtime worker:
 - Codex's full toolset (shell, apply_patch, update_plan, view_image, web_search) — the worker does its actual task work natively
@@ -301,7 +301,7 @@ If you want per-profile Codex isolation (separate auth, separate installed plugi
 
 ```bash
 # Inside the work profile, you might wrap hermes:
-CODEX_HOME=~/.hermes/profiles/work/codex hermes chat
+CODEX_HOME=~/.hermes/profiles/work/codex lydia chat
 ```
 
 You'll need to re-run `codex login` once with that `CODEX_HOME` set so the OAuth tokens land in the profile-scoped location. After that, `hermes -p work` will operate on isolated Codex state.
@@ -377,7 +377,7 @@ Effective on the next session. The Codex managed block stays in `~/.codex/config
 
 ## Limitations
 
-This runtime is **opt-in beta**. Working as of Hermes Agent 2026.5 + Codex CLI 0.130.0:
+This runtime is **opt-in beta**. Working as of Lydia Agent 2026.5 + Codex CLI 0.130.0:
 
 - Multi-turn conversations
 - `commandExecution` and `fileChange` (apply_patch) approvals via Hermes UI

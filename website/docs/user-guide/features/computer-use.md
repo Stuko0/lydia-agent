@@ -5,7 +5,7 @@ sidebar_position: 16
 
 # Computer Use
 
-Hermes Agent can drive your desktop — clicking, typing, scrolling,
+Lydia Agent can drive your desktop — clicking, typing, scrolling,
 dragging — in the **background** on **macOS, Windows, and Linux**. Your
 cursor doesn't move, keyboard focus doesn't change, and your virtual
 desktops / Spaces don't switch on you. You and the agent co-work on the
@@ -55,7 +55,7 @@ status` to verify the install.
 
 **Option 2: enable the toolset interactively.**
 
-1. Run `hermes tools`, pick `🖱️  Computer Use (macOS/Windows/Linux)`.
+1. Run `lydia native`, pick `🖱️  Computer Use (macOS/Windows/Linux)`.
 2. The setup runs the upstream installer (same as Option 1).
 
 After installing, regardless of which path you took, grant the
@@ -258,7 +258,7 @@ of screenshot context, not ~600K.
 - **Windows: elevated (admin) windows can't be driven from a normal
   agent.** Windows UIPI (User Interface Privilege Isolation) enforces
   integrity-level boundaries: a Medium-integrity process (the default
-  Hermes agent) cannot enumerate the UIA tree of, or inject mouse input
+  Lydia Agent) cannot enumerate the UIA tree of, or inject mouse input
   into, a window owned by a High-integrity (Administrator) process.
   Symptom: `capture(mode='som')` returns 0 elements and `click(...)`
   reports success while doing nothing, even though the screenshot
@@ -266,7 +266,7 @@ of screenshot context, not ~600K.
   events partially bypass UIPI, so Tab / Enter can still navigate an
   elevated dialog. This is an OS constraint, not a cua-driver bug — it
   affects every Windows automation stack. To drive elevated windows,
-  run the Hermes agent itself at High integrity (launch from an
+  run the Lydia Agent itself at High integrity (launch from an
   elevated terminal); otherwise target non-elevated windows.
 - **Platform-specific deployment gotchas:**
   - **macOS** uses private SkyLight SPIs. Apple can change them in any
@@ -423,7 +423,7 @@ Specific failure modes the doctor doesn't catch:
 
 **`computer_use backend unavailable: cua-driver is not installed`** —
 Run `hermes computer-use install` to fetch the cua-driver binary, or
-run `hermes tools` and enable the Computer Use toolset.
+run `lydia native` and enable the Computer Use toolset.
 
 **Clicks seem to have no effect** — Capture and verify. A modal you
 didn't see may be blocking input. Dismiss it with `escape` or the close

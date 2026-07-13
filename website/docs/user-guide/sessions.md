@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Sessions
 
-Hermes Agent automatically saves every conversation as a session. Sessions enable conversation resume, cross-session search, and full conversation history management.
+Lydia Agent automatically saves every conversation as a session. Sessions enable conversation resume, cross-session search, and full conversation history management.
 
 ## How Sessions Work
 
@@ -72,7 +72,7 @@ Each session is tagged with its source platform:
 
 | Source | Description |
 |--------|-------------|
-| `cli` | Interactive CLI (`hermes` or `hermes chat`) |
+| `cli` | Interactive CLI (`hermes` or `lydia chat`) |
 | `telegram` | Telegram messenger |
 | `discord` | Discord server/DM |
 | `slack` | Slack workspace |
@@ -107,8 +107,8 @@ hermes --continue
 hermes -c
 
 # Or with the chat subcommand
-hermes chat --continue
-hermes chat -c
+lydia chat --continue
+lydia chat -c
 ```
 
 This looks up the most recent `cli` session from the SQLite database and loads its full conversation history.
@@ -137,7 +137,7 @@ hermes -r 20250305_091523_a1b2c3d4
 hermes --resume "refactoring auth"
 
 # Or with the chat subcommand
-hermes chat --resume 20250305_091523_a1b2c3d4
+lydia chat --resume 20250305_091523_a1b2c3d4
 ```
 
 Session IDs are shown when you exit a CLI session, and can be found with `hermes sessions list`.

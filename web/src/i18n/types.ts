@@ -148,11 +148,11 @@ export interface Translations {
     starting: string;
     startedInBackground: string;
     stopped: string;
-    updateHermes: string;
-    updateHermesConfirmMessage?: string;
-    updateHermesConfirmNow?: string;
-    updateHermesConfirmTitle?: string;
-    updatingHermes: string;
+    updateLydia: string;
+    updateLydiaConfirmMessage?: string;
+    updateLydiaConfirmNow?: string;
+    updateLydiaConfirmTitle?: string;
+    updatingLydia: string;
     waitingForOutput: string;
   };
 
@@ -574,7 +574,7 @@ export interface Translations {
     fontMono?: string;
   };
 
-  // ── Achievements plugin (plugins/hermes-achievements) ──
+  // ── Achievements plugin (plugins/lydia-achievements) ──
   achievements: {
     hero: {
       kicker: string;

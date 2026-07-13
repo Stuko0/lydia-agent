@@ -1135,7 +1135,7 @@ export default function SessionsPage() {
         const res = await fetch(api.exportSessionUrl(id), {
           credentials: "include",
           headers: {
-            "X-Hermes-Session-Token":
+            "X-Lydia-Session-Token":
               (window as unknown as { __HERMES_SESSION_TOKEN__?: string })
                 .__HERMES_SESSION_TOKEN__ ?? "",
           },
@@ -1421,7 +1421,7 @@ export default function SessionsPage() {
               <span className="text-xs font-mondwest tracking-[0.12em] truncate">
                 {activeAction === "restart"
                   ? t.status.restartGateway
-                  : t.status.updateHermes}
+                  : t.status.updateLydia}
               </span>
 
               <Badge

@@ -8,7 +8,7 @@ as ``HERMES_DASHBOARD_OAUTH_CLIENT_ID``.
 This command:
   1. Resolves a fresh Nous Portal access token from the existing login
      (``~/.hermes/auth.json``), refreshing it if needed. Fails fast with a
-     "run `hermes setup`" hint when the user isn't logged in.
+     "run `lydia setup`" hint when the user isn't logged in.
   2. POSTs to ``{portal}/api/oauth/self-hosted-client`` with that bearer
      token, which creates a SELF_HOSTED agent client owned by the caller's
      org and returns the fully-formed ``agent:{id}`` client_id.
@@ -251,7 +251,7 @@ def cmd_dashboard_register(args) -> None:
     except AuthError as exc:
         if getattr(exc, "relogin_required", False):
             print("✗ You're not logged into Nous Portal.")
-            print("  Run `hermes setup` (or `hermes auth add nous`) first, then retry.")
+            print("  Run `lydia setup` (or `hermes auth add nous`) first, then retry.")
         else:
             print(f"✗ Could not resolve a Nous Portal access token: {exc}")
         sys.exit(1)

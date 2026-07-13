@@ -1,14 +1,14 @@
 ---
-title: "Openclaw Migration — 将用户的 OpenClaw 自定义配置迁移到 Hermes Agent"
+title: "Openclaw Migration — 将用户的 OpenClaw 自定义配置迁移到 Lydia Agent"
 sidebar_label: "Openclaw Migration"
-description: "将用户的 OpenClaw 自定义配置迁移到 Hermes Agent"
+description: "将用户的 OpenClaw 自定义配置迁移到 Lydia Agent"
 ---
 
 {/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Openclaw Migration
 
-将用户的 OpenClaw 自定义配置迁移到 Hermes Agent。从 `~/.openclaw` 导入 Hermes 兼容的记忆、`SOUL.md`、命令白名单、用户技能及所选工作区资产，并精确报告无法迁移的内容及原因。
+将用户的 OpenClaw 自定义配置迁移到 Lydia Agent。从 `~/.openclaw` 导入 Hermes 兼容的记忆、`SOUL.md`、命令白名单、用户技能及所选工作区资产，并精确报告无法迁移的内容及原因。
 
 ## Skill 元数据
 
@@ -17,7 +17,7 @@ description: "将用户的 OpenClaw 自定义配置迁移到 Hermes Agent"
 | 来源 | 可选 — 通过 `hermes skills install official/migration/openclaw-migration` 安装 |
 | 路径 | `optional-skills/migration/openclaw-migration` |
 | 版本 | `1.0.0` |
-| 作者 | Hermes Agent (Nous Research) |
+| 作者 | Lydia Agent (Nous Research) |
 | 许可证 | MIT |
 | 平台 | linux, macos, windows |
 | 标签 | `Migration`, `OpenClaw`, `Hermes`, `Memory`, `Persona`, `Import` |
@@ -31,23 +31,23 @@ description: "将用户的 OpenClaw 自定义配置迁移到 Hermes Agent"
 
 # OpenClaw -> Hermes 迁移
 
-当用户希望以最少的手动清理将其 OpenClaw 配置迁移到 Hermes Agent 时，使用此 skill。
+当用户希望以最少的手动清理将其 OpenClaw 配置迁移到 Lydia Agent 时，使用此 skill。
 
 ## CLI 命令
 
 如需快速、非交互式迁移，使用内置 CLI 命令：
 
 ```bash
-hermes claw migrate              # Full interactive migration
-hermes claw migrate --dry-run    # Preview what would be migrated
-hermes claw migrate --preset user-data   # Migrate without secrets
-hermes claw migrate --overwrite  # Overwrite existing conflicts
-hermes claw migrate --source /custom/path/.openclaw  # Custom source
+lydia claw migrate              # Full interactive migration
+lydia claw migrate --dry-run    # Preview what would be migrated
+lydia claw migrate --preset user-data   # Migrate without secrets
+lydia claw migrate --overwrite  # Overwrite existing conflicts
+lydia claw migrate --source /custom/path/.openclaw  # Custom source
 ```
 
 CLI 命令运行与下文所述相同的迁移脚本。当需要交互式、引导式迁移并支持 dry-run（预览）和逐项冲突解决时，请通过 agent 使用此 skill。
 
-**首次设置：** `hermes setup` 向导会自动检测 `~/.openclaw`，并在配置开始前提供迁移选项。
+**首次设置：** `lydia setup` 向导会自动检测 `~/.openclaw`，并在配置开始前提供迁移选项。
 
 ## 此 skill 的功能
 

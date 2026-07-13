@@ -2,7 +2,7 @@
 sidebar_position: 12
 sidebar_label: "Built-in Plugins"
 title: "Built-in Plugins"
-description: "Plugins shipped with Hermes Agent that run automatically via lifecycle hooks — disk-cleanup and friends"
+description: "Plugins shipped with Lydia Agent that run automatically via lifecycle hooks — disk-cleanup and friends"
 ---
 
 # Built-in Plugins
@@ -149,7 +149,7 @@ The plugin is fail-open: no SDK installed, no credentials, or a transient Langfu
 **Setup (interactive — recommended):**
 
 ```bash
-hermes tools          # → Langfuse Observability → Cloud or Self-Hosted
+lydia native          # → Langfuse Observability → Cloud or Self-Hosted
 ```
 
 The wizard collects your keys, `pip install`s the `langfuse` SDK, and adds `observability/langfuse` to `plugins.enabled` for you. Restart Hermes and the next turn ships a trace.
@@ -178,13 +178,13 @@ HERMES_LANGFUSE_BASE_URL=https://cloud.langfuse.com   # or your self-hosted URL
 | `pre_tool_call` | Start a `tool` child observation with sanitized `args`. |
 | `post_tool_call` | Close the tool observation with sanitized `result`. `read_file` payloads get summarized (head + tail + omitted-line count) so a huge file read stays under `HERMES_LANGFUSE_MAX_CHARS`. |
 
-Session grouping keys off the Hermes session ID (or task ID for sub-agents) via `langfuse.propagate_attributes`, so everything in a single `hermes chat` session lives under one Langfuse session.
+Session grouping keys off the Hermes session ID (or task ID for sub-agents) via `langfuse.propagate_attributes`, so everything in a single `lydia chat` session lives under one Langfuse session.
 
 **Verify:**
 
 ```bash
 hermes plugins list                 # observability/langfuse should show "enabled"
-hermes chat -q "hello"              # check the Langfuse UI for a "Hermes turn" trace
+lydia chat -q "hello"              # check the Langfuse UI for a "Hermes turn" trace
 ```
 
 **Optional tuning** (in `.env`):
