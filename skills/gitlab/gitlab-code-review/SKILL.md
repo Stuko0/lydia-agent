@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [GitLab, Code-Review, Pull-Requests, Git, Quality]
     related_skills: [gitlab-auth, gitlab-mr-workflow]
 ---
@@ -28,8 +28,8 @@ if command -v glab &>/dev/null && glab auth status &>/dev/null; then
 else
   AUTH="git"
   if [ -z "$GITLAB_TOKEN" ]; then
-    if _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITLAB_TOKEN=" "$_hermes_env"; then
-      GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
+    if _lydia_env="${LYDIA_HOME:-$HOME/.lydia}/.env"; [ -f "$_lydia_env" ] && grep -q "^GITLAB_TOKEN=" "$_lydia_env"; then
+      GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_lydia_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
     elif grep -q "github.com" ~/.git-credentials 2>/dev/null; then
       GITLAB_TOKEN=$(grep "${GITLAB_HOST:-gitlab\.com}" ~/.git-credentials 2>/dev/null | head -1 | sed 's|https://[^:]*:\([^@]*\)@.*|\1|')
     fi
@@ -335,7 +335,7 @@ When the user asks you to "review MR #N", "look at this MR", or gives you an MR 
 ### Step 1: Set up environment
 
 ```bash
-source "${HERMES_HOME:-$HOME/.hermes}/skills/gitlab/gitlab-auth/scripts/gitlab-env.sh"
+source "${LYDIA_HOME:-$HOME/.lydia}/skills/gitlab/gitlab-auth/scripts/gitlab-env.sh"
 # Or run the inline setup block from the top of this skill
 ```
 

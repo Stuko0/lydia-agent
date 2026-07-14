@@ -6,7 +6,7 @@ All requests need: `-H "Authorization: token $GITEA_TOKEN"`
 
 Use the `tea-env.sh` helper to set `$GITEA_TOKEN`, `$TEA_OWNER`, `$TEA_REPO` automatically:
 ```bash
-source "${HERMES_HOME:-$HOME/.hermes}/skills/github/gitea-auth/scripts/tea-env.sh"
+source "${LYDIA_HOME:-$HOME/.lydia}/skills/github/gitea-auth/scripts/tea-env.sh"
 ```
 
 ## Repositories

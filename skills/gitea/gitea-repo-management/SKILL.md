@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [Gitea, Repositories, Git, Releases, Secrets, Configuration]
     related_skills: [gitea-auth, gitea-pr-workflow, gitea-issues]
 ---
@@ -27,8 +27,8 @@ if command -v tea &>/dev/null && tea logins list &>/dev/null; then
 else
   AUTH="git"
   if [ -z "$GITEA_TOKEN" ]; then
-    if _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITEA_TOKEN=" "$_hermes_env"; then
-      GITEA_TOKEN=$(grep "^GITEA_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
+    if _lydia_env="${LYDIA_HOME:-$HOME/.lydia}/.env"; [ -f "$_lydia_env" ] && grep -q "^GITEA_TOKEN=" "$_lydia_env"; then
+      GITEA_TOKEN=$(grep "^GITEA_TOKEN=" "$_lydia_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
     elif grep -q "github.com" ~/.git-credentials 2>/dev/null; then
       GITEA_TOKEN=$(grep "github.com" ~/.git-credentials 2>/dev/null | head -1 | sed 's|https://[^:]*:\([^@]*\)@.*|\1|')
     fi

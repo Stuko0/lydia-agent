@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [LOC, Code Analysis, pygount, Codebase, Metrics, Repository]
     related_skills: [gitlab-repo-management]
 prerequisites:
