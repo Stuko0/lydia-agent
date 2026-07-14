@@ -6,7 +6,7 @@ description: "Set up Lydia Agent as an email assistant via IMAP/SMTP"
 
 # Email Setup
 
-Hermes can receive and reply to emails using standard IMAP and SMTP protocols. Send an email to the agent's address and it replies in-thread — no special client or bot API needed. Works with Gmail, Outlook, Yahoo, Fastmail, or any provider that supports IMAP/SMTP.
+Lydia can receive and reply to emails using standard IMAP and SMTP protocols. Send an email to the agent's address and it replies in-thread — no special client or bot API needed. Works with Gmail, Outlook, Yahoo, Fastmail, or any provider that supports IMAP/SMTP.
 
 :::info Gateway adapter only: no external dependencies
 This page covers the Email gateway adapter, which uses Python's built-in `imaplib`, `smtplib`, and `email` modules. No additional packages or external services are required for this gateway path.
@@ -50,23 +50,23 @@ Most email providers support IMAP/SMTP. Check your provider's documentation for:
 
 ---
 
-## Step 1: Configure Hermes
+## Step 1: Configure Lydia
 
 The easiest way:
 
 ```bash
-hermes gateway setup
+lydia gateway setup
 ```
 
 Select **Email** from the platform menu. The wizard prompts for your email address, password, IMAP/SMTP hosts, and allowed senders.
 
 ### Manual Configuration
 
-Add to `~/.hermes/.env`:
+Add to `~/.lydia/.env`:
 
 ```bash
 # Required
-EMAIL_ADDRESS=hermes@gmail.com
+EMAIL_ADDRESS=lydia@gmail.com
 EMAIL_PASSWORD=abcd efgh ijkl mnop    # App password (not your regular password)
 EMAIL_IMAP_HOST=imap.gmail.com
 EMAIL_SMTP_HOST=smtp.gmail.com
@@ -86,9 +86,9 @@ EMAIL_HOME_ADDRESS=your@email.com      # Default delivery target for cron jobs
 ## Step 2: Start the Gateway
 
 ```bash
-hermes gateway              # Run in foreground
-hermes gateway install      # Install as a user service
-sudo hermes gateway install --system   # Linux only: boot-time system service
+lydia gateway              # Run in foreground
+lydia gateway install      # Install as a user service
+sudo lydia gateway install --system   # Linux only: boot-time system service
 ```
 
 On startup, the adapter:
@@ -150,7 +150,7 @@ Email access is stricter by default than chat-style platforms:
 4. **`platforms.email.unauthorized_dm_behavior: pair`** → unknown senders receive a pairing code
 
 :::warning
-**Use a dedicated inbox and configure `EMAIL_ALLOWED_USERS` for normal operation.** Email pairing is opt-in because shared inboxes often contain unrelated unread messages, and Hermes should not reply to those contacts by default.
+**Use a dedicated inbox and configure `EMAIL_ALLOWED_USERS` for normal operation.** Email pairing is opt-in because shared inboxes often contain unrelated unread messages, and Lydia should not reply to those contacts by default.
 :::
 
 ---
@@ -163,7 +163,7 @@ Email access is stricter by default than chat-style platforms:
 | **"SMTP connection failed"** at startup | Verify `EMAIL_SMTP_HOST` and `EMAIL_SMTP_PORT`. Check that your password is correct (use App Password for Gmail). |
 | **Messages not received** | Check `EMAIL_ALLOWED_USERS` includes the sender's email. Check spam folder — some providers flag automated replies. |
 | **"Authentication failed"** | For Gmail, you must use an App Password, not your regular password. Ensure 2FA is enabled first. |
-| **Duplicate replies** | Ensure only one gateway instance is running. Check `hermes gateway status`. |
+| **Duplicate replies** | Ensure only one gateway instance is running. Check `lydia gateway status`. |
 | **Slow response** | The default poll interval is 15 seconds. Reduce with `EMAIL_POLL_INTERVAL=5` for faster response (but more IMAP connections). |
 | **Replies not threading** | The adapter uses In-Reply-To headers. Some email clients (especially web-based) may not thread correctly with automated messages. |
 
@@ -177,7 +177,7 @@ Email access is stricter by default than chat-style platforms:
 
 - Use **App Passwords** instead of your main password (required for Gmail with 2FA)
 - Set `EMAIL_ALLOWED_USERS` to restrict who can interact with the agent
-- The password is stored in `~/.hermes/.env` — protect this file (`chmod 600`)
+- The password is stored in `~/.lydia/.env` — protect this file (`chmod 600`)
 - IMAP uses SSL (port 993) and SMTP uses STARTTLS (port 587) by default — connections are encrypted
 
 ---

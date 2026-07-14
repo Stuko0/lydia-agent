@@ -3,10 +3,10 @@ import { useState } from 'react'
 
 import { useI18n } from '@/i18n'
 import { currentPickerSelection } from '@/lib/model-status-label'
-import type { ModelOptionProvider, ModelOptionsResponse, ModelPricing } from '@/types/hermes'
+import type { ModelOptionProvider, ModelOptionsResponse, ModelPricing } from '@/types/lydia'
 
-import type { HermesGateway } from '../hermes'
-import { getGlobalModelOptions } from '../hermes'
+import type { LydiaGateway } from '../lydia'
+import { getGlobalModelOptions } from '../lydia'
 import { cn } from '../lib/utils'
 import { startManualOnboarding } from '../store/onboarding'
 
@@ -19,7 +19,7 @@ import { Skeleton } from './ui/skeleton'
 interface ModelPickerDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  gw?: HermesGateway
+  gw?: LydiaGateway
   sessionId?: string | null
   currentModel: string
   currentProvider: string

@@ -1,5 +1,4 @@
 [console_scripts]
-hermes = hermes_cli.main:main
-hermes-acp = acp_adapter.entry:main
-hermes-agent = run_agent:main
-lydia = hermes_cli.main:main
+lydia = lydia_cli.main:main
+lydia-acp = acp_adapter.entry:main
+lydia-agent = run_agent:main

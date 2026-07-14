@@ -411,10 +411,10 @@ class WhatsAppBehaviorMixin:
 # ---------------------------------------------------------------------------
 
 def resolve_whatsapp_bridge_dir() -> Path:
-    """Resolve the WhatsApp bridge directory, mirroring to HERMES_HOME if needed.
+    """Resolve the WhatsApp bridge directory, mirroring to LYDIA_HOME if needed.
 
-    When the install tree is read-only (e.g., Docker /opt/hermes), this function
-    mirrors the bridge source to a writable HERMES_HOME location and returns that
+    When the install tree is read-only (e.g., Docker /opt/lydia), this function
+    mirrors the bridge source to a writable LYDIA_HOME location and returns that
     path. This ensures npm install works in Docker environments.
 
     Returns the resolved bridge directory path.
@@ -423,12 +423,12 @@ def resolve_whatsapp_bridge_dir() -> Path:
     from pathlib import Path as _Path
 
     # Default location in install tree (may be read-only)
-    from hermes_constants import get_hermes_home
+    from lydia_constants import get_lydia_home
     install_bridge = _Path(__file__).resolve().parents[2] / "scripts" / "whatsapp-bridge"
 
-    # Try HERMES_HOME location first
-    hermes_home = get_hermes_home()
-    hermes_home_bridge = hermes_home / "scripts" / "whatsapp-bridge"
+    # Try LYDIA_HOME location first
+    lydia_home = get_lydia_home()
+    lydia_home_bridge = lydia_home / "scripts" / "whatsapp-bridge"
 
     # Check if install dir is writable
     try:
@@ -442,18 +442,18 @@ def resolve_whatsapp_bridge_dir() -> Path:
     if install_writable:
         return install_bridge
 
-    # Install dir is read-only, mirror to HERMES_HOME if needed
-    if hermes_home_bridge.exists():
-        return hermes_home_bridge
+    # Install dir is read-only, mirror to LYDIA_HOME if needed
+    if lydia_home_bridge.exists():
+        return lydia_home_bridge
 
-    # Mirror the bridge source to HERMES_HOME
+    # Mirror the bridge source to LYDIA_HOME
     try:
-        hermes_home_bridge.parent.mkdir(parents=True, exist_ok=True)
+        lydia_home_bridge.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(
             install_bridge,
-            hermes_home_bridge,
+            lydia_home_bridge,
             dirs_exist_ok=False,
         )
-        return hermes_home_bridge
+        return lydia_home_bridge
     except Exception:
         return install_bridge

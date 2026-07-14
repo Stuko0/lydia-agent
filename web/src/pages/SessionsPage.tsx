@@ -1136,8 +1136,8 @@ export default function SessionsPage() {
           credentials: "include",
           headers: {
             "X-Lydia-Session-Token":
-              (window as unknown as { __HERMES_SESSION_TOKEN__?: string })
-                .__HERMES_SESSION_TOKEN__ ?? "",
+              (window as unknown as { __LYDIA_SESSION_TOKEN__?: string })
+                .__LYDIA_SESSION_TOKEN__ ?? "",
           },
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

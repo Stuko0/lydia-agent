@@ -9,16 +9,16 @@ description: "How to build an image-generation backend plugin for Lydia Agent"
 Image-gen provider plugins register a backend that services every `image_generate` tool call — DALL·E, gpt-image, Grok, Flux, Imagen, Stable Diffusion, fal, Replicate, a local ComfyUI rig, anything. Built-in providers (OpenAI, OpenAI-Codex, xAI) all ship as plugins. You can add a new one, or override a bundled one, by dropping a directory into `plugins/image_gen/<name>/`.
 
 :::tip
-Image-gen is one of several **backend plugins** Hermes supports. The others (with more specialized ABCs) are [Memory Provider Plugins](/developer-guide/memory-provider-plugin), [Context Engine Plugins](/developer-guide/context-engine-plugin), and [Model Provider Plugins](/developer-guide/model-provider-plugin). General tool/hook/CLI plugins live in [Build a Hermes Plugin](/guides/build-a-hermes-plugin).
+Image-gen is one of several **backend plugins** Lydia supports. The others (with more specialized ABCs) are [Memory Provider Plugins](/developer-guide/memory-provider-plugin), [Context Engine Plugins](/developer-guide/context-engine-plugin), and [Model Provider Plugins](/developer-guide/model-provider-plugin). General tool/hook/CLI plugins live in [Build a Lydia Plugin](/guides/build-a-lydia-plugin).
 :::
 
 ## How discovery works
 
-Hermes scans for image-gen backends in three places:
+Lydia scans for image-gen backends in three places:
 
 1. **Bundled** — `<repo>/plugins/image_gen/<name>/` (auto-loaded with `kind: backend`, always available)
-2. **User** — `~/.hermes/plugins/image_gen/<name>/` (opt-in via `plugins.enabled`)
-3. **Pip** — packages declaring a `hermes_agent.plugins` entry point
+2. **User** — `~/.lydia/plugins/image_gen/<name>/` (opt-in via `plugins.enabled`)
+3. **Pip** — packages declaring a `lydia_agent.plugins` entry point
 
 Each plugin's `register(ctx)` function calls `ctx.register_image_gen_provider(...)` — that puts it into the registry in `agent/image_gen_registry.py`. The active provider is picked by `image_gen.provider` in `config.yaml`; `lydia native` walks users through selection.
 
@@ -32,7 +32,7 @@ plugins/image_gen/my-backend/
 └── plugin.yaml      # Manifest with kind: backend
 ```
 
-A bundled plugin is complete at this point. User plugins at `~/.hermes/plugins/image_gen/<name>/` need to be added to `plugins.enabled` in `config.yaml` (or run `hermes plugins enable <name>`).
+A bundled plugin is complete at this point. User plugins at `~/.lydia/plugins/image_gen/<name>/` need to be added to `plugins.enabled` in `config.yaml` (or run `lydia plugins enable <name>`).
 
 ## The ImageGenProvider ABC
 
@@ -172,7 +172,7 @@ class MyBackendImageGenProvider(ImageGenProvider):
 
             # Two shapes supported:
             #   - URL string: return it as `image`
-            #   - base64 data: save under $HERMES_HOME/cache/images/ via save_b64_image()
+            #   - base64 data: save under $LYDIA_HOME/cache/images/ via save_b64_image()
             if result.get("image_b64"):
                 path = save_b64_image(
                     result["image_b64"],
@@ -219,7 +219,7 @@ requires_env:
   - MY_BACKEND_API_KEY
 ```
 
-`kind: backend` is what routes the plugin to the image-gen registration path. `requires_env` is prompted during `hermes plugins install`.
+`kind: backend` is what routes the plugin to the image-gen registration path. `requires_env` is prompted during `lydia plugins install`.
 
 ## ABC reference
 
@@ -267,28 +267,28 @@ The tool wrapper JSON-serializes the dict and hands it to the LLM. Errors are su
 
 ## Handling base64 vs URL output
 
-Some backends return image URLs (fal, Replicate); others return base64 payloads (OpenAI gpt-image-2). For the base64 case, use `save_b64_image()` — it writes to `$HERMES_HOME/cache/images/<prefix>_<timestamp>_<uuid>.<ext>` and returns the absolute `Path`. Pass that path (as `str`) as `image=` in `success_response()`. Gateway delivery (Telegram photo bubble, Discord attachment) recognizes both URLs and absolute paths.
+Some backends return image URLs (fal, Replicate); others return base64 payloads (OpenAI gpt-image-2). For the base64 case, use `save_b64_image()` — it writes to `$LYDIA_HOME/cache/images/<prefix>_<timestamp>_<uuid>.<ext>` and returns the absolute `Path`. Pass that path (as `str`) as `image=` in `success_response()`. Gateway delivery (Telegram photo bubble, Discord attachment) recognizes both URLs and absolute paths.
 
 ## User overrides
 
-Drop a user plugin at `~/.hermes/plugins/image_gen/<name>/` with the same `name` property as a bundled one and enable it via `hermes plugins enable <name>` — the registry is last-writer-wins, so your version replaces the built-in. Useful for pointing an `openai` plugin at a private proxy, or swapping in a custom model catalog.
+Drop a user plugin at `~/.lydia/plugins/image_gen/<name>/` with the same `name` property as a bundled one and enable it via `lydia plugins enable <name>` — the registry is last-writer-wins, so your version replaces the built-in. Useful for pointing an `openai` plugin at a private proxy, or swapping in a custom model catalog.
 
 ## Testing
 
 ```bash
-export HERMES_HOME=/tmp/hermes-imggen-test
-mkdir -p $HERMES_HOME/plugins/image_gen/my-backend
+export LYDIA_HOME=/tmp/lydia-imggen-test
+mkdir -p $LYDIA_HOME/plugins/image_gen/my-backend
 # …copy __init__.py + plugin.yaml into that dir…
 
 export MY_BACKEND_API_KEY=your-test-key
-hermes plugins enable my-backend
+lydia plugins enable my-backend
 
 # Pick it as the active provider
-echo "image_gen:" >> $HERMES_HOME/config.yaml
-echo "  provider: my-backend" >> $HERMES_HOME/config.yaml
+echo "image_gen:" >> $LYDIA_HOME/config.yaml
+echo "  provider: my-backend" >> $LYDIA_HOME/config.yaml
 
 # Exercise it
-hermes -z "Generate an image of a corgi in a spacesuit"
+lydia -z "Generate an image of a corgi in a spacesuit"
 ```
 
 Or interactively: `lydia native` → "Image Generation" → select `my-backend` → enter API key if prompted.
@@ -303,14 +303,14 @@ Or interactively: `lydia native` → "Image Generation" → select `my-backend` 
 
 ```toml
 # pyproject.toml
-[project.entry-points."hermes_agent.plugins"]
+[project.entry-points."lydia_agent.plugins"]
 my-backend-imggen = "my_backend_imggen_package"
 ```
 
-`my_backend_imggen_package` must expose a top-level `register` function. See [Distribute via pip](/guides/build-a-hermes-plugin#distribute-via-pip) in the general plugin guide for the full setup.
+`my_backend_imggen_package` must expose a top-level `register` function. See [Distribute via pip](/guides/build-a-lydia-plugin#distribute-via-pip) in the general plugin guide for the full setup.
 
 ## Related pages
 
 - [Image Generation](/user-guide/features/image-generation) — user-facing feature documentation
 - [Plugins overview](/user-guide/features/plugins) — all plugin types at a glance
-- [Build a Hermes Plugin](/guides/build-a-hermes-plugin) — general tools/hooks/slash commands guide
+- [Build a Lydia Plugin](/guides/build-a-lydia-plugin) — general tools/hooks/slash commands guide

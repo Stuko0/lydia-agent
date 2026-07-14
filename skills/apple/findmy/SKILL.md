@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [macos]
 metadata:
-  hermes:
+  lydia:
     tags: [FindMy, AirTag, location, tracking, macOS, Apple]
 ---
 

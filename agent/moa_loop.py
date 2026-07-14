@@ -90,7 +90,7 @@ def _slot_runtime(slot: dict[str, str]) -> dict[str, Any]:
     model = str(slot.get("model") or "").strip()
     out: dict[str, Any] = {"provider": provider, "model": model}
     try:
-        from hermes_cli.runtime_provider import resolve_runtime_provider
+        from lydia_cli.runtime_provider import resolve_runtime_provider
 
         rt = resolve_runtime_provider(requested=provider, target_model=model)
         # Forward the resolved endpoint through to call_llm unconditionally.
@@ -257,7 +257,7 @@ def _reference_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
     came back — not just the agent's narration. We therefore preserve the whole
     conversation flow, but flatten it into clean user/assistant *text* turns:
 
-      - system prompt: dropped (8K of Hermes boilerplate, not advisory signal).
+      - system prompt: dropped (8K of Lydia boilerplate, not advisory signal).
       - assistant turns: kept; any ``tool_calls`` are rendered inline as
         ``[called tool: name(args)]`` text lines appended to the turn's text.
       - ``tool``-role results: NOT dropped. Each is folded (head+tail preview,
@@ -477,8 +477,8 @@ class MoAChatCompletions:
             logger.debug("MoA reference_callback failed for %s: %s", event, exc)
 
     def create(self, **api_kwargs: Any) -> Any:
-        from hermes_cli.config import load_config
-        from hermes_cli.moa_config import resolve_moa_preset
+        from lydia_cli.config import load_config
+        from lydia_cli.moa_config import resolve_moa_preset
 
         preset = resolve_moa_preset(load_config().get("moa") or {}, self.preset_name)
         messages = list(api_kwargs.get("messages") or [])

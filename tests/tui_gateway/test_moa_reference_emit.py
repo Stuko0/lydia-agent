@@ -19,12 +19,12 @@ def server():
     with patch.dict(
         "sys.modules",
         {
-            "hermes_constants": MagicMock(
-                get_hermes_home=MagicMock(return_value="/tmp/hermes_test_moa_emit")
+            "lydia_constants": MagicMock(
+                get_lydia_home=MagicMock(return_value="/tmp/lydia_test_moa_emit")
             ),
-            "hermes_cli.env_loader": MagicMock(),
-            "hermes_cli.banner": MagicMock(),
-            "hermes_state": MagicMock(),
+            "lydia_cli.env_loader": MagicMock(),
+            "lydia_cli.banner": MagicMock(),
+            "lydia_state": MagicMock(),
         },
     ):
         import importlib

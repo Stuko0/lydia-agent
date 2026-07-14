@@ -59,7 +59,7 @@ Deploy Lydia Agent as a bot on your favorite messaging platform.
 4. [Telegram Setup](/user-guide/messaging/telegram)
 5. [Discord Setup](/user-guide/messaging/discord)
 6. [Voice Mode](/user-guide/features/voice-mode)
-7. [Use Voice Mode with Hermes](/guides/use-voice-mode-with-hermes)
+7. [Use Voice Mode with Lydia](/guides/use-voice-mode-with-lydia)
 8. [Security](/user-guide/security)
 
 For full project examples, see:
@@ -85,7 +85,7 @@ Cron jobs let Lydia Agent run tasks on a schedule — daily summaries, periodic 
 Extend Lydia Agent with your own tools and reusable skill packages.
 
 1. [Plugins](/user-guide/features/plugins)
-2. [Build a Hermes Plugin](/guides/build-a-hermes-plugin)
+2. [Build a Lydia Plugin](/guides/build-a-lydia-plugin)
 3. [Tools Overview](/user-guide/features/tools)
 4. [Skills Overview](/user-guide/features/skills)
 5. [MCP (Model Context Protocol)](/user-guide/features/mcp)
@@ -95,7 +95,7 @@ Extend Lydia Agent with your own tools and reusable skill packages.
 
 :::tip
 For most custom tool creation, start with plugins. The [Adding Tools](/developer-guide/adding-tools)
-page is for built-in Hermes core development, not the usual user/custom-tool path.
+page is for built-in Lydia core development, not the usual user/custom-tool path.
 :::
 
 ### "I want to train models"

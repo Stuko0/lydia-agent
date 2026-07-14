@@ -6,7 +6,7 @@ description: "Your first conversation with Lydia Agent — from install to chatt
 
 # Quickstart
 
-This guide gets you from zero to a working Hermes setup that survives real use. Install, choose a provider, verify a working chat, and know exactly what to do when something breaks.
+This guide gets you from zero to a working Lydia setup that survives real use. Install, choose a provider, verify a working chat, and know exactly what to do when something breaks.
 
 ## Prefer to watch?
 
@@ -27,7 +27,7 @@ This guide gets you from zero to a working Hermes setup that survives real use. 
 
 - Brand new and want the shortest path to a working setup
 - Switching providers and don't want to lose time to config mistakes
-- Setting up Hermes for a team, bot, or always-on workflow
+- Setting up Lydia for a team, bot, or always-on workflow
 - Tired of "it installed, but it still does nothing"
 
 ## The fastest path
@@ -36,33 +36,33 @@ Pick the row that matches your goal:
 
 | Goal | Do this first | Then do this |
 |---|---|---|
-| I just want Hermes working on my machine | `lydia setup` | Run a real chat and verify it responds |
+| I just want Lydia working on my machine | `lydia setup` | Run a real chat and verify it responds |
 | I already know my provider | `lydia model` | Save the config, then start chatting |
-| I want a bot or always-on setup | `hermes gateway setup` after CLI works | Connect Telegram, Discord, Slack, or another platform |
+| I want a bot or always-on setup | `lydia gateway setup` after CLI works | Connect Telegram, Discord, Slack, or another platform |
 | I want a local or self-hosted model | `lydia model` → custom endpoint | Verify the endpoint, model name, and context length |
 | I want multi-provider fallback | `lydia model` first | Add routing and fallback only after the base chat works |
 
-**Rule of thumb:** if Hermes cannot complete a normal chat, do not add more features yet. Get one clean conversation working first, then layer on gateway, cron, skills, voice, or routing.
+**Rule of thumb:** if Lydia cannot complete a normal chat, do not add more features yet. Get one clean conversation working first, then layer on gateway, cron, skills, voice, or routing.
 
 ---
 
 ## 1. Install Lydia Agent
-### With the Hermes Desktop installer on macOS or Windows (recommended)
-To easily install the command-line and desktop applications, [download the Hermes Desktop installer](https://hermes-agent.nousresearch.com/) from our website and run it.
+### With the Lydia Desktop installer on macOS or Windows (recommended)
+To easily install the command-line and desktop applications, [download the Lydia Desktop installer](https://lydia-agent.nousresearch.com/) from our website and run it.
 
-### Without Hermes Desktop:
-For a command-line only install without Hermes Desktop, run:
+### Without Lydia Desktop:
+For a command-line only install without Lydia Desktop, run:
 
 #### Linux / macOS / WSL2 / Android (Termux)
 ```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
 ```
 
 #### Windows (native)
 
 Run in powershell:
 ```powershell
-iex (irm https://hermes-agent.nousresearch.com/install.ps1) 
+iex (irm https://lydia-agent.nousresearch.com/install.ps1) 
 ```
 
 :::tip Android / Termux
@@ -102,7 +102,7 @@ On a fresh install, `lydia setup` offers three modes:
 - **Full Setup** — walk through every provider, tool, and option yourself (bring your own keys).
 - **Blank Slate** — everything starts **off** except the bare minimum needed to run an agent: **provider & model, the File Operations toolset, and the Terminal toolset**. No web, browser, code execution, vision, memory, delegation, cron, skills, plugins, or MCP servers — and compression, checkpoints, smart routing, and memory capture are all disabled. After the minimal baseline is applied, you choose one of two paths: **start with everything disabled** (finish now with the minimal agent), or **walk through all configurations** (opt in to tools, skills, plugins, MCP, and messaging). Pick this when you want a minimal, fully-controlled agent and intend to enable only exactly what you need.
 
-Blank Slate writes an explicit `platform_toolsets.cli` list plus `agent.disabled_toolsets`, so nothing you didn't choose ever loads — not even after `hermes update`. Re-enable anything later with `lydia native`, seed skills with `hermes skills opt-in --sync`, or tune settings with `lydia setup agent`.
+Blank Slate writes an explicit `platform_toolsets.cli` list plus `agent.disabled_toolsets`, so nothing you didn't choose ever loads — not even after `lydia update`. Re-enable anything later with `lydia native`, seed skills with `lydia skills opt-in --sync`, or tune settings with `lydia setup agent`.
 :::
 
 Good defaults:
@@ -118,7 +118,7 @@ Good defaults:
 | **Kimi / Moonshot China** | China-region Moonshot endpoint | Set `KIMI_CN_API_KEY` |
 | **Arcee AI** | Trinity models | Set `ARCEEAI_API_KEY` |
 | **GMI Cloud** | Multi-model direct API | Set `GMI_API_KEY` |
-| **MiniMax (OAuth)** | MiniMax frontier model via browser OAuth — no API key needed (model name in `hermes_cli/models.py` may change between releases) | `lydia model` → MiniMax (OAuth) |
+| **MiniMax (OAuth)** | MiniMax frontier model via browser OAuth — no API key needed (model name in `lydia_cli/models.py` may change between releases) | `lydia model` → MiniMax (OAuth) |
 | **MiniMax** | International MiniMax endpoint | Set `MINIMAX_API_KEY` |
 | **MiniMax China** | China-region MiniMax endpoint | Set `MINIMAX_CN_API_KEY` |
 | **Alibaba Cloud** | Qwen models via DashScope | Set `DASHSCOPE_API_KEY` (Qwen Coding Plan also accepts `ALIBABA_CODING_PLAN_API_KEY`) |
@@ -156,10 +156,10 @@ You can switch providers at any time with `lydia model` — no lock-in. For a fu
 
 ### How settings are stored
 
-Hermes separates secrets from normal config:
+Lydia separates secrets from normal config:
 
-- **Secrets and tokens** → `~/.hermes/.env`
-- **Non-secret settings** → `~/.hermes/config.yaml`
+- **Secrets and tokens** → `~/.lydia/.env`
+- **Non-secret settings** → `~/.lydia/config.yaml`
 
 The easiest way to set values correctly is through the CLI:
 
@@ -174,14 +174,14 @@ The right value goes to the right file automatically.
 ## 3. Run Your First Chat
 
 ```bash
-hermes            # classic CLI
-hermes --tui      # modern TUI (recommended)
+lydia            # classic CLI
+lydia --tui      # modern TUI (recommended)
 ```
 
 You'll see a welcome banner with your model, available tools, and skills. Use a prompt that's specific and easy to verify:
 
 :::tip Pick your interface
-Hermes ships with two terminal interfaces: the classic `prompt_toolkit` CLI and a newer [TUI](../user-guide/tui.md) with modal overlays, mouse selection, and non-blocking input. Both share the same sessions, slash commands, and config — try each with `hermes` vs `hermes --tui`.
+Lydia ships with two terminal interfaces: the classic `prompt_toolkit` CLI and a newer [TUI](../user-guide/tui.md) with modal overlays, mouse selection, and non-blocking input. Both share the same sessions, slash commands, and config — try each with `lydia` vs `lydia --tui`.
 :::
 
 ```
@@ -199,7 +199,7 @@ Help me set up a clean GitHub PR workflow for this codebase.
 **What success looks like:**
 
 - The banner shows your chosen model/provider
-- Hermes replies without error
+- Lydia replies without error
 - It can use a tool if needed (terminal, file read, web search)
 - The conversation continues normally for more than one turn
 
@@ -210,8 +210,8 @@ If that works, you're past the hardest part.
 Before moving on, make sure resume works:
 
 ```bash
-hermes --continue    # Resume the most recent session
-hermes -c            # Short form
+lydia --continue    # Resume the most recent session
+lydia -c            # Short form
 ```
 
 That should bring you back to the session you just had. If it doesn't, check whether you're in the same profile and whether the session actually saved. This matters later when you're juggling multiple setups or machines.
@@ -253,7 +253,7 @@ Only after the base chat works. Pick what you need:
 ### Bot or shared assistant
 
 ```bash
-hermes gateway setup    # Interactive platform configuration
+lydia gateway setup    # Interactive platform configuration
 ```
 
 Connect [Telegram](/user-guide/messaging/telegram), [Discord](/user-guide/messaging/discord), [Slack](/user-guide/messaging/slack), [WhatsApp](/user-guide/messaging/whatsapp), [Signal](/user-guide/messaging/signal), [Email](/user-guide/messaging/email), or [Home Assistant](/user-guide/messaging/homeassistant), or [Microsoft Teams](/user-guide/messaging/teams).
@@ -261,7 +261,7 @@ Connect [Telegram](/user-guide/messaging/telegram), [Discord](/user-guide/messag
 ### Automation and tools
 
 - `lydia native` — tune tool access per platform
-- `hermes skills` — browse and install reusable workflows
+- `lydia skills` — browse and install reusable workflows
 - Cron — only after your bot or CLI setup is stable
 
 ### Sandboxed terminal
@@ -276,9 +276,9 @@ lydia config set terminal.backend ssh       # Remote server
 ### Voice mode
 
 ```bash
-# From the Hermes install directory (the curl installer placed it at
-# ~/.hermes/hermes-agent on Linux/macOS or %LOCALAPPDATA%\hermes\hermes-agent on Windows):
-cd ~/.hermes/hermes-agent
+# From the Lydia install directory (the curl installer placed it at
+# ~/.lydia/lydia-agent on Linux/macOS or %LOCALAPPDATA%\lydia\lydia-agent on Windows):
+cd ~/.lydia/lydia-agent
 uv pip install -e ".[voice]"
 # Includes faster-whisper for free local speech-to-text
 ```
@@ -287,25 +287,25 @@ Then in the CLI: `/voice on`. Press `Ctrl+B` to record. See [Voice Mode](../user
 
 ### Skills
 
-Skills are on-demand instruction documents that teach Hermes how to do a specific task — deploy to Kubernetes, open a GitHub PR, fine-tune a model, search for GIFs. Each is a `SKILL.md` file with a name, a description, and a step-by-step procedure. The agent reads the short descriptions for free and only loads a skill's full content when a task actually calls for it, so adding skills doesn't bloat every request.
+Skills are on-demand instruction documents that teach Lydia how to do a specific task — deploy to Kubernetes, open a GitHub PR, fine-tune a model, search for GIFs. Each is a `SKILL.md` file with a name, a description, and a step-by-step procedure. The agent reads the short descriptions for free and only loads a skill's full content when a task actually calls for it, so adding skills doesn't bloat every request.
 
-Hermes ships with a catalog of bundled skills already installed in `~/.hermes/skills/`. You can add more from the Skills Hub, or write your own.
+Lydia ships with a catalog of bundled skills already installed in `~/.lydia/skills/`. You can add more from the Skills Hub, or write your own.
 
 **Browse and install from the hub:**
 
 ```bash
-hermes skills browse                      # list everything available
-hermes skills search kubernetes           # find skills by keyword
-hermes skills install openai/skills/k8s   # install one (runs a security scan first)
+lydia skills browse                      # list everything available
+lydia skills search kubernetes           # find skills by keyword
+lydia skills install openai/skills/k8s   # install one (runs a security scan first)
 ```
 
-The install argument is a `source/path` slug from the hub — `openai/skills/k8s` means the `k8s` skill from OpenAI's catalog. `hermes skills browse` shows the exact slugs to use.
+The install argument is a `source/path` slug from the hub — `openai/skills/k8s` means the `k8s` skill from OpenAI's catalog. `lydia skills browse` shows the exact slugs to use.
 
 **Use a skill** — every installed skill becomes a slash command automatically:
 
 ```bash
 /k8s deploy the staging manifest          # run the skill with a request
-/k8s                                       # load it and let Hermes ask what you need
+/k8s                                       # load it and let Lydia ask what you need
 ```
 
 This works in the CLI and in any connected messaging platform. You don't have to install everything up front — the agent picks the right bundled skill on its own during normal conversation when a task matches one.
@@ -315,7 +315,7 @@ See [Skills System](../user-guide/features/skills.md) for writing your own, exte
 ### MCP servers
 
 ```yaml
-# Add to ~/.hermes/config.yaml
+# Add to ~/.lydia/config.yaml
 mcp_servers:
   github:
     command: npx
@@ -329,10 +329,10 @@ mcp_servers:
 ACP support ships with the standard `[all]` extras, so the curl installer already includes it. Just run:
 
 ```bash
-hermes acp
+lydia acp
 ```
 
-(If you installed without `[all]`, run `cd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"` first.)
+(If you installed without `[all]`, run `cd ~/.lydia/lydia-agent && uv pip install -e ".[acp]"` first.)
 
 See [ACP Editor Integration](../user-guide/features/acp.md).
 
@@ -344,10 +344,10 @@ These are the problems that waste the most time:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Hermes opens but gives empty or broken replies | Provider auth or model selection is wrong | Run `lydia model` again and confirm provider, model, and auth |
+| Lydia opens but gives empty or broken replies | Provider auth or model selection is wrong | Run `lydia model` again and confirm provider, model, and auth |
 | Custom endpoint "works" but returns garbage | Wrong base URL, model name, or not actually OpenAI-compatible | Verify the endpoint in a separate client first |
-| Gateway starts but nobody can message it | Bot token, allowlist, or platform setup is incomplete | Re-run `hermes gateway setup` and check `hermes gateway status` |
-| `hermes --continue` can't find old session | Switched profiles or session never saved | Check `hermes sessions list` and confirm you're in the right profile |
+| Gateway starts but nobody can message it | Bot token, allowlist, or platform setup is incomplete | Re-run `lydia gateway setup` and check `lydia gateway status` |
+| `lydia --continue` can't find old session | Switched profiles or session never saved | Check `lydia sessions list` and confirm you're in the right profile |
 | Model unavailable or odd fallback behavior | Provider routing or fallback settings are too aggressive | Keep routing off until the base provider is stable |
 | `lydia doctor` flags config problems | Config values are missing or stale | Fix the config, retest a plain chat before adding features |
 
@@ -358,9 +358,9 @@ When something feels off, use this order:
 1. `lydia doctor`
 2. `lydia model`
 3. `lydia setup`
-4. `hermes sessions list`
-5. `hermes --continue`
-6. `hermes gateway status`
+4. `lydia sessions list`
+5. `lydia --continue`
+6. `lydia gateway status`
 
 That sequence gets you from "broken vibes" back to a known state fast.
 
@@ -370,14 +370,14 @@ That sequence gets you from "broken vibes" back to a known state fast.
 
 | Command | Description |
 |---------|-------------|
-| `hermes` | Start chatting |
+| `lydia` | Start chatting |
 | `lydia model` | Choose your LLM provider and model |
 | `lydia native` | Configure which tools are enabled per platform |
 | `lydia setup` | Full setup wizard (configures everything at once) |
 | `lydia doctor` | Diagnose issues |
-| `hermes update` | Update to latest version |
-| `hermes gateway` | Start the messaging gateway |
-| `hermes --continue` | Resume last session |
+| `lydia update` | Update to latest version |
+| `lydia gateway` | Start the messaging gateway |
+| `lydia --continue` | Resume last session |
 
 ## Next Steps
 

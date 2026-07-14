@@ -6,7 +6,7 @@ alcance para los informes de vulnerabilidades.
 
 ## 1. Reportar una Vulnerabilidad
 
-Reporta de forma privada a través de [GitHub Security Advisories](https://github.com/NousResearch/hermes-agent/security/advisories/new)
+Reporta de forma privada a través de [GitHub Security Advisories](https://github.com/NousResearch/lydia-agent/security/advisories/new)
 o **security@nousresearch.com**. No abras issues públicos para
 vulnerabilidades de seguridad. **Lydia Agent no opera un programa de
 recompensas por errores.**
@@ -16,7 +16,7 @@ Un informe útil incluye:
 - Una descripción concisa y evaluación de severidad.
 - El componente afectado, identificado por ruta de archivo y rango de líneas
   (ej. `path/to/file.py:120-145`).
-- Detalles del entorno (`hermes version`, SHA del commit, SO, versión de Python).
+- Detalles del entorno (`lydia version`, SHA del commit, SO, versión de Python).
 - Una reproducción contra `main` o el último release.
 - Una declaración de qué límite de confianza del §2 se cruza.
 
@@ -267,7 +267,7 @@ divulgación privada y no reciben avisos.
   que deshabilitan explícitamente protecciones: `--insecure` y flags equivalentes
   en el dashboard u otros componentes, aprobaciones deshabilitadas,
   backend local en producción, perfiles de desarrollo que evitan
-  la seguridad de hermes-home, y similares. Los informes contra esas
+  la seguridad de lydia-home, y similares. Los informes contra esas
   configuraciones no son vulnerabilidades — eso es el trabajo del flag.
 - **Habilidades y plugins contribuidos por la comunidad.** Las habilidades de terceros
   (incluyendo el repositorio de habilidades de la comunidad) y los plugins de terceros

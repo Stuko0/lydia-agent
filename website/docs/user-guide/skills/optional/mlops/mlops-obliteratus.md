@@ -14,7 +14,7 @@ OBLITERATUS: abliterate LLM refusals (diff-in-means).
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/obliteratus` |
+| Source | Optional — install with `lydia skills install official/mlops/obliteratus` |
 | Path | `optional-skills/mlops/obliteratus` |
 | Version | `2.0.0` |
 | Author | Lydia Agent |
@@ -27,7 +27,7 @@ OBLITERATUS: abliterate LLM refusals (diff-in-means).
 ## Reference: full SKILL.md
 
 :::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
+The following is the complete skill definition that Lydia loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
 :::
 
 # OBLITERATUS Skill

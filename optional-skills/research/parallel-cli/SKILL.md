@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [Research, Web, Search, Deep-Research, Enrichment, CLI]
     related_skills: [duckduckgo-search, mcporter]
 ---
@@ -15,7 +15,7 @@ metadata:
 
 Use `parallel-cli` when the user explicitly wants Parallel, or when a terminal-native workflow would benefit from Parallel's vendor-specific stack for web search, extraction, deep research, enrichment, entity discovery, or monitoring.
 
-This is an optional third-party workflow, not a Hermes core capability.
+This is an optional third-party workflow, not a Lydia core capability.
 
 Important expectations:
 - Parallel is a paid service with a free tier, not a fully free local tool.
@@ -231,7 +231,7 @@ parallel-cli research run \
   --json
 ```
 
-Recommended Hermes workflow:
+Recommended Lydia workflow:
 1. launch with `--no-wait --json`
 2. capture the returned run/task ID
 3. if the user wants to continue other work, keep moving
@@ -324,7 +324,7 @@ parallel-cli monitor create --help
 
 Use this when the user wants recurring tracking of a page or source rather than a one-time fetch.
 
-## Recommended Hermes usage patterns
+## Recommended Lydia usage patterns
 
 ### Fast answer with citations
 1. Run `parallel-cli search ... --json`

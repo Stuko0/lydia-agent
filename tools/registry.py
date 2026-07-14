@@ -1,4 +1,4 @@
-"""Central registry for all hermes-agent tools.
+"""Central registry for all lydia-agent tools.
 
 Each tool file calls ``registry.register()`` at module level to declare its
 schema, handler, toolset membership, and availability check.  ``model_tools.py``
@@ -332,7 +332,7 @@ class ToolRegistry:
             return mod
         # Also gate plugin modules currently loading but not yet policy-recorded
         # (defensive: a handler defined in the plugin namespace is plugin code).
-        if isinstance(mod, str) and mod.startswith("hermes_plugins."):
+        if isinstance(mod, str) and mod.startswith("lydia_plugins."):
             return mod
         return None
 

@@ -79,7 +79,7 @@ class PlatformEntry:
     source: str = "plugin"
 
     # Name of the plugin manifest that registered this entry (empty for
-    # built-ins).  Used by ``hermes gateway setup`` to auto-enable the
+    # built-ins).  Used by ``lydia gateway setup`` to auto-enable the
     # owning plugin when the user configures its platform.
     plugin_name: str = ""
 
@@ -174,7 +174,7 @@ class PlatformRegistry:
         # Why this exists: platform adapter modules import heavy, platform-
         # specific SDKs at module level (lark_oapi, microsoft_teams, discord.py,
         # slack_bolt, ...). Eagerly loading all ~20 bundled platform plugins at
-        # plugin-discovery time added several seconds to *every* `hermes`
+        # plugin-discovery time added several seconds to *every* `lydia`
         # invocation -- including plain `lydia chat`, which never touches any
         # gateway platform. Discovery now registers a cheap deferred loader per
         # platform; the real module is imported only when a registry lookup

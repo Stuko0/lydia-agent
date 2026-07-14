@@ -12,9 +12,9 @@ import urllib.parse
 import urllib.request
 
 DEFAULT_UA = (
-    "hermes-osint-investigation/0.2 "
-    "(+https://github.com/NousResearch/hermes-agent; "
-    "set HERMES_OSINT_UA env var to identify yourself per "
+    "lydia-osint-investigation/0.2 "
+    "(+https://10.1.200.116:3000/arquant-admin/NewLydia; "
+    "set LYDIA_OSINT_UA env var to identify yourself per "
     "Wikimedia / SEC fair-use guidance)"
 )
 
@@ -38,7 +38,7 @@ def get(
     if params:
         sep = "&" if "?" in url else "?"
         url = f"{url}{sep}{urllib.parse.urlencode(params)}"
-    h = {"User-Agent": user_agent or os.environ.get("HERMES_OSINT_UA", DEFAULT_UA)}
+    h = {"User-Agent": user_agent or os.environ.get("LYDIA_OSINT_UA", DEFAULT_UA)}
     if headers:
         h.update(headers)
 

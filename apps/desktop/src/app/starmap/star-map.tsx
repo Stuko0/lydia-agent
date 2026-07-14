@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useThemeEpoch } from '@/hooks/use-theme-epoch'
 import { createDoubleTapDetector, isSmartZoomWheel } from '@/lib/trackpad-gestures'
 import { loadStarmapGraph } from '@/store/starmap'
-import type { StarmapGraph } from '@/types/hermes'
+import type { StarmapGraph } from '@/types/lydia'
 
 import { computePalette, memoryInkFor, resolveRgb, rgba } from './color'
 import { RING_OUTER, TILT, ZOOM_MAX, ZOOM_MIN } from './constants'
@@ -93,7 +93,7 @@ function RevealLabel({ axis, revealStore }: { axis: TimeAxis; revealStore: Writa
   )
 }
 
-// A tilted, top-down star map of what Hermes has learned. Time is RADIAL: oldest
+// A tilted, top-down star map of what Lydia has learned. Time is RADIAL: oldest
 // at the core, newest on the outer rings. This component owns the refs, effects
 // and pointer wiring; layout lives in simulation.ts and painting in render.ts.
 export function StarMap({
