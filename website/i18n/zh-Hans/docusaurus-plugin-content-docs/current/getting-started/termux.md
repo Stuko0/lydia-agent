@@ -4,7 +4,7 @@ title: "Android / Termux"
 description: "通过 Termux 在 Android 手机上直接运行 Lydia Agent"
 ---
 
-# 在 Android 上通过 Termux 运行 Hermes
+# 在 Android 上通过 Termux 运行 Lydia
 
 这是在 Android 手机上通过 [Termux](https://termux.dev/) 直接运行 Lydia Agent 的已验证路径。
 
@@ -13,7 +13,7 @@ description: "通过 Termux 在 Android 手机上直接运行 Lydia Agent"
 ## 已验证路径支持哪些功能？
 
 已验证的 Termux 安装包含：
-- Hermes CLI
+- Lydia CLI
 - cron 支持
 - PTY（伪终端）/后台终端支持
 - Telegram gateway 支持（手动 / 尽力而为的后台运行）
@@ -37,23 +37,23 @@ python -m pip install -e '.[termux]' -c constraints-termux.txt
 - 基于 Docker 的终端隔离在 Termux 内不可用
 - Android 可能仍会挂起 Termux 后台任务，因此 gateway 持久化是尽力而为，而非正常的托管服务
 
-这并不妨碍 Hermes 作为手机原生 CLI agent 正常工作——只是意味着推荐的移动端安装有意比桌面/服务器安装更精简。
+这并不妨碍 Lydia 作为手机原生 CLI agent 正常工作——只是意味着推荐的移动端安装有意比桌面/服务器安装更精简。
 
 ---
 
 ## 方式一：一行安装命令
 
-Hermes 现已内置 Termux 感知的安装路径：
+Lydia 现已内置 Termux 感知的安装路径：
 
 ```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
 ```
 
 在 Termux 上，安装程序会自动：
 - 使用 `pkg` 安装系统包
 - 使用 `python -m venv` 创建虚拟环境
 - 优先尝试较大的 `.[termux-all]` 扩展，失败后回退到较小的 `.[termux]` 扩展（再次失败则进行基础安装）——curl 安装程序自动按此顺序执行
-- 将 `hermes` 链接到 `$PREFIX/bin`，使其保留在 Termux PATH 中
+- 将 `lydia` 链接到 `$PREFIX/bin`，使其保留在 Termux PATH 中
 - 跳过未经验证的浏览器 / WhatsApp 引导
 
 如果你需要显式命令或需要调试失败的安装，请使用下方的手动安装路径。
@@ -77,11 +77,11 @@ pkg install -y git python clang rust make pkg-config libffi openssl nodejs ripgr
 - `ripgrep` — 快速文件搜索
 - `ffmpeg` — 媒体 / TTS 转换
 
-### 2. 克隆 Hermes
+### 2. 克隆 Lydia
 
 ```bash
-git clone https://github.com/NousResearch/hermes-agent.git
-cd hermes-agent
+git clone https://github.com/NousResearch/lydia-agent.git
+cd lydia-agent
 ```
 
 ### 3. 创建虚拟环境
@@ -107,25 +107,25 @@ python -m pip install -e '.[termux]' -c constraints-termux.txt
 python -m pip install -e '.' -c constraints-termux.txt
 ```
 
-### 5. 将 `hermes` 添加到 Termux PATH
+### 5. 将 `lydia` 添加到 Termux PATH
 
 ```bash
-ln -sf "$PWD/venv/bin/hermes" "$PREFIX/bin/hermes"
+ln -sf "$PWD/venv/bin/lydia" "$PREFIX/bin/lydia"
 ```
 
-`$PREFIX/bin` 在 Termux 中已默认在 PATH 中，因此这样做可以让 `hermes` 命令在新 shell 中持续可用，无需每次重新激活虚拟环境。
+`$PREFIX/bin` 在 Termux 中已默认在 PATH 中，因此这样做可以让 `lydia` 命令在新 shell 中持续可用，无需每次重新激活虚拟环境。
 
 ### 6. 验证安装
 
 ```bash
-hermes version
+lydia version
 lydia doctor
 ```
 
-### 7. 启动 Hermes
+### 7. 启动 Lydia
 
 ```bash
-hermes
+lydia
 ```
 
 ---
@@ -138,7 +138,7 @@ hermes
 lydia model
 ```
 
-或直接在 `~/.hermes/.env` 中设置密钥。
+或直接在 `~/.lydia/.env` 中设置密钥。
 
 ### 稍后重新运行完整的交互式设置向导
 

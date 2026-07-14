@@ -7,7 +7,7 @@ at startup, by THREE separate code paths:
   1. cli.py            -> ``env_mappings`` dict (CLI / TUI startup)
   2. gateway/run.py    -> ``_terminal_env_map`` dict (gateway / messaging
                           platforms)
-  3. hermes_cli/config.py:set_config_value
+  3. lydia_cli/config.py:set_config_value
                        -> bridges via the canonical ``TERMINAL_CONFIG_ENV_MAP``
                           (one-shot when the user runs ``lydia config set …``)
 
@@ -19,8 +19,8 @@ for ``docker_run_as_host_user`` (gateway and CLI maps) and once for
 This test guards against future drift by extracting all three maps via source
 inspection and asserting they all bridge the same set of writable
 ``terminal.*`` keys.  Source inspection (rather than importing the live
-dicts) keeps the test independent of the user's ~/.hermes/config.yaml and
-mirrors the pattern used in tests/hermes_cli/test_config_drift.py.
+dicts) keeps the test independent of the user's ~/.lydia/config.yaml and
+mirrors the pattern used in tests/lydia_cli/test_config_drift.py.
 """
 
 import ast
@@ -96,7 +96,7 @@ def _save_config_env_sync_keys() -> set[str]:
     source of truth that the config-set path uses, rather than a string
     literal that the consolidation removed.
     """
-    from hermes_cli import config as hc_config
+    from lydia_cli import config as hc_config
     # set_config_value bridges every TERMINAL_CONFIG_ENV_MAP key except
     # terminal.cwd (see the ``key != "terminal.cwd"`` guard in
     # set_config_value); mirror that exclusion here.
@@ -187,7 +187,7 @@ def test_save_config_set_supports_critical_bridged_keys():
     assert not missing, (
         f"`lydia config set terminal.X` doesn't sync these load-bearing "
         f"keys to .env: {sorted(missing)}.  Add them to TERMINAL_CONFIG_ENV_MAP "
-        f"in hermes_cli/config.py (set_config_value bridges through it)."
+        f"in lydia_cli/config.py (set_config_value bridges through it)."
     )
 
 
@@ -245,7 +245,7 @@ def test_docker_extra_args_is_bridged_everywhere():
     _terminal_env_map.  So a user who hand-edited config.yaml had their GPU /
     shm-size flags silently dropped on the CLI and gateway/desktop paths,
     while ``image``/``volumes`` (which were in those maps) bridged fine --
-    producing the "Hermes partially reads the Docker config" symptom.  Guard
+    producing the "Lydia partially reads the Docker config" symptom.  Guard
     all four bridging points so this cannot regress.
     """
     assert "docker_extra_args" in _cli_env_map_keys()
@@ -260,7 +260,7 @@ def test_docker_persist_across_processes_is_bridged_everywhere():
     ``terminal.docker_persist_across_processes`` (issue #20561) controls
     whether ``DockerEnvironment.__init__`` probes for and reuses an existing
     labeled container at startup, and whether ``cleanup()`` removes the
-    container on Hermes exit or just stops it (keeping it for the next
+    container on Lydia exit or just stops it (keeping it for the next
     process).  Same four-bridge invariant as docker_run_as_host_user /
     docker_env / docker_mount_cwd_to_workspace — drift between any of the
     four sites means ``terminal.docker_persist_across_processes: false`` in
@@ -277,7 +277,7 @@ def test_docker_persist_across_processes_is_bridged_everywhere():
 def test_docker_orphan_reaper_is_bridged_everywhere():
     """Regression pin for the startup orphan reaper toggle (issue #20561).
 
-    ``terminal.docker_orphan_reaper`` controls whether Hermes sweeps stale
+    ``terminal.docker_orphan_reaper`` controls whether Lydia sweeps stale
     Exited containers from prior SIGKILL'd processes at startup.  Same
     four-site bridge invariant — drift means
     ``terminal.docker_orphan_reaper: false`` silently does nothing for one

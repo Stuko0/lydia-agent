@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils'
 import { useSkinCommand } from '@/themes/use-skin-command'
 
 import { formatRefValue } from '../components/assistant-ui/directive-text'
-import { getSessionMessages, triggerCronJob } from '../hermes'
+import { getSessionMessages, triggerCronJob } from '../lydia'
 import { type ChatMessage, chatMessageText, preserveLocalAssistantErrors, toChatMessages } from '../lib/chat-messages'
 import { storedSessionIdForNotification } from '../lib/session-ids'
 import { latestSessionTodos } from '../lib/todos'
@@ -111,7 +111,7 @@ import { SessionPickerOverlay } from './session-picker-overlay'
 import { SessionSwitcher } from './session-switcher'
 import { useContextSuggestions } from './session/hooks/use-context-suggestions'
 import { useCwdActions } from './session/hooks/use-cwd-actions'
-import { useHermesConfig } from './session/hooks/use-hermes-config'
+import { useLydiaConfig } from './session/hooks/use-lydia-config'
 import { useMessageStream } from './session/hooks/use-message-stream'
 import { useModelControls } from './session/hooks/use-model-controls'
 import { usePreviewRouting } from './session/hooks/use-preview-routing'
@@ -224,12 +224,12 @@ export function DesktopController() {
   const { connectionRef, gatewayRef, requestGateway } = useGatewayRequest()
 
   useEffect(() => {
-    window.hermesDesktop?.setPreviewShortcutActive?.(Boolean(chatOpen && (filePreviewTarget || previewTarget)))
+    window.lydiaDesktop?.setPreviewShortcutActive?.(Boolean(chatOpen && (filePreviewTarget || previewTarget)))
   }, [chatOpen, filePreviewTarget, previewTarget])
 
   useEffect(() => {
     startUpdatePoller()
-    const unsubscribe = window.hermesDesktop?.onOpenUpdatesRequested?.(() => openUpdatesWindow())
+    const unsubscribe = window.lydiaDesktop?.onOpenUpdatesRequested?.(() => openUpdatesWindow())
 
     return () => {
       unsubscribe?.()
@@ -273,7 +273,7 @@ export function DesktopController() {
   // resumes a non-existent stored session ("session not found") and strands the
   // user. Translate runtime -> stored before navigating.
   useEffect(() => {
-    const unsubscribe = window.hermesDesktop?.onFocusSession?.(sessionId => {
+    const unsubscribe = window.lydiaDesktop?.onFocusSession?.(sessionId => {
       if (sessionId) {
         navigate(sessionRoute(storedSessionIdForNotification(sessionId, runtimeIdByStoredSessionIdRef.current)))
       }
@@ -284,20 +284,20 @@ export function DesktopController() {
 
   // Notification action button (Approve/Reject) — resolve in place, no navigation.
   useEffect(() => {
-    const unsubscribe = window.hermesDesktop?.onNotificationAction?.(({ actionId, sessionId }) => {
+    const unsubscribe = window.lydiaDesktop?.onNotificationAction?.(({ actionId, sessionId }) => {
       void respondToApprovalAction(sessionId ?? null, actionId)
     })
 
     return () => unsubscribe?.()
   }, [])
 
-  // hermes:// deep links (e.g. a docs "Send to App" button for an automation blueprint).
+  // lydia:// deep links (e.g. a docs "Send to App" button for an automation blueprint).
   // Build the equivalent /blueprint slash command from the payload and drop
   // it into the composer — the user reviews/edits, then sends; the agent (or
   // the shared command handler) creates the job. Signal readiness so a link
   // that arrived during boot is flushed exactly once.
   useEffect(() => {
-    const unsubscribe = window.hermesDesktop?.onDeepLink?.(payload => {
+    const unsubscribe = window.lydiaDesktop?.onDeepLink?.(payload => {
       if (!payload || payload.kind !== 'blueprint' || !payload.name) {
         return
       }
@@ -316,7 +316,7 @@ export function DesktopController() {
     })
 
     // Tell the main process the renderer is ready to receive deep links.
-    void window.hermesDesktop?.signalDeepLinkReady?.()
+    void window.lydiaDesktop?.signalDeepLinkReady?.()
 
     return () => unsubscribe?.()
   }, [])
@@ -348,7 +348,7 @@ export function DesktopController() {
       }
     }
 
-    const unsubscribe = window.hermesDesktop?.onClosePreviewRequested?.(closeActiveRightRailTab)
+    const unsubscribe = window.lydiaDesktop?.onClosePreviewRequested?.(closeActiveRightRailTab)
 
     window.addEventListener('keydown', onKeyDown, { capture: true })
 
@@ -421,7 +421,7 @@ export function DesktopController() {
     requestGateway
   })
 
-  const { refreshHermesConfig, sttEnabled, voiceMaxRecordingSeconds } = useHermesConfig({
+  const { refreshLydiaConfig, sttEnabled, voiceMaxRecordingSeconds } = useLydiaConfig({
     activeSessionIdRef,
     refreshProjectBranch
   })
@@ -511,7 +511,7 @@ export function DesktopController() {
     activeSessionIdRef,
     hydrateFromStoredSession,
     queryClient,
-    refreshHermesConfig,
+    refreshLydiaConfig,
     refreshSessions,
     sessionStateByRuntimeIdRef,
     updateSessionState
@@ -809,7 +809,7 @@ export function DesktopController() {
     onGatewayReady: g => {
       gatewayRef.current = g
     },
-    refreshHermesConfig,
+    refreshLydiaConfig,
     refreshSessions
   })
 
@@ -847,9 +847,9 @@ export function DesktopController() {
   useEffect(() => {
     if (gatewayState === 'open' && !activeSessionId && freshDraftReady) {
       void refreshCurrentModel()
-      void refreshHermesConfig()
+      void refreshLydiaConfig()
     }
-  }, [activeSessionId, freshDraftReady, gatewayState, refreshCurrentModel, refreshHermesConfig])
+  }, [activeSessionId, freshDraftReady, gatewayState, refreshCurrentModel, refreshLydiaConfig])
 
   useRouteResume({
     activeSessionId,
@@ -924,7 +924,7 @@ export function DesktopController() {
         <DesktopOnboardingOverlay
           enabled={gatewayState === 'open'}
           onCompleted={() => {
-            void refreshHermesConfig()
+            void refreshLydiaConfig()
             void refreshCurrentModel()
             void queryClient.invalidateQueries({ queryKey: ['model-options'] })
           }}
@@ -949,7 +949,7 @@ export function DesktopController() {
             gateway={gatewayRef.current}
             onClose={closeOverlayToPreviousRoute}
             onConfigSaved={() => {
-              void refreshHermesConfig()
+              void refreshLydiaConfig()
               void refreshCurrentModel()
               void queryClient.invalidateQueries({ queryKey: ['model-options'] })
             }}

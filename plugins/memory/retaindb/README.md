@@ -10,13 +10,13 @@ Cloud memory API with hybrid search (Vector + BM25 + Reranking) and 7 memory typ
 ## Setup
 
 ```bash
-hermes memory setup    # select "retaindb"
+lydia memory setup    # select "retaindb"
 ```
 
 Or manually:
 ```bash
 lydia config set memory.provider retaindb
-echo "RETAINDB_API_KEY=your-key" >> ~/.hermes/.env
+echo "RETAINDB_API_KEY=your-key" >> ~/.lydia/.env
 ```
 
 ## Config

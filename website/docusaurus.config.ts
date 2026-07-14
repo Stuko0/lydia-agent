@@ -7,11 +7,11 @@ const config: Config = {
   tagline: 'The self-improving AI agent',
   favicon: 'img/favicon.ico',
 
-  url: 'https://hermes-agent.nousresearch.com',
+  url: 'https://lydia-agent.nousresearch.com',
   baseUrl: '/docs/',
 
   organizationName: 'NousResearch',
-  projectName: 'hermes-agent',
+  projectName: 'lydia-agent',
 
   onBrokenLinks: 'warn',
 
@@ -78,6 +78,38 @@ const config: Config = {
             from: '/guides/automation-templates',
             to: '/guides/automation-blueprints',
           },
+          {
+            from: '/guides/run-lydia-with-nous-portal',
+            to: '/guides/run-lydia-with-nous-portal',
+          },
+          {
+            from: '/guides/build-a-lydia-plugin',
+            to: '/guides/build-a-lydia-plugin',
+          },
+          {
+            from: '/guides/use-voice-mode-with-lydia',
+            to: '/guides/use-voice-mode-with-lydia',
+          },
+          {
+            from: '/guides/use-mcp-with-lydia',
+            to: '/guides/use-mcp-with-lydia',
+          },
+          {
+            from: '/guides/use-soul-with-lydia',
+            to: '/guides/use-soul-with-lydia',
+          },
+          {
+            from: '/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-lydia-agent',
+            to: '/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-lydia-agent',
+          },
+          {
+            from: '/user-guide/skills/bundled/software-development/software-development-lydia-agent-skill-authoring',
+            to: '/user-guide/skills/bundled/software-development/software-development-lydia-agent-skill-authoring',
+          },
+          {
+            from: '/user-guide/skills/optional/devops/devops-lydia-s6-container-supervision',
+            to: '/user-guide/skills/optional/devops/devops-lydia-s6-container-supervision',
+          },
         ],
       },
     ],
@@ -90,7 +122,7 @@ const config: Config = {
         docs: {
           routeBasePath: '/',  // Docs at the root of /docs/
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/NousResearch/hermes-agent/edit/main/website/',
+          editUrl: 'https://10.1.200.116:3000/arquant-admin/NewLydia/edit/main/website/',
         },
         blog: false,
         theme: {
@@ -101,7 +133,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/hermes-agent-banner.png',
+    image: 'img/lydia-agent-banner.png',
     colorMode: {
       defaultMode: 'dark',
       respectPrefersColorScheme: true,
@@ -131,7 +163,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://hermes-agent.nousresearch.com/',
+          href: 'https://lydia-agent.nousresearch.com/',
           label: 'Download',
           position: 'left',
         },
@@ -140,12 +172,12 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://hermes-agent.nousresearch.com',
+          href: 'https://lydia-agent.nousresearch.com',
           label: 'Home',
           position: 'right',
         },
         {
-          href: 'https://github.com/NousResearch/hermes-agent',
+          href: 'https://10.1.200.116:3000/arquant-admin/NewLydia',
           label: 'GitHub',
           position: 'right',
         },
@@ -172,15 +204,15 @@ const config: Config = {
           title: 'Community',
           items: [
             { label: 'Discord', href: 'https://discord.gg/NousResearch' },
-            { label: 'GitHub Issues', href: 'https://github.com/NousResearch/hermes-agent/issues' },
+            { label: 'GitHub Issues', href: 'https://10.1.200.116:3000/arquant-admin/NewLydia/issues' },
             { label: 'Skills Hub', href: 'https://agentskills.io' },
           ],
         },
         {
           title: 'More',
           items: [
-            { label: 'Desktop Download', href: 'https://hermes-agent.nousresearch.com/' },
-            { label: 'GitHub', href: 'https://github.com/NousResearch/hermes-agent' },
+            { label: 'Desktop Download', href: 'https://lydia-agent.nousresearch.com/' },
+            { label: 'GitHub', href: 'https://10.1.200.116:3000/arquant-admin/NewLydia' },
             { label: 'Nous Research', href: 'https://nousresearch.com' },
           ],
         },

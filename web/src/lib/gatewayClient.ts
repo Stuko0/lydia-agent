@@ -15,11 +15,11 @@
 
 import {
   JsonRpcGatewayClient,
-  buildHermesWebSocketUrl,
+  buildLydiaWebSocketUrl,
   type ConnectionState,
   type GatewayEvent,
   type GatewayEventName,
-} from "@hermes/shared";
+} from "@lydia/shared";
 
 import { LYDIA_BASE_PATH, buildWsAuthParam } from "@/lib/api";
 
@@ -51,7 +51,7 @@ export class GatewayClient extends JsonRpcGatewayClient {
     }
 
     await super.connect(
-      buildHermesWebSocketUrl({
+      buildLydiaWebSocketUrl({
         authParam,
         basePath: LYDIA_BASE_PATH,
         path: "/api/ws",

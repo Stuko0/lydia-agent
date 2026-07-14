@@ -1,5 +1,5 @@
 """
-Hermes Gateway - Multi-platform messaging integration.
+Lydia Gateway - Multi-platform messaging integration.
 
 This module provides a unified gateway for connecting the Lydia Agent
 to various messaging platforms (Telegram, Discord, WhatsApp, Weixin, and more) with:

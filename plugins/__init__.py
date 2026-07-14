@@ -1,1 +1,1 @@
-# Hermes plugins package
+# Lydia plugins package

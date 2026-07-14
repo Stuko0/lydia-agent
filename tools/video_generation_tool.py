@@ -12,7 +12,7 @@ video generation provider. Mirrors the ``image_generate`` design:
 - Each provider lives under ``plugins/video_gen/<name>/``.
 
 The tool itself is intentionally backend-agnostic and ships **no in-tree
-provider** — turn on a backend by enabling a plugin (``hermes plugins
+provider** — turn on a backend by enabling a plugin (``lydia plugins
 enable video_gen/<name>``) and selecting it in ``lydia native`` → Video
 Generation.
 
@@ -66,7 +66,7 @@ VIDEO_GENERATE_SCHEMA: Dict[str, Any] = {
     # actual capabilities (which modalities / resolutions / duration
     # ranges the user's currently-selected model supports).
     # See _build_dynamic_video_schema() below and the dynamic-tool-schemas
-    # skill at github/hermes-agent-dev/references/dynamic-tool-schemas.md.
+    # skill at github/lydia-agent-dev/references/dynamic-tool-schemas.md.
     "description": "(rebuilt at get_definitions() time — see _build_dynamic_video_schema)",
     "parameters": {
         "type": "object",
@@ -167,7 +167,7 @@ VIDEO_GENERATE_SCHEMA: Dict[str, Any] = {
 
 def _read_video_gen_section() -> Dict[str, Any]:
     try:
-        from hermes_cli.config import load_config
+        from lydia_cli.config import load_config
 
         cfg = load_config()
         section = cfg.get("video_gen") if isinstance(cfg, dict) else None
@@ -204,7 +204,7 @@ def check_video_generation_requirements() -> bool:
     """
     try:
         from agent.video_gen_registry import list_providers
-        from hermes_cli.plugins import _ensure_plugins_discovered
+        from lydia_cli.plugins import _ensure_plugins_discovered
 
         _ensure_plugins_discovered()
         for provider in list_providers():
@@ -231,7 +231,7 @@ def _resolve_active_provider():
     """
     try:
         from agent.video_gen_registry import get_active_provider
-        from hermes_cli.plugins import _ensure_plugins_discovered
+        from lydia_cli.plugins import _ensure_plugins_discovered
 
         _ensure_plugins_discovered()
         provider = get_active_provider()
@@ -248,7 +248,7 @@ def _missing_provider_error(configured: Optional[str]) -> str:
     if configured:
         msg = (
             f"video_gen.provider='{configured}' is set but no plugin "
-            f"registered that name. Run `hermes plugins list` to see "
+            f"registered that name. Run `lydia plugins list` to see "
             f"installed video gen backends, or `lydia native` → Video "
             f"Generation to pick one."
         )
@@ -484,7 +484,7 @@ def _build_dynamic_video_schema() -> Dict[str, Any]:
 
     try:
         from agent.video_gen_registry import get_provider
-        from hermes_cli.plugins import _ensure_plugins_discovered
+        from lydia_cli.plugins import _ensure_plugins_discovered
 
         _ensure_plugins_discovered()
         provider = get_provider(configured)

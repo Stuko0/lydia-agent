@@ -1,26 +1,26 @@
-# nix/desktop.nix — Hermes Desktop (Electron) app build + wrapper
+# nix/desktop.nix — Lydia Desktop (Electron) app build + wrapper
 #
-# `hermesAgent` is the fully-built `.#default` package — it ships the
-# `hermes` binary with the venv, runtime PATH, bundled skills/plugins, etc.
+# `lydiaAgent` is the fully-built `.#default` package — it ships the
+# `lydia` binary with the venv, runtime PATH, bundled skills/plugins, etc.
 # already wired up.  We point the desktop at it via the existing
-# `HERMES_DESKTOP_HERMES` override env var, so the desktop's resolver
-# uses our fully wrapped binary at step 4 ("existing Hermes CLI").
+# `LYDIA_DESKTOP_LYDIA` override env var, so the desktop's resolver
+# uses our fully wrapped binary at step 4 ("existing Lydia CLI").
 # No reimplementation of the agent resolution in this wrapper.
 {
   pkgs,
   lib,
   stdenv,
   makeWrapper,
-  hermesNpmLib,
+  lydiaNpmLib,
   electron,
-  hermesAgent,
+  lydiaAgent,
   ...
 }:
 let
-  npm = hermesNpmLib.mkNpmPassthru {
+  npm = lydiaNpmLib.mkNpmPassthru {
     folder = "apps/desktop";
     attr = "desktop";
-    pname = "hermes-desktop";
+    pname = "lydia-desktop";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile (npm.src + "/apps/desktop/package.json"));
@@ -30,7 +30,7 @@ let
   renderer = pkgs.buildNpmPackage (
     npm
     // {
-      pname = "hermes-desktop-renderer";
+      pname = "lydia-desktop-renderer";
       inherit version;
       doCheck = true;
 
@@ -113,7 +113,7 @@ in
 
 # Electron wrapper: nixpkgs' electron binary pointed at the renderer dir.
 stdenv.mkDerivation {
-  pname = "hermes-desktop";
+  pname = "lydia-desktop";
   inherit version;
 
   dontUnpack = true;
@@ -124,31 +124,31 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/share/hermes-desktop $out/bin
-    cp -r ${renderer}/* $out/share/hermes-desktop/
+    mkdir -p $out/share/lydia-desktop $out/bin
+    cp -r ${renderer}/* $out/share/lydia-desktop/
 
     # Standard nixpkgs pattern for electron-builder apps: patch process.resourcesPath
     # to point to the app's directory. In Nix, unpackaged electron defaults this
     # to the electron distribution's resources path, breaking extraResources lookups.
-    substituteInPlace $out/share/hermes-desktop/electron/main.cjs \
-      --replace-fail "process.resourcesPath" "'$out/share/hermes-desktop'"
+    substituteInPlace $out/share/lydia-desktop/electron/main.cjs \
+      --replace-fail "process.resourcesPath" "'$out/share/lydia-desktop'"
 
     # git-review-ops.cjs has the same process.resourcesPath fallback for its
     # staged simple-git dep (native-deps/vendor/node_modules/), so it needs the same
     # rewrite — otherwise the require() fallback resolves against the electron
     # dist's resources path and fails to load simple-git (issue #52735).
-    substituteInPlace $out/share/hermes-desktop/electron/git-review-ops.cjs \
-      --replace-fail "process.resourcesPath" "'$out/share/hermes-desktop'"
+    substituteInPlace $out/share/lydia-desktop/electron/git-review-ops.cjs \
+      --replace-fail "process.resourcesPath" "'$out/share/lydia-desktop'"
 
     # Wrap the nixpkgs electron binary to launch our app.  Set
-    # HERMES_DESKTOP_HERMES to the absolute path of the nix-built `hermes`
-    # binary so the desktop's resolver step 4 ("existing Hermes CLI on
+    # LYDIA_DESKTOP_LYDIA to the absolute path of the nix-built `lydia`
+    # binary so the desktop's resolver step 4 ("existing Lydia CLI on
     # PATH") uses our fully wrapped binary — venv with all deps,
     # bundled skills/plugins, runtime PATH (ripgrep/git/ffmpeg/etc).
     # No reimplementation of the agent resolver in the wrapper.
-    makeWrapper ${lib.getExe electron} $out/bin/hermes-desktop \
-      --add-flags "$out/share/hermes-desktop" \
-      --set HERMES_DESKTOP_HERMES "${lib.getExe hermesAgent}" \
+    makeWrapper ${lib.getExe electron} $out/bin/lydia-desktop \
+      --add-flags "$out/share/lydia-desktop" \
+      --set LYDIA_DESKTOP_LYDIA "${lib.getExe lydiaAgent}" \
       --set ELECTRON_IS_DEV 0
 
     runHook postInstall
@@ -160,9 +160,9 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Native Electron desktop shell for Lydia Agent";
-    homepage = "https://github.com/NousResearch/hermes-agent";
+    homepage = "https://10.1.200.116:3000/arquant-admin/NewLydia";
     license = licenses.mit;
     platforms = platforms.unix;
-    mainProgram = "hermes-desktop";
+    mainProgram = "lydia-desktop";
   };
 }

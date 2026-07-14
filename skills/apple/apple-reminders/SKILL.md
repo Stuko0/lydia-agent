@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [macos]
 metadata:
-  hermes:
+  lydia:
     tags: [Reminders, tasks, todo, macOS, Apple]
 prerequisites:
   commands: [remindctl]

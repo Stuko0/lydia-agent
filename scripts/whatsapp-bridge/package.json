@@ -1,5 +1,5 @@
 {
-  "name": "hermes-whatsapp-bridge",
+  "name": "lydia-whatsapp-bridge",
   "version": "1.0.0",
   "description": "WhatsApp bridge for Lydia Agent using Baileys",
   "private": true,

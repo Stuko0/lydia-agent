@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [macos]
 metadata:
-  hermes:
+  lydia:
     tags: [Notes, Apple, macOS, note-taking]
     related_skills: [obsidian]
 prerequisites:

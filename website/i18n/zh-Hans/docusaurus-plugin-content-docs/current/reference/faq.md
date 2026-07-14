@@ -12,56 +12,56 @@ description: "Lydia Agent 常见问题解答及常见问题解决方案"
 
 ## 常见问题
 
-### Hermes 支持哪些 LLM 提供商？
+### Lydia 支持哪些 LLM 提供商？
 
 Lydia Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商包括：
 
 - **[OpenRouter](https://openrouter.ai/)** — 通过一个 API key 访问数百个模型（推荐，灵活性强）
 - **Nous Portal** — Nous Research 自有推理端点
 - **OpenAI** — GPT-5.4、GPT-5-codex、GPT-4.1、GPT-4o 等
-- **Anthropic** — Claude 模型（直接 API、通过 `hermes auth add anthropic` 进行 OAuth、OpenRouter 或任何兼容代理）
+- **Anthropic** — Claude 模型（直接 API、通过 `lydia auth add anthropic` 进行 OAuth、OpenRouter 或任何兼容代理）
 - **Google** — Gemini 模型（通过 `gemini` 提供商直接调用 API、OpenRouter 或兼容代理）
 - **z.ai / ZhipuAI** — GLM 模型
 - **Kimi / Moonshot AI** — Kimi 模型
 - **MiniMax** — 全球及中国区端点
 - **本地模型** — 通过 [Ollama](https://ollama.com/)、[vLLM](https://docs.vllm.ai/)、[llama.cpp](https://github.com/ggerganov/llama.cpp)、[SGLang](https://github.com/sgl-project/sglang) 或任何兼容 OpenAI 的服务器
 
-使用 `lydia model` 设置提供商，或直接编辑 `~/.hermes/.env`。所有提供商 key 请参阅[环境变量](./environment-variables.md)参考文档。
+使用 `lydia model` 设置提供商，或直接编辑 `~/.lydia/.env`。所有提供商 key 请参阅[环境变量](./environment-variables.md)参考文档。
 
 ### 支持 Windows 吗？
 
-**原生不支持。** Lydia Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 Hermes。标准安装命令在 WSL2 中可完美运行：
+**原生不支持。** Lydia Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 Lydia。标准安装命令在 WSL2 中可完美运行：
 
 ```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
 ```
 
-### 我在 WSL2 中运行 Hermes，如何控制 Windows 上的普通 Chrome？
+### 我在 WSL2 中运行 Lydia，如何控制 Windows 上的普通 Chrome？
 
 推荐使用 MCP bridge（桥接），而非 `/browser connect`。
 
 推荐方案：
 
-- 在 WSL2 内运行 Hermes
+- 在 WSL2 内运行 Lydia
 - 继续使用 Windows 上已登录的普通 Chrome
 - 通过 `cmd.exe` 或 `powershell.exe` 将 `chrome-devtools-mcp` 添加为 MCP 服务器
-- 让 Hermes 使用生成的 MCP 浏览器工具
+- 让 Lydia 使用生成的 MCP 浏览器工具
 
-这比强制 Hermes 核心浏览器传输直接跨越 WSL2/Windows 边界进行附加更为可靠。
+这比强制 Lydia 核心浏览器传输直接跨越 WSL2/Windows 边界进行附加更为可靠。
 
 参见：
 
-- [在 Hermes 中使用 MCP](../guides/use-mcp-with-hermes.md#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
+- [在 Lydia 中使用 MCP](../guides/use-mcp-with-lydia.md#wsl2-bridge-lydia-in-wsl-to-windows-chrome)
 - [浏览器自动化](../user-guide/features/browser.md#wsl2--windows-chrome-prefer-mcp-over-browser-connect)
 
 ### 支持 Android / Termux 吗？
 
-支持 — Hermes 现已为 Android 手机提供经过测试的 Termux 安装路径。
+支持 — Lydia 现已为 Android 手机提供经过测试的 Termux 安装路径。
 
 快速安装：
 
 ```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
 ```
 
 完整的手动步骤、支持的扩展及当前限制，请参阅 [Termux 指南](../getting-started/termux.md)。
@@ -70,7 +70,7 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 ### 我的数据会被发送到哪里？
 
-API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。Lydia Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.hermes/` 目录中。
+API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。Lydia Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.lydia/` 目录中。
 
 ### 可以离线使用 / 使用本地模型吗？
 
@@ -94,16 +94,16 @@ model:
   base_url: http://localhost:11434/v1
 ```
 
-Hermes 会将端点、提供商和 base URL 持久化到 `config.yaml`，重启后仍然有效。如果您的本地服务器只加载了一个模型，`/model custom` 会自动检测到它。您也可以在 config.yaml 中设置 `provider: custom` — 这是一个一等提供商，不是其他任何东西的别名。
+Lydia 会将端点、提供商和 base URL 持久化到 `config.yaml`，重启后仍然有效。如果您的本地服务器只加载了一个模型，`/model custom` 会自动检测到它。您也可以在 config.yaml 中设置 `provider: custom` — 这是一个一等提供商，不是其他任何东西的别名。
 
 此方式适用于 Ollama、vLLM、llama.cpp server、SGLang、LocalAI 等。详情请参阅[配置指南](../user-guide/configuration.md)。
 
 :::tip Ollama 用户
-如果您在 Ollama 中设置了自定义 `num_ctx`（例如 `ollama run --num_ctx 16384`），请确保在 Hermes 中设置匹配的上下文长度 — Ollama 的 `/api/show` 报告的是模型的*最大*上下文，而非您配置的实际 `num_ctx`。
+如果您在 Ollama 中设置了自定义 `num_ctx`（例如 `ollama run --num_ctx 16384`），请确保在 Lydia 中设置匹配的上下文长度 — Ollama 的 `/api/show` 报告的是模型的*最大*上下文，而非您配置的实际 `num_ctx`。
 :::
 
 :::tip 本地模型超时问题
-Hermes 会自动检测本地端点并放宽流式传输超时（读取超时从 120s 提升至 1800s，禁用停滞流检测）。如果在非常大的上下文下仍然超时，请在 `.env` 中设置 `HERMES_STREAM_READ_TIMEOUT=1800`。详情请参阅[本地 LLM 指南](../guides/local-llm-on-mac.md#timeouts)。
+Lydia 会自动检测本地端点并放宽流式传输超时（读取超时从 120s 提升至 1800s，禁用停滞流检测）。如果在非常大的上下文下仍然超时，请在 `.env` 中设置 `LYDIA_STREAM_READ_TIMEOUT=1800`。详情请参阅[本地 LLM 指南](../guides/local-llm-on-mac.md#timeouts)。
 :::
 
 ### 费用是多少？
@@ -123,7 +123,7 @@ Lydia Agent 本身**免费且开源**（MIT 许可证）。您只需为所选提
 
 ### 可以在我自己的 Python 项目中使用吗？
 
-可以。导入 `AIAgent` 类，以编程方式使用 Hermes：
+可以。导入 `AIAgent` 类，以编程方式使用 Lydia：
 
 ```python
 from run_agent import AIAgent
@@ -140,7 +140,7 @@ response = agent.chat("Explain quantum computing briefly")
 
 ### 安装问题
 
-#### 安装后出现 `hermes: command not found`
+#### 安装后出现 `lydia: command not found`
 
 **原因：** Shell 未重新加载更新后的 PATH。
 
@@ -155,8 +155,8 @@ source ~/.zshrc     # zsh
 
 如果仍然无效，请验证安装位置：
 ```bash
-which hermes
-ls ~/.local/bin/hermes
+which lydia
+ls ~/.local/bin/lydia
 ```
 
 :::tip
@@ -165,7 +165,7 @@ ls ~/.local/bin/hermes
 
 #### Python 版本过旧
 
-**原因：** Hermes 需要 Python 3.11 或更新版本。
+**原因：** Lydia 需要 Python 3.11 或更新版本。
 
 **解决方案：**
 ```bash
@@ -180,9 +180,9 @@ brew install python@3.12      # macOS
 
 #### 终端命令提示 `node: command not found`（或 `nvm`、`pyenv`、`asdf` 等）
 
-**原因：** Hermes 在启动时通过运行一次 `bash -l` 构建每个会话的环境快照。bash 登录 shell 会读取 `/etc/profile`、`~/.bash_profile` 和 `~/.profile`，但**不会 source `~/.bashrc`** — 因此在 `~/.bashrc` 中安装自身的工具（`nvm`、`asdf`、`pyenv`、`cargo`、自定义 `PATH` 导出）对快照不可见。当 Hermes 在 systemd 下运行或在未预加载交互式 shell 配置的最小 shell 中运行时，此问题最为常见。
+**原因：** Lydia 在启动时通过运行一次 `bash -l` 构建每个会话的环境快照。bash 登录 shell 会读取 `/etc/profile`、`~/.bash_profile` 和 `~/.profile`，但**不会 source `~/.bashrc`** — 因此在 `~/.bashrc` 中安装自身的工具（`nvm`、`asdf`、`pyenv`、`cargo`、自定义 `PATH` 导出）对快照不可见。当 Lydia 在 systemd 下运行或在未预加载交互式 shell 配置的最小 shell 中运行时，此问题最为常见。
 
-**解决方案：** Hermes 默认自动 source `~/.bashrc`。如果这还不够 — 例如您是 zsh 用户，PATH 在 `~/.zshrc` 中，或者您从独立文件初始化 `nvm` — 请在 `~/.hermes/config.yaml` 中列出需要额外 source 的文件：
+**解决方案：** Lydia 默认自动 source `~/.bashrc`。如果这还不够 — 例如您是 zsh 用户，PATH 在 `~/.zshrc` 中，或者您从独立文件初始化 `nvm` — 请在 `~/.lydia/config.yaml` 中列出需要额外 source 的文件：
 
 ```yaml
 terminal:
@@ -223,9 +223,9 @@ source ~/.bashrc
 ```bash
 # 不要对安装程序使用 sudo — 它安装到 ~/.local/bin
 # 如果之前使用 sudo 安装，请先清理：
-sudo rm /usr/local/bin/hermes
+sudo rm /usr/local/bin/lydia
 # 然后重新运行标准安装程序
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
 ```
 
 ---
@@ -239,7 +239,7 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 **解决方案：** 退出当前会话，在终端中使用 `lydia model` 添加新提供商：
 
 ```bash
-# 先退出 Hermes 聊天会话（Ctrl+C 或 /quit）
+# 先退出 Lydia 聊天会话（Ctrl+C 或 /quit）
 
 # 运行完整的提供商设置向导
 lydia model
@@ -275,7 +275,7 @@ lydia config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 ```
 
 :::warning
-请确保 key 与提供商匹配。OpenAI 的 key 无法用于 OpenRouter，反之亦然。检查 `~/.hermes/.env` 中是否有冲突条目。
+请确保 key 与提供商匹配。OpenAI 的 key 无法用于 OpenRouter，反之亦然。检查 `~/.lydia/.env` 中是否有冲突条目。
 :::
 
 #### 模型不可用 / 找不到模型
@@ -288,7 +288,7 @@ lydia config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 lydia model
 
 # 设置有效的模型
-lydia config set HERMES_MODEL anthropic/claude-opus-4.7
+lydia config set LYDIA_MODEL anthropic/claude-opus-4.7
 
 # 或按会话指定
 lydia chat --model openrouter/meta-llama/llama-3.1-70b-instruct
@@ -305,7 +305,7 @@ lydia chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 
 #### 上下文长度超限
 
-**原因：** 对话内容超出模型的上下文窗口，或 Hermes 检测到的模型上下文长度有误。
+**原因：** 对话内容超出模型的上下文窗口，或 Lydia 检测到的模型上下文长度有误。
 
 **解决方案：**
 ```bash
@@ -319,14 +319,14 @@ lydia chat
 lydia chat --model openrouter/google/gemini-3-flash-preview
 ```
 
-如果在第一次长对话时就出现此问题，Hermes 可能检测到了错误的模型上下文长度。检查检测结果：
+如果在第一次长对话时就出现此问题，Lydia 可能检测到了错误的模型上下文长度。检查检测结果：
 
 查看 CLI 启动行 — 它会显示检测到的上下文长度（例如 `📊 Context limit: 128000 tokens`）。您也可以在会话中使用 `/usage` 查看。
 
 如需修正上下文检测，请显式设置：
 
 ```yaml
-# 在 ~/.hermes/config.yaml 中
+# 在 ~/.lydia/config.yaml 中
 model:
   default: your-model-name
   context_length: 131072  # 您模型的实际上下文窗口
@@ -351,14 +351,14 @@ custom_providers:
 
 #### 命令被标记为危险而阻止
 
-**原因：** Hermes 检测到潜在的破坏性命令（例如 `rm -rf`、`DROP TABLE`）。这是一项安全功能。
+**原因：** Lydia 检测到潜在的破坏性命令（例如 `rm -rf`、`DROP TABLE`）。这是一项安全功能。
 
 **解决方案：** 出现提示时，检查命令并输入 `y` 批准执行。您也可以：
 - 要求智能体使用更安全的替代方案
 - 在[安全文档](../user-guide/security.md)中查看完整的危险模式列表
 
 :::tip
-这是预期行为 — Hermes 绝不会静默执行破坏性命令。审批提示会向您显示将要执行的确切内容。
+这是预期行为 — Lydia 绝不会静默执行破坏性命令。审批提示会向您显示将要执行的确切内容。
 :::
 
 #### 通过消息网关时 `sudo` 不起作用
@@ -398,13 +398,13 @@ docker run hello-world
 **解决方案：**
 ```bash
 # 检查网关是否在运行
-hermes gateway status
+lydia gateway status
 
 # 启动网关
-hermes gateway start
+lydia gateway start
 
 # 查看错误日志
-cat ~/.hermes/logs/gateway.log | tail -50
+cat ~/.lydia/logs/gateway.log | tail -50
 ```
 
 #### 消息未送达
@@ -412,8 +412,8 @@ cat ~/.hermes/logs/gateway.log | tail -50
 **原因：** 网络问题、bot token 已过期，或平台 webhook 配置错误。
 
 **解决方案：**
-- 使用 `hermes gateway setup` 验证您的 bot token 是否有效
-- 检查网关日志：`cat ~/.hermes/logs/gateway.log | tail -50`
+- 使用 `lydia gateway setup` 验证您的 bot token 是否有效
+- 检查网关日志：`cat ~/.lydia/logs/gateway.log | tail -50`
 - 对于基于 webhook 的平台（Slack、WhatsApp），确保您的服务器可公开访问
 
 #### 白名单混淆 — 谁可以与 bot 交互？
@@ -428,7 +428,7 @@ cat ~/.hermes/logs/gateway.log | tail -50
 | **私信配对** | 第一个在私信中发消息的用户获得独占访问权 |
 | **开放** | 任何人都可以交互（不建议用于生产环境） |
 
-在 `~/.hermes/config.yaml` 中您的网关设置下进行配置。请参阅[消息文档](../user-guide/messaging/index.md)。
+在 `~/.lydia/config.yaml` 中您的网关设置下进行配置。请参阅[消息文档](../user-guide/messaging/index.md)。
 
 #### 网关无法启动
 
@@ -437,7 +437,7 @@ cat ~/.hermes/logs/gateway.log | tail -50
 **解决方案：**
 ```bash
 # 安装核心消息网关依赖项
-cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"  # Telegram、Discord、Slack 及共享网关依赖
+cd ~/.lydia/lydia-agent && uv pip install -e ".[messaging]"  # Telegram、Discord、Slack 及共享网关依赖
 
 # 检查端口冲突
 lsof -i :8080
@@ -446,7 +446,7 @@ lsof -i :8080
 lydia config show
 ```
 
-#### WSL：网关持续断开连接或 `hermes gateway start` 失败
+#### WSL：网关持续断开连接或 `lydia gateway start` 失败
 
 **原因：** WSL 的 systemd 支持不稳定。许多 WSL2 安装未启用 systemd，即使启用，服务也可能在 WSL 重启或 Windows 空闲关机后无法存活。
 
@@ -454,14 +454,14 @@ lydia config show
 
 ```bash
 # 方案一：直接前台运行（最简单）
-hermes gateway run
+lydia gateway run
 
 # 方案二：通过 tmux 持久运行（关闭终端后仍存活）
-tmux new -s hermes 'hermes gateway run'
-# 稍后重新连接：tmux attach -t hermes
+tmux new -s lydia 'lydia gateway run'
+# 稍后重新连接：tmux attach -t lydia
 
 # 方案三：通过 nohup 后台运行
-nohup hermes gateway run > ~/.hermes/logs/gateway.log 2>&1 &
+nohup lydia gateway run > ~/.lydia/logs/gateway.log 2>&1 &
 ```
 
 如果仍想尝试 systemd，请确保已启用：
@@ -478,7 +478,7 @@ nohup hermes gateway run > ~/.hermes/logs/gateway.log 2>&1 &
 
 :::tip Windows 开机自启
 如需可靠的自启动，使用 Windows 任务计划程序在登录时启动 WSL + 网关：
-1. 创建一个任务，运行 `wsl -d Ubuntu -- bash -lc 'hermes gateway run'`
+1. 创建一个任务，运行 `wsl -d Ubuntu -- bash -lc 'lydia gateway run'`
 2. 设置在用户登录时触发
 :::
 
@@ -486,17 +486,17 @@ nohup hermes gateway run > ~/.hermes/logs/gateway.log 2>&1 &
 
 **原因：** launchd 服务继承的是最小 PATH（`/usr/bin:/bin:/usr/sbin:/sbin`），不包含 Homebrew、nvm、cargo 或其他用户安装的工具目录。这通常会导致 WhatsApp bridge（`node not found`）或语音转录（`ffmpeg not found`）失败。
 
-**解决方案：** 网关在您运行 `hermes gateway install` 时会捕获您的 shell PATH。如果您在设置网关后安装了新工具，请重新运行 install 以捕获更新后的 PATH：
+**解决方案：** 网关在您运行 `lydia gateway install` 时会捕获您的 shell PATH。如果您在设置网关后安装了新工具，请重新运行 install 以捕获更新后的 PATH：
 
 ```bash
-hermes gateway install    # 重新快照当前 PATH
-hermes gateway start      # 检测到更新的 plist 并重新加载
+lydia gateway install    # 重新快照当前 PATH
+lydia gateway start      # 检测到更新的 plist 并重新加载
 ```
 
 您可以验证 plist 中的 PATH 是否正确：
 ```bash
 /usr/libexec/PlistBuddy -c "Print :EnvironmentVariables:PATH" \
-  ~/Library/LaunchAgents/ai.hermes.gateway.plist
+  ~/Library/LaunchAgents/ai.lydia.gateway.plist
 ```
 
 ---
@@ -557,7 +557,7 @@ lydia chat --continue
 **解决方案：**
 ```bash
 # 确保 MCP 依赖项已安装（标准安装中已包含）
-cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+cd ~/.lydia/lydia-agent && uv pip install -e ".[mcp]"
 
 # 对于基于 npm 的服务器，确保 Node.js 可用
 node --version
@@ -567,7 +567,7 @@ npx --version
 npx -y @modelcontextprotocol/server-filesystem /tmp
 ```
 
-验证您的 `~/.hermes/config.yaml` 中的 MCP 配置：
+验证您的 `~/.lydia/config.yaml` 中的 MCP 配置：
 ```yaml
 mcp_servers:
   filesystem:
@@ -590,13 +590,13 @@ mcp_servers:
 # 验证 MCP 服务器已配置
 lydia config show | grep -A 12 mcp_servers
 
-# 更改配置后重启 Hermes 或重新加载 MCP
+# 更改配置后重启 Lydia 或重新加载 MCP
 lydia chat
 ```
 
 另请参阅：
 - [MCP（模型上下文协议）](/user-guide/features/mcp)
-- [在 Hermes 中使用 MCP](/guides/use-mcp-with-hermes)
+- [在 Lydia 中使用 MCP](/guides/use-mcp-with-lydia)
 - [MCP 配置参考](/reference/mcp-config-reference)
 
 #### MCP 超时错误
@@ -609,16 +609,16 @@ lydia chat
 - 对于远程 HTTP MCP 服务器，检查网络连接
 
 :::warning
-如果 MCP 服务器在请求中途崩溃，Hermes 会报告超时。请检查服务器自身的日志（而非仅 Hermes 日志）以诊断根本原因。
+如果 MCP 服务器在请求中途崩溃，Lydia 会报告超时。请检查服务器自身的日志（而非仅 Lydia 日志）以诊断根本原因。
 :::
 
 ---
 
 ## Profiles（配置文件）
 
-### Profiles 与直接设置 HERMES_HOME 有何不同？
+### Profiles 与直接设置 LYDIA_HOME 有何不同？
 
-Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命令前手动设置 `HERMES_HOME=/some/path`，但 profiles 会为您处理所有底层工作：创建目录结构、生成 shell 别名（`hermes-work`）、在 `~/.hermes/active_profile` 中跟踪活动 profile，以及自动跨所有 profiles 同步技能更新。它们还与 tab 补全集成，让您无需记忆路径。
+Profiles 是构建在 `LYDIA_HOME` 之上的托管层。您*可以*在每次命令前手动设置 `LYDIA_HOME=/some/path`，但 profiles 会为您处理所有底层工作：创建目录结构、生成 shell 别名（`lydia-work`）、在 `~/.lydia/active_profile` 中跟踪活动 profile，以及自动跨所有 profiles 同步技能更新。它们还与 tab 补全集成，让您无需记忆路径。
 
 ### 两个 profiles 可以共享同一个 bot token 吗？
 
@@ -626,7 +626,7 @@ Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命
 
 ### Profiles 共享记忆或会话吗？
 
-不共享。每个 profile 都有自己独立的记忆存储、会话数据库和技能目录，完全隔离。如果您想用现有的记忆和会话创建新 profile，请使用 `hermes profile create newname --clone-all` 从当前 profile 复制所有内容，或添加 `--clone-from <profile>` 从指定源 profile 复制。
+不共享。每个 profile 都有自己独立的记忆存储、会话数据库和技能目录，完全隔离。如果您想用现有的记忆和会话创建新 profile，请使用 `lydia profile create newname --clone-all` 从当前 profile 复制所有内容，或添加 `--clone-from <profile>` 从指定源 profile 复制。
 
 ### 运行 `lydia update` 时会发生什么？
 
@@ -634,7 +634,7 @@ Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命
 
 ### 可以运行多少个 profiles？
 
-没有硬性限制。每个 profile 只是 `~/.hermes/profiles/` 下的一个目录。实际限制取决于您的磁盘空间以及系统能处理多少个并发网关（每个网关是一个轻量级 Python 进程）。运行数十个 profiles 完全没问题；每个空闲的 profile 不占用任何资源。
+没有硬性限制。每个 profile 只是 `~/.lydia/profiles/` 下的一个目录。实际限制取决于您的磁盘空间以及系统能处理多少个并发网关（每个网关是一个轻量级 Python 进程）。运行数十个 profiles 完全没问题；每个空闲的 profile 不占用任何资源。
 
 ---
 
@@ -644,7 +644,7 @@ Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命
 
 **场景：** 您日常使用 GPT-5.4，但 Gemini 或 Grok 写社交媒体内容更好。每次手动切换模型很繁琐。
 
-**解决方案：委托配置。** Hermes 可以自动将子智能体路由到不同的模型。在 `~/.hermes/config.yaml` 中设置：
+**解决方案：委托配置。** Lydia 可以自动将子智能体路由到不同的模型。在 `~/.lydia/config.yaml` 中设置：
 
 ```yaml
 delegation:
@@ -652,7 +652,7 @@ delegation:
   provider: "openrouter"                    # 子智能体的提供商
 ```
 
-现在当您告诉 Hermes "帮我写一个关于 X 的 Twitter 帖子"并生成 `delegate_task` 子智能体时，该子智能体将在 Gemini 上运行，而非您的主模型。您的主对话仍在 GPT-5.4 上进行。
+现在当您告诉 Lydia "帮我写一个关于 X 的 Twitter 帖子"并生成 `delegate_task` 子智能体时，该子智能体将在 Gemini 上运行，而非您的主模型。您的主对话仍在 GPT-5.4 上进行。
 
 您也可以在 prompt 中明确指定：*"委托一个任务来撰写关于我们产品发布的社交媒体帖子。让你的子智能体负责实际写作。"* 智能体将使用 `delegate_task`，它会自动读取委托配置。
 
@@ -668,9 +668,9 @@ delegation:
 
 ### 在一个 WhatsApp 号码上运行多个智能体（按聊天绑定）
 
-**场景：** 在 OpenClaw 中，您可以将多个独立智能体绑定到特定的 WhatsApp 聊天 — 一个用于家庭购物清单群组，另一个用于您的私聊。Hermes 能做到吗？
+**场景：** 在 OpenClaw 中，您可以将多个独立智能体绑定到特定的 WhatsApp 聊天 — 一个用于家庭购物清单群组，另一个用于您的私聊。Lydia 能做到吗？
 
-**当前限制：** Hermes 的每个 profile 都需要自己的 WhatsApp 号码/会话。您无法将多个 profiles 绑定到同一个 WhatsApp 号码上的不同聊天 — WhatsApp bridge（Baileys）每个号码使用一个已认证的会话。
+**当前限制：** Lydia 的每个 profile 都需要自己的 WhatsApp 号码/会话。您无法将多个 profiles 绑定到同一个 WhatsApp 号码上的不同聊天 — WhatsApp bridge（Baileys）每个号码使用一个已认证的会话。
 
 **变通方案：**
 
@@ -686,7 +686,7 @@ delegation:
 
 ### 控制 Telegram 中显示的内容（隐藏日志和推理过程）
 
-**场景：** 您在 Telegram 中看到了网关执行日志、Hermes 推理过程和工具调用详情，而不是最终输出。
+**场景：** 您在 Telegram 中看到了网关执行日志、Lydia 推理过程和工具调用详情，而不是最终输出。
 
 **解决方案：** `config.yaml` 中的 `display.tool_progress` 设置控制显示多少工具活动：
 
@@ -711,9 +711,9 @@ display:
 
 ### 在 Telegram 上管理技能（slash 命令限制）
 
-**场景：** Telegram 有 100 个 slash 命令的限制，您的技能数量已超过此限制。您想禁用 Telegram 上不需要的技能，但 `hermes skills config` 设置似乎没有生效。
+**场景：** Telegram 有 100 个 slash 命令的限制，您的技能数量已超过此限制。您想禁用 Telegram 上不需要的技能，但 `lydia skills config` 设置似乎没有生效。
 
-**解决方案：** 使用 `hermes skills config` 按平台禁用技能。这会写入 `config.yaml`：
+**解决方案：** 使用 `lydia skills config` 按平台禁用技能。这会写入 `config.yaml`：
 
 ```yaml
 skills:
@@ -722,7 +722,7 @@ skills:
     telegram: [skill-a, skill-b]  # 仅在 telegram 上禁用
 ```
 
-更改后，**重启网关**（`hermes gateway restart` 或终止并重新启动）。Telegram bot 命令菜单在启动时重建。
+更改后，**重启网关**（`lydia gateway restart` 或终止并重新启动）。Telegram bot 命令菜单在启动时重建。
 
 :::tip
 描述过长的技能在 Telegram 菜单中会被截断为 40 个字符，以符合 payload 大小限制。如果技能未出现，可能是总 payload 大小问题而非 100 个命令数量限制 — 禁用未使用的技能对两者都有帮助。
@@ -732,7 +732,7 @@ skills:
 
 **场景：** 您有一个 Telegram 或 Discord 线程，多人在其中 @ bot。您希望该线程中的所有 @ 都属于一个共享对话，而非每个用户各自独立的会话。
 
-**当前行为：** Hermes 在大多数平台上按用户 ID 创建会话，因此每个人都有自己的对话上下文。这是出于隐私和上下文隔离的设计考量。
+**当前行为：** Lydia 在大多数平台上按用户 ID 创建会话，因此每个人都有自己的对话上下文。这是出于隐私和上下文隔离的设计考量。
 
 **变通方案：**
 
@@ -742,7 +742,7 @@ skills:
 
 3. **使用 Discord 频道。** Discord 会话按频道键控，因此同一频道中的所有用户共享上下文。为共享对话使用专用频道。
 
-### 将 Hermes 迁移到另一台机器
+### 将 Lydia 迁移到另一台机器
 
 **场景：** 您在一台机器上积累了技能、cron 作业和记忆，想将所有内容迁移到新的专用 Linux 机器。
 
@@ -750,22 +750,22 @@ skills:
 
 1. 在新机器上安装 Lydia Agent：
    ```bash
-   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+   curl -fsSL https://lydia-agent.nousresearch.com/install.sh | bash
    ```
 
 2. 在**源机器**上创建完整备份：
    ```bash
-   hermes backup
+   lydia backup
    ```
-   这会将您整个 `~/.hermes/` 目录（配置、API key、记忆、技能、会话和 profiles）打包为 zip 文件，保存到主目录 `~/hermes-backup-<timestamp>.zip`。
+   这会将您整个 `~/.lydia/` 目录（配置、API key、记忆、技能、会话和 profiles）打包为 zip 文件，保存到主目录 `~/lydia-backup-<timestamp>.zip`。
 
 3. 将 zip 文件复制到新机器并导入：
    ```bash
    # 在源机器上
-   scp ~/hermes-backup-<timestamp>.zip newmachine:~/
+   scp ~/lydia-backup-<timestamp>.zip newmachine:~/
 
    # 在新机器上
-   hermes import ~/hermes-backup-<timestamp>.zip
+   lydia import ~/lydia-backup-<timestamp>.zip
    ```
 
 4. 在新机器上运行 `lydia setup` 以验证 API key 和提供商配置是否正常工作。
@@ -776,38 +776,38 @@ skills:
 
 ```bash
 # 在源机器上
-hermes profile export work ./work-backup.tar.gz
+lydia profile export work ./work-backup.tar.gz
 
 # 将文件复制到目标机器，然后：
-hermes profile import ./work-backup.tar.gz work
+lydia profile import ./work-backup.tar.gz work
 ```
 
 导入的 profile 将包含导出时的所有配置、记忆、会话和技能。如果新机器的设置不同，您可能需要更新路径或重新向提供商进行身份验证。
 
-### `hermes backup` 与 `hermes profile export` 的对比
+### `lydia backup` 与 `lydia profile export` 的对比
 
-| 功能 | `hermes backup` | `hermes profile export` |
+| 功能 | `lydia backup` | `lydia profile export` |
 | :--- | :--- | :--- |
 | **使用场景** | **整机迁移** | **移植/共享特定 profile** |
-| **范围** | 全局（整个 `~/.hermes` 目录） | 局部（单个 profile 目录） |
+| **范围** | 全局（整个 `~/.lydia` 目录） | 局部（单个 profile 目录） |
 | **包含内容** | 所有 profiles、全局配置、API key、会话 | 单个 profile：SOUL.md、记忆、会话、技能 |
 | **凭据** | **包含**（`.env` 和 `auth.json`） | **排除**（为安全共享而剥离） |
 | **格式** | `.zip` | `.tar.gz` |
 
 **手动备选方案（rsync）：** 如果您倾向于直接复制文件，请排除代码仓库：
 ```bash
-rsync -av --exclude='hermes-agent' ~/.hermes/ newmachine:~/.hermes/
+rsync -av --exclude='lydia-agent' ~/.lydia/ newmachine:~/.lydia/
 ```
 
 :::tip
-`hermes backup` 即使在 Hermes 正在运行时也能生成一致的快照。还原的归档文件不包含机器本地的运行时文件，如 `gateway.pid` 和 `cron.pid`。
+`lydia backup` 即使在 Lydia 正在运行时也能生成一致的快照。还原的归档文件不包含机器本地的运行时文件，如 `gateway.pid` 和 `cron.pid`。
 :::
 
 ### 安装后重新加载 shell 时出现权限拒绝
 
-**场景：** 运行 Hermes 安装程序后，`source ~/.zshrc` 提示权限拒绝错误。
+**场景：** 运行 Lydia 安装程序后，`source ~/.zshrc` 提示权限拒绝错误。
 
-**原因：** 这通常发生在 `~/.zshrc`（或 `~/.bashrc`）文件权限不正确，或安装程序无法干净写入时。这不是 Hermes 特有的问题 — 而是 shell 配置权限问题。
+**原因：** 这通常发生在 `~/.zshrc`（或 `~/.bashrc`）文件权限不正确，或安装程序无法干净写入时。这不是 Lydia 特有的问题 — 而是 shell 配置权限问题。
 
 **解决方案：**
 ```bash
@@ -854,6 +854,6 @@ lydia chat -q "hello" --model anthropic/claude-opus-4.7
 
 如果您的问题未在此处涵盖：
 
-1. **搜索现有 issue：** [GitHub Issues](https://github.com/NousResearch/hermes-agent/issues)
+1. **搜索现有 issue：** [GitHub Issues](https://github.com/NousResearch/lydia-agent/issues)
 2. **向社区提问：** [Nous Research Discord](https://discord.gg/nousresearch)
-3. **提交 bug 报告：** 请包含您的操作系统、Python 版本（`python3 --version`）、Hermes 版本（`hermes --version`）以及完整的错误信息
+3. **提交 bug 报告：** 请包含您的操作系统、Python 版本（`python3 --version`）、Lydia 版本（`lydia --version`）以及完整的错误信息

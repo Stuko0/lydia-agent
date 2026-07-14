@@ -11,7 +11,7 @@
  *              ▼                                                          .
  *     WebSocket /api/pty?token=<session>                                  .
  *          ▼                                                              .
- *     FastAPI pty_ws  (hermes_cli/web_server.py)                          .
+ *     FastAPI pty_ws  (lydia_cli/web_server.py)                          .
  *          ▼                                                              .
  *     POSIX PTY → `node ui-tui/dist/entry.js` → tui_gateway + AIAgent     .
  */
@@ -122,8 +122,8 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
   // so a missing token there is expected, not an error.
   const [banner, setBanner] = useState<string | null>(() =>
     typeof window !== "undefined" &&
-    !window.__HERMES_SESSION_TOKEN__ &&
-    !window.__HERMES_AUTH_REQUIRED__
+    !window.__LYDIA_SESSION_TOKEN__ &&
+    !window.__LYDIA_AUTH_REQUIRED__
       ? "Session token unavailable. Open this page through `lydia dashboard`, not directly."
       : null,
   );
@@ -369,8 +369,8 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
     const host = hostRef.current;
     if (!host) return;
 
-    const token = window.__HERMES_SESSION_TOKEN__;
-    const gated = !!window.__HERMES_AUTH_REQUIRED__;
+    const token = window.__LYDIA_SESSION_TOKEN__;
+    const gated = !!window.__LYDIA_AUTH_REQUIRED__;
     // Banner already initialised above; just bail before wiring xterm/WS.
     // In gated mode the token is absent by design — api.buildWsUrl() mints
     // a WS ticket instead, so don't bail; let the effect reach that path.
@@ -647,7 +647,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
       });
     });
 
-    // WebSocket. In gated mode (``window.__HERMES_AUTH_REQUIRED__``) this
+    // WebSocket. In gated mode (``window.__LYDIA_AUTH_REQUIRED__``) this
     // awaits a single-use ticket via /api/auth/ws-ticket before opening;
     // in loopback mode it resolves synchronously against the injected
     // session token. The IIFE keeps the outer effect synchronous so its
@@ -1117,7 +1117,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
 
 declare global {
   interface Window {
-    __HERMES_SESSION_TOKEN__?: string;
-    __HERMES_AUTH_REQUIRED__?: boolean;
+    __LYDIA_SESSION_TOKEN__?: string;
+    __LYDIA_AUTH_REQUIRED__?: boolean;
   }
 }
