@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [GitLab, Merge-Requests, CI/CD, Git, Automation, Merge]
     related_skills: [gitlab-auth, gitlab-code-review]
 ---
@@ -30,8 +30,8 @@ else
   AUTH="git"
   # Ensure we have a token for API calls
   if [ -z "$GITLAB_TOKEN" ]; then
-    if _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITLAB_TOKEN=" "$_hermes_env"; then
-      GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
+    if _lydia_env="${LYDIA_HOME:-$HOME/.lydia}/.env"; [ -f "$_lydia_env" ] && grep -q "^GITLAB_TOKEN=" "$_lydia_env"; then
+      GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_lydia_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
     elif grep -q "github.com" ~/.git-credentials 2>/dev/null; then
       GITLAB_TOKEN=$(grep "${GITLAB_HOST:-gitlab\.com}" ~/.git-credentials 2>/dev/null | head -1 | sed 's|https://[^:]*:\([^@]*\)@.*|\1|')
     fi

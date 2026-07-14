@@ -6,7 +6,7 @@ author: Lydia Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lydia:
     tags: [GitLab, Authentication, Git, glab-cli, SSH, Setup]
     related_skills: [gitlab-mr-workflow, gitlab-code-review, gitlab-issues, gitlab-repo-management]
 ---
@@ -52,7 +52,7 @@ This is the most portable method — works everywhere, no SSH config needed.
 Tell the user to go to: **https://\${GITLAB_HOST:-gitlab.com}/-/user_settings/personal_access_tokens**
 
 - Click "Generate new token (classic)"
-- Give it a name like "hermes-agent"
+- Give it a name like "lydia-agent"
 - Select scopes:
   - `repo` (full repository access — read, write, push, PRs)
   - `workflow` (trigger and manage GitLab CI)
@@ -131,7 +131,7 @@ cat ~/.ssh/id_ed25519.pub
 Tell the user to add the public key at: **https://\${GITLAB_HOST:-gitlab.com}/-/user_settings/keys**
 - Click "New SSH key"
 - Paste the public key content
-- Give it a title like "hermes-agent-<machine-name>"
+- Give it a title like "lydia-agent-<machine-name>"
 
 **Step 3: Test the connection**
 
@@ -220,8 +220,8 @@ if command -v glab &>/dev/null && glab auth status &>/dev/null; then
   echo "AUTH_METHOD=glab"
 elif [ -n "$GITLAB_TOKEN" ]; then
   echo "AUTH_METHOD=curl"
-elif _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITLAB_TOKEN=" "$_hermes_env"; then
-  export GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
+elif _lydia_env="${LYDIA_HOME:-$HOME/.lydia}/.env"; [ -f "$_lydia_env" ] && grep -q "^GITLAB_TOKEN=" "$_lydia_env"; then
+  export GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_lydia_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
   echo "AUTH_METHOD=curl"
 elif grep -q "github.com" ~/.git-credentials 2>/dev/null; then
   export GITLAB_TOKEN=$(grep "${GITLAB_HOST:-gitlab\.com}" ~/.git-credentials | head -1 | sed 's|https://[^:]*:\([^@]*\)@.*|\1|')

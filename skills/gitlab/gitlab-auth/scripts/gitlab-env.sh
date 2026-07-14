@@ -23,8 +23,8 @@ if command -v glab &>/dev/null && glab auth status &>/dev/null 2>&1; then
     GL_USER=$(glab api user --jq '.login' 2>/dev/null)
 elif [ -n "$GITLAB_TOKEN" ]; then
     GL_AUTH_METHOD="curl"
-elif _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITLAB_TOKEN=" "$_hermes_env" 2>/dev/null; then
-    GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
+elif _lydia_env="${LYDIA_HOME:-$HOME/.lydia}/.env"; [ -f "$_lydia_env" ] && grep -q "^GITLAB_TOKEN=" "$_lydia_env" 2>/dev/null; then
+    GITLAB_TOKEN=$(grep "^GITLAB_TOKEN=" "$_lydia_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
     if [ -n "$GITLAB_TOKEN" ]; then
         GL_AUTH_METHOD="curl"
     fi

@@ -24,7 +24,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519_lydia.pub user@10.1.200.142
 
 ## 2. Configuring Lydia
 
-Once key-based authentication is working, you need to configure Lydia to use the SSH environment. You can do this by setting environment variables or by updating the `config.yaml` file (located in `~/.lydia/config.yaml` or `~/.hermes/config.yaml`).
+Once key-based authentication is working, you need to configure Lydia to use the SSH environment. You can do this by setting environment variables or by updating the `config.yaml` file (located in `~/.lydia/config.yaml` or `~/.lydia/config.yaml`).
 
 ### Option A: config.yaml (Recommended)
 Add the following to your config file:
@@ -45,7 +45,7 @@ TERMINAL_SSH_HOST="10.1.200.142" \
 TERMINAL_SSH_USER="username" \
 TERMINAL_SSH_PORT="22" \
 TERMINAL_SSH_KEY="/home/user/.ssh/id_ed25519_lydia" \
-hermes
+lydia
 ```
 
 ## 3. What the SSH Backend Handles

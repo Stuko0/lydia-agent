@@ -6,7 +6,7 @@ All requests need: `-H "PRIVATE-TOKEN: $GITLAB_TOKEN"`
 
 Use the `gitlab-env.sh` helper to set `$GITLAB_TOKEN`, `$GL_OWNER`, `$GL_REPO` automatically:
 ```bash
-source "${HERMES_HOME:-$HOME/.hermes}/skills/gitlab/gitlab-auth/scripts/gitlab-env.sh"
+source "${LYDIA_HOME:-$HOME/.lydia}/skills/gitlab/gitlab-auth/scripts/gitlab-env.sh"
 ```
 
 ## Repositories
