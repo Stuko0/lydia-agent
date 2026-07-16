@@ -143,3 +143,7 @@ apps/desktop/demo/
 # PR body is the archive. See the lydia-agent-dev skill's
 # pr-infographic-workflow reference (storage rule + lapse #8 / #COMMIT-1).
 infographic/
+
+# Graphify pipeline outputs
+graphify-out/
+GRAPH_REPORT.md

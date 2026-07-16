@@ -33,9 +33,9 @@ def _primary_hex() -> str:
         from lydia_cli.skin_engine import get_active_skin
 
         skin = get_active_skin()
-        return skin.get_color("ui_primary", "") or skin.get_color("banner_title", "#FFD700")
+        return skin.get_color("ui_primary", "") or skin.get_color("banner_title", "#c4a7e7")
     except Exception:
-        return "#FFD700"
+        return "#c4a7e7"
 
 
 @lru_cache(maxsize=1)

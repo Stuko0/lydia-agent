@@ -251,48 +251,42 @@ const cleanPromptSymbol = (s: string | undefined, fallback: string) => {
   return cleaned || fallback
 }
 
+// ── Rose Pine Moon (dark) ─────────────────────────────────────────────
+// https://rosepinetheme.com/palette/moon
 export const DARK_THEME: Theme = {
   color: {
-    primary: '#FFD700',
-    accent: '#FFBF00',
-    border: '#CD7F32',
-    text: '#FFF8DC',
-    muted: '#CC9B1F',
-    // Bumped from the old `#B8860B` darkgoldenrod (~53% luminance) which
-    // read as barely-visible on dark terminals for long body text.  The
-    // new value sits ~60% luminance — readable without losing the "muted /
-    // secondary" semantic.  Field labels still use `label` (65%) which
-    // stays brighter so hierarchy holds.
-    completionBg: '#1a1a2e',
-    completionCurrentBg: '#333355',
-    completionMetaBg: '#1a1a2e',
-    completionMetaCurrentBg: '#333355',
+    primary: '#c4a7e7',     // Iris
+    accent: '#ea9a97',       // Rose
+    border: '#56526e',       // Highlight High
+    text: '#e0def4',         // Text
+    muted: '#6e6a86',        // Muted
+    completionBg: '#2a273f', // Surface
+    completionCurrentBg: '#393552', // Overlay
+    completionMetaBg: '#2a273f',   // Surface
+    completionMetaCurrentBg: '#393552', // Overlay
 
-    label: '#DAA520',
-    ok: '#4caf50',
-    error: '#ef5350',
-    warn: '#ffa726',
+    label: '#908caa',        // Subtle
+    ok: '#9ccfd8',           // Foam
+    error: '#eb6f92',        // Love
+    warn: '#f6c177',         // Gold
 
-    prompt: '#FFF8DC',
-    // sessionLabel/sessionBorder intentionally track the `dim` value — they
-    // are "same role, same colour" by design.  fromSkin's banner_dim fallback
-    // relies on this pairing (#11300).
-    sessionLabel: '#CC9B1F',
-    sessionBorder: '#CC9B1F',
+    prompt: '#e0def4',       // Text
+    sessionLabel: '#6e6a86', // Muted
+    sessionBorder: '#6e6a86', // Muted
 
-    statusBg: '#1a1a2e',
-    statusFg: '#C0C0C0',
-    statusGood: '#8FBC8F',
-    statusWarn: '#FFD700',
-    statusBad: '#FF8C00',
-    statusCritical: '#FF6B6B',
-    selectionBg: '#3a3a55',
+    statusBg: '#2a273f',     // Surface
+    statusFg: '#e0def4',     // Text
+    statusGood: '#9ccfd8',   // Foam
+    statusWarn: '#f6c177',   // Gold
+    statusBad: '#eb6f92',    // Love
+    statusCritical: '#eb6f92', // Love
+    selectionBg: '#393552',  // Overlay
 
-    diffAdded: 'rgb(220,255,220)',
-    diffRemoved: 'rgb(255,220,220)',
-    diffAddedWord: 'rgb(36,138,61)',
-    diffRemovedWord: 'rgb(207,34,46)',
-    shellDollar: '#4dabf7'
+    diffAdded: '#2a363a',         // dark teal bg
+    diffRemoved: '#3a2833',       // dark rose bg
+    diffAddedWord: '#9ccfd8',     // Foam
+    diffRemovedWord: '#eb6f92',   // Love
+    shellDollar: '#3e8fb0'        // Pine
   },
 
   brand: BRAND,
@@ -301,43 +295,42 @@ export const DARK_THEME: Theme = {
   bannerHero: ''
 }
 
-// Light-terminal palette: darker golds/ambers that stay legible on white
-// backgrounds. Same shape as DARK_THEME so `fromSkin` still layers on top
-// cleanly (#11300).
+// ── Rose Pine Dawn (light) ────────────────────────────────────────────
+// https://rosepinetheme.com/palette/dawn
 export const LIGHT_THEME: Theme = {
   color: {
-    primary: '#8B6914',
-    accent: '#A0651C',
-    border: '#7A4F1F',
-    text: '#3D2F13',
-    muted: '#7A5A0F',
-    completionBg: '#F5F5F5',
-    completionCurrentBg: mix('#F5F5F5', '#A0651C', 0.25),
-    completionMetaBg: '#F5F5F5',
-    completionMetaCurrentBg: mix('#F5F5F5', '#A0651C', 0.25),
+    primary: '#907aa9',      // Iris
+    accent: '#d7827e',       // Rose
+    border: '#cecacd',       // Highlight High
+    text: '#575279',         // Text
+    muted: '#9893a5',        // Muted
+    completionBg: '#fffaf3', // Surface
+    completionCurrentBg: mix('#fffaf3', '#d7827e', 0.20),
+    completionMetaBg: '#fffaf3',
+    completionMetaCurrentBg: mix('#fffaf3', '#d7827e', 0.20),
 
-    label: '#7A5A0F',
-    ok: '#2E7D32',
-    error: '#C62828',
-    warn: '#E65100',
+    label: '#797593',        // Subtle
+    ok: '#56949f',           // Foam
+    error: '#b4637a',        // Love
+    warn: '#ea9d34',         // Gold
 
-    prompt: '#2B2014',
-    sessionLabel: '#7A5A0F',
-    sessionBorder: '#7A5A0F',
+    prompt: '#575279',       // Text
+    sessionLabel: '#9893a5', // Muted
+    sessionBorder: '#9893a5', // Muted
 
-    statusBg: '#F5F5F5',
-    statusFg: '#333333',
-    statusGood: '#2E7D32',
-    statusWarn: '#8B6914',
-    statusBad: '#D84315',
-    statusCritical: '#B71C1C',
-    selectionBg: '#D4E4F7',
+    statusBg: '#fffaf3',     // Surface
+    statusFg: '#575279',     // Text
+    statusGood: '#56949f',   // Foam
+    statusWarn: '#ea9d34',   // Gold
+    statusBad: '#b4637a',    // Love
+    statusCritical: '#b4637a', // Love
+    selectionBg: '#dfdad9',  // Highlight Med
 
-    diffAdded: 'rgb(200,240,200)',
-    diffRemoved: 'rgb(240,200,200)',
-    diffAddedWord: 'rgb(27,94,32)',
-    diffRemovedWord: 'rgb(183,28,28)',
-    shellDollar: '#1565C0'
+    diffAdded: '#eaf5f0',         // light teal bg
+    diffRemoved: '#f5eaf0',       // light rose bg
+    diffAddedWord: '#286983',     // Pine
+    diffRemovedWord: '#b4637a',   // Love
+    shellDollar: '#286983'        // Pine
   },
 
   brand: BRAND,

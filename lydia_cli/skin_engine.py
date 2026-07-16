@@ -17,36 +17,36 @@ All fields are optional. Missing values inherit from the ``default`` skin.
 
     # Colors: hex values for Rich markup (banner, UI, response box)
     colors:
-      banner_border: "#CD7F32"            # Panel border color
-      banner_title: "#FFD700"             # Panel title text color
-      banner_accent: "#FFBF00"            # Section headers (Available Tools, etc.)
-      banner_dim: "#B8860B"               # Dim/muted text (separators, labels)
-      banner_text: "#FFF8DC"              # Body text (tool names, skill names)
-      ui_accent: "#FFBF00"               # General UI accent
-      ui_label: "#DAA520"                # UI labels (warm gold; teal clashed w/ default banner gold)
-      ui_ok: "#4caf50"                   # Success indicators
-      ui_error: "#ef5350"                # Error indicators
-      ui_warn: "#ffa726"                 # Warning indicators
-      prompt: "#FFF8DC"                  # Prompt text color
-      input_rule: "#CD7F32"              # Input area horizontal rule
-      response_border: "#FFD700"         # Response box border (ANSI)
-      status_bar_bg: "#1a1a2e"           # Status bar background
-      status_bar_text: "#C0C0C0"         # Status bar default text
-      status_bar_strong: "#FFD700"       # Status bar highlighted text
-      status_bar_dim: "#8B8682"          # Status bar separators/muted text
-      status_bar_good: "#8FBC8F"         # Healthy context usage
-      status_bar_warn: "#FFD700"         # Warning context usage
-      status_bar_bad: "#FF8C00"          # High context usage
-      status_bar_critical: "#FF6B6B"     # Critical context usage
-      session_label: "#DAA520"           # Session label color
-      session_border: "#8B8682"          # Session ID dim color
-      status_bar_bg: "#1a1a2e"          # TUI status/usage bar background
-      voice_status_bg: "#1a1a2e"        # TUI voice status background
-      selection_bg: "#333355"           # TUI mouse-selection highlight background
-      completion_menu_bg: "#1a1a2e"      # Completion menu background
-      completion_menu_current_bg: "#333355"  # Active completion row background
-      completion_menu_meta_bg: "#1a1a2e"     # Completion meta column background
-      completion_menu_meta_current_bg: "#333355"  # Active completion meta background
+      banner_border: "#56526e"            # Panel border color
+      banner_title: "#c4a7e7"             # Panel title text color
+      banner_accent: "#ea9a97"            # Section headers (Available Tools, etc.)
+      banner_dim: "#6e6a86"               # Dim/muted text (separators, labels)
+      banner_text: "#e0def4"              # Body text (tool names, skill names)
+      ui_accent: "#ea9a97"               # General UI accent
+      ui_label: "#908caa"                # UI labels
+      ui_ok: "#9ccfd8"                   # Success indicators
+      ui_error: "#eb6f92"                # Error indicators
+      ui_warn: "#f6c177"                 # Warning indicators
+      prompt: "#e0def4"                  # Prompt text color
+      input_rule: "#56526e"              # Input area horizontal rule
+      response_border: "#c4a7e7"         # Response box border (ANSI)
+      status_bar_bg: "#2a273f"           # Status bar background
+      status_bar_text: "#e0def4"         # Status bar default text
+      status_bar_strong: "#c4a7e7"       # Status bar highlighted text
+      status_bar_dim: "#6e6a86"          # Status bar separators/muted text
+      status_bar_good: "#9ccfd8"         # Healthy context usage
+      status_bar_warn: "#f6c177"         # Warning context usage
+      status_bar_bad: "#eb6f92"          # High context usage
+      status_bar_critical: "#eb6f92"     # Critical context usage
+      session_label: "#908caa"           # Session label color
+      session_border: "#6e6a86"          # Session ID dim color
+      status_bar_bg: "#2a273f"          # TUI status/usage bar background
+      voice_status_bg: "#2a273f"        # TUI voice status background
+      selection_bg: "#393552"           # TUI mouse-selection highlight background
+      completion_menu_bg: "#2a273f"      # Completion menu background
+      completion_menu_current_bg: "#393552"  # Active completion row background
+      completion_menu_meta_bg: "#2a273f"     # Completion meta column background
+      completion_menu_meta_current_bg: "#393552"  # Active completion meta background
 
     # Spinner: customize the animated spinner during API calls
     spinner:
@@ -89,7 +89,7 @@ USAGE
     from lydia_cli.skin_engine import get_active_skin, list_skins, set_active_skin
 
     skin = get_active_skin()
-    print(skin.colors["banner_title"])    # "#FFD700"
+    print(skin.colors["banner_title"])    # "#c4a7e7"
     print(skin.get_branding("agent_name"))  # "Lydia Agent"
 
     set_active_skin("ares")               # Switch to built-in ares skin
@@ -164,24 +164,24 @@ class SkinConfig:
 _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     "default": {
         "name": "default",
-        "description": "Classic Lydia — gold and kawaii",
+        "description": "Rose Pine Moon — iris, rose, and foam",
         "colors": {
-            "banner_border": "#CD7F32",
-            "banner_title": "#FFD700",
-            "banner_accent": "#FFBF00",
-            "banner_dim": "#B8860B",
-            "banner_text": "#FFF8DC",
-            "ui_accent": "#FFBF00",
-            "ui_label": "#DAA520",
-            "ui_ok": "#4caf50",
-            "ui_error": "#ef5350",
-            "ui_warn": "#ffa726",
-            "prompt": "#FFF8DC",
-            "input_rule": "#CD7F32",
-            "response_border": "#FFD700",
-            "status_bar_bg": "#1a1a2e",
-            "session_label": "#DAA520",
-            "session_border": "#8B8682",
+            "banner_border": "#56526e",
+            "banner_title": "#c4a7e7",
+            "banner_accent": "#ea9a97",
+            "banner_dim": "#6e6a86",
+            "banner_text": "#e0def4",
+            "ui_accent": "#ea9a97",
+            "ui_label": "#908caa",
+            "ui_ok": "#9ccfd8",
+            "ui_error": "#eb6f92",
+            "ui_warn": "#f6c177",
+            "prompt": "#e0def4",
+            "input_rule": "#56526e",
+            "response_border": "#c4a7e7",
+            "status_bar_bg": "#2a273f",
+            "session_label": "#908caa",
+            "session_border": "#6e6a86",
         },
         "spinner": {
             # Empty = use hardcoded defaults in display.py
@@ -348,29 +348,29 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     },
     "daylight": {
         "name": "daylight",
-        "description": "Light theme for bright terminals with dark text and cool blue accents",
+        "description": "Rose Pine Dawn — light theme with iris, rose, and foam",
         "colors": {
-            "banner_border": "#2563EB",
-            "banner_title": "#0F172A",
-            "banner_accent": "#1D4ED8",
-            "banner_dim": "#475569",
-            "banner_text": "#111827",
-            "ui_accent": "#2563EB",
-            "ui_label": "#0F766E",
-            "ui_ok": "#15803D",
-            "ui_error": "#B91C1C",
-            "ui_warn": "#B45309",
-            "prompt": "#111827",
-            "input_rule": "#93C5FD",
-            "response_border": "#2563EB",
-            "session_label": "#1D4ED8",
-            "session_border": "#64748B",
-            "status_bar_bg": "#E5EDF8",
-            "voice_status_bg": "#E5EDF8",
-            "completion_menu_bg": "#F8FAFC",
-            "completion_menu_current_bg": "#DBEAFE",
-            "completion_menu_meta_bg": "#EEF2FF",
-            "completion_menu_meta_current_bg": "#BFDBFE",
+            "banner_border": "#cecacd",
+            "banner_title": "#575279",
+            "banner_accent": "#d7827e",
+            "banner_dim": "#9893a5",
+            "banner_text": "#575279",
+            "ui_accent": "#d7827e",
+            "ui_label": "#797593",
+            "ui_ok": "#56949f",
+            "ui_error": "#b4637a",
+            "ui_warn": "#ea9d34",
+            "prompt": "#575279",
+            "input_rule": "#cecacd",
+            "response_border": "#907aa9",
+            "session_label": "#797593",
+            "session_border": "#9893a5",
+            "status_bar_bg": "#fffaf3",
+            "voice_status_bg": "#fffaf3",
+            "completion_menu_bg": "#fffaf3",
+            "completion_menu_current_bg": "#f2e9e1",
+            "completion_menu_meta_bg": "#f4ede8",
+            "completion_menu_meta_current_bg": "#dfdad9",
         },
         "spinner": {},
         "branding": {
@@ -859,24 +859,24 @@ def get_prompt_toolkit_style_overrides() -> Dict[str, str]:
     # color schemes).  Skins can opt into a colored prompt by setting
     # `prompt` explicitly in their YAML.
     prompt = skin.get_color("prompt", "")
-    input_rule = skin.get_color("input_rule", "#CD7F32")
-    title = skin.get_color("banner_title", "#FFD700")
-    text = skin.get_color("banner_text", "#FFF8DC")
-    dim = skin.get_color("banner_dim", "#555555")
+    input_rule = skin.get_color("input_rule", "#56526e")
+    title = skin.get_color("banner_title", "#c4a7e7")
+    text = skin.get_color("banner_text", "#e0def4")
+    dim = skin.get_color("banner_dim", "#6e6a86")
     label = skin.get_color("ui_label", title)
-    warn = skin.get_color("ui_warn", "#FF8C00")
-    error = skin.get_color("ui_error", "#FF6B6B")
-    status_bg = skin.get_color("status_bar_bg", "#1a1a2e")
+    warn = skin.get_color("ui_warn", "#f6c177")
+    error = skin.get_color("ui_error", "#eb6f92")
+    status_bg = skin.get_color("status_bar_bg", "#2a273f")
     status_text = skin.get_color("status_bar_text", text)
     status_strong = skin.get_color("status_bar_strong", title)
     status_dim = skin.get_color("status_bar_dim", dim)
-    status_good = skin.get_color("status_bar_good", skin.get_color("ui_ok", "#8FBC8F"))
+    status_good = skin.get_color("status_bar_good", skin.get_color("ui_ok", "#9ccfd8"))
     status_warn = skin.get_color("status_bar_warn", warn)
     status_bad = skin.get_color("status_bar_bad", skin.get_color("banner_accent", warn))
     status_critical = skin.get_color("status_bar_critical", error)
     voice_bg = skin.get_color("voice_status_bg", status_bg)
-    menu_bg = skin.get_color("completion_menu_bg", "#1a1a2e")
-    menu_current_bg = skin.get_color("completion_menu_current_bg", "#333355")
+    menu_bg = skin.get_color("completion_menu_bg", "#2a273f")
+    menu_current_bg = skin.get_color("completion_menu_current_bg", "#393552")
     menu_meta_bg = skin.get_color("completion_menu_meta_bg", menu_bg)
     menu_meta_current_bg = skin.get_color("completion_menu_meta_current_bg", menu_current_bg)
 

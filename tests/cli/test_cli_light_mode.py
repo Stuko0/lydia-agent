@@ -109,6 +109,17 @@ class TestLightModeRemap:
         assert cli_mod._maybe_remap_for_light_mode("#FFF8DC") == "#1A1A1A"
         assert cli_mod._maybe_remap_for_light_mode("#FFD700") == "#9A6B00"
 
+    def test_remap_rose_pine_moon_to_dawn(self, cli_mod, monkeypatch):
+        """New Rose Pine Moon defaults must have light-mode equivalents."""
+        cli_mod._LIGHT_MODE_CACHE = True
+        # RPM text → RPD text
+        assert cli_mod._maybe_remap_for_light_mode("#e0def4") == "#575279"
+        # RPM love → RPD love
+        assert cli_mod._maybe_remap_for_light_mode("#eb6f92") == "#b4637a"
+        # RPM foam is readable on light backgrounds, pass through
+        remapped = cli_mod._maybe_remap_for_light_mode("#9ccfd8")
+        assert isinstance(remapped, str)
+
     def test_remap_case_insensitive(self, cli_mod, monkeypatch):
         cli_mod._LIGHT_MODE_CACHE = True
         # Lowercase input should still remap.

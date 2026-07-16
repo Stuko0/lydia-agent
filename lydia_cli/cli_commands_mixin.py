@@ -1643,12 +1643,12 @@ class CLICommandsMixin:
                         from lydia_cli.skin_engine import get_active_skin
                         _skin = get_active_skin()
                         label = _skin.get_branding("response_label", "🌹 Lydia")
-                        _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#CD7F32"))
-                        _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#FFF8DC"))
+                        _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#c4a7e7"))
+                        _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#e0def4"))
                     except Exception:
                         label = "🌹 Lydia"
-                        _resp_color = "#CD7F32"
-                        _resp_text = "#FFF8DC"
+                        _resp_color = "#56526e"
+                        _resp_text = "#e0def4"
 
                     _chat_console = ChatConsole()
                     _chat_console.print(Panel(

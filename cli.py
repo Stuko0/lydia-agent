@@ -1950,14 +1950,14 @@ def _prune_orphaned_branches(repo_root: str) -> None:
 # ============================================================================
 
 # Color palette (hex colors for Rich markup):
-# - Gold: #FFD700 (headers, highlights)
-# - Amber: #FFBF00 (secondary highlights)
-# - Bronze: #CD7F32 (tertiary elements)
-# - Light: #FFF8DC (text)
-# - Dim: #B8860B (muted text)
+# - Iris: #c4a7e7 (headers, highlights)
+# - Rose: #ea9a97 (secondary highlights)
+# - Highlight High: #56526e (tertiary elements)
+# - Text: #e0def4 (text)
+# - Muted: #6e6a86 (muted text)]
 
 # ANSI building blocks for conversation display
-_ACCENT_ANSI_DEFAULT = "\033[1;38;2;255;215;0m"  # True-color #FFD700 bold — fallback
+_ACCENT_ANSI_DEFAULT = "\\033[1;38;2;196;167;231m"  # True-color #c4a7e7 bold — fallback
 _BOLD = "\033[1m"
 _RST = "\033[0m"
 _STREAM_PAD = (
@@ -1980,14 +1980,14 @@ def _hex_to_ansi(hex_color: str, *, bold: bool = False) -> str:
         prefix = "1;" if bold else ""
         return f"\033[{prefix}38;2;{r};{g};{b}m"
     except (ValueError, IndexError):
-        return _ACCENT_ANSI_DEFAULT if bold else "\033[38;2;184;134;11m"
+        return _ACCENT_ANSI_DEFAULT if bold else "\\033[38;2;110;106;134m"
 
 
 # ────────────────────────────────────────────────────────────────────────
 # Light/dark terminal mode detection.
 #
 # Mirrors ui-tui/src/theme.ts detectLightMode().  Used to decide whether
-# to remap "near-white" skin colors (e.g. #FFF8DC banner_text, #B8860B
+# to remap "near-white" skin colors (e.g. #e0def4 banner_text, #6e6a86
 # banner_dim) to darker equivalents that are readable on a light
 # Terminal.app / iTerm2 background.
 #
@@ -2168,7 +2168,7 @@ def _detect_light_mode() -> bool:
 #
 # IMPORTANT: only remap colors that are used as STANDALONE foregrounds
 # on the terminal's background.  Don't remap colors that are paired
-# with a dark bg (e.g. status bar text on bg:#1a1a2e) — those would
+# with a dark bg (e.g. status bar text on bg:#2a273f) — those would
 # become invisible the OTHER direction (dark gray on dark navy).
 _LIGHT_MODE_REMAP: dict[str, str] = {
     # Original (dark-mode) -> Light-mode replacement (darker, readable)
@@ -2187,6 +2187,16 @@ _LIGHT_MODE_REMAP: dict[str, str] = {
     # NOTE: skipping #C0C0C0/#888888/#555555/#8B8682 — those are
     # status-bar foregrounds paired with dark navy bg, where dark
     # remap values would become invisible.
+    # Rose Pine Moon -> Rose Pine Dawn (light-mode) remaps
+    "#e0def4": "#575279",
+    "#c4a7e7": "#7a5fa0",
+    "#ea9a97": "#b06a67",
+    "#9ccfd8": "#56949f",
+    "#eb6f92": "#b4637a",
+    "#f6c177": "#ea9d34",
+    "#6e6a86": "#575279",
+    "#908caa": "#575279",
+    "#56526e": "#575279",
 }
 
 
@@ -2251,7 +2261,7 @@ class _SkinAwareAnsi:
     """
 
     def __init__(
-        self, skin_key: str, fallback_hex: str = "#FFD700", *, bold: bool = False
+        self, skin_key: str, fallback_hex: str = "#c4a7e7", *, bold: bool = False
     ):
         self._skin_key = skin_key
         self._fallback_hex = fallback_hex
@@ -2282,12 +2292,12 @@ class _SkinAwareAnsi:
         self._cached = None
 
 
-_ACCENT = _SkinAwareAnsi("response_border", "#FFD700", bold=True)
+_ACCENT = _SkinAwareAnsi("response_border", "#c4a7e7", bold=True)
 # Use ANSI dim+italic attributes (\x1b[2;3m) instead of a hardcoded
 # hex color so dim/thinking text inherits the terminal's default
 # foreground color and stays readable in both light and dark
-# Terminal.app modes.  Hardcoded skin colors like #B8860B
-# (dark goldenrod) become invisible against light cream backgrounds.
+# Terminal.app modes.  Hardcoded skin colors like #6e6a86
+# (muted) become invisible against light cream backgrounds.
 _DIM = "\x1b[2;3m"
 
 
@@ -2316,9 +2326,9 @@ def _accent_hex() -> str:
     try:
         from lydia_cli.skin_engine import get_active_skin
 
-        return get_active_skin().get_color("ui_accent", "#FFBF00")
+        return get_active_skin().get_color("ui_accent", "#ea9a97")
     except Exception:
-        return "#FFBF00"
+        return "#ea9a97"
 
 
 def _rich_text_from_ansi(text: str) -> _RichText:
@@ -3402,29 +3412,29 @@ class ChatConsole:
 
 
 # ASCII Art - LYDIA-AGENT logo (full width, single line - requires ~95 char terminal)
-LYDIA_AGENT_LOGO = """[bold #FFD700]██╗     ██╗   ██╗██████╗ ██╗█████╗         █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
-[bold #FFD700]██║     ╚██╗ ██╔╝██╔══██╗██║██╔══██╗       ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
-[#FFBF00]██║      ╚████╔╝ ██║  ██║██║███████║█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
-[#FFBF00]██║       ╚██╔╝  ██║  ██║██║██╔══██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
-[#CD7F32]███████╗   ██║   ██████╔╝██║██║  ██║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
-[#CD7F32]╚══════╝   ╚═╝   ╚═════╝ ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]"""
+LYDIA_AGENT_LOGO = """[bold #c4a7e7]██╗     ██╗   ██╗██████╗ ██╗█████╗         █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
+[bold #c4a7e7]██║     ╚██╗ ██╔╝██╔══██╗██║██╔══██╗       ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
+[#a78ec4]██║      ╚████╔╝ ██║  ██║██║███████║█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
+[#a78ec4]██║       ╚██╔╝  ██║  ██║██║██╔══██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
+[#7f6c96]███████╗   ██║   ██████╔╝██║██║  ██║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
+[#7f6c96]╚══════╝   ╚═╝   ╚═════╝ ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]"""
 # ASCII Art - Lydia Gothic L (compact, fits in left panel)
-LYDIA_GOTHIC_L = """[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#CD7F32]⠀⠀⠀⠀⠀⠀⠀⠀⣰⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#FFBF00]⠀⠀⠀⠀⠀⠀⢀⣴⠟⠀⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#FFBF00]⠀⠀⠀⠀⠀⢀⡾⠁⢀⡞⠁⠙⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#FFBF00]⠀⠀⠀⠀⠀⣼⠁⠀⢸⠇⠀⠀⠘⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#FFBF00]⠀⠀⠀⠀⣸⠏⠀⠀⣸⠁⠀⠀⢀⠈⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#FFBF00]⠀⠀⠀⢠⡞⠀⠀⢠⡿⠀⠀⢀⡾⠁⠈⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⡮⠁[/]
-[#B8860B]⠀⠀⠀⢸⡇⠀⠀⠸⣿⡀⣴⡟⠀⠀⢀⣿⣧⡀⠀⠀⠀⠀⠀⠀⢨⠁[/]
-[#B8860B]⠀⠀⠀⠸⣧⡀⠀⠀⠙⢿⣿⠃⠀⢀⣼⠃⠈⢿⣧⡄⠀⠀⠀⡀⡞[/]
-[#B8860B]⠀⠀⠀⠈⠛⠿⣄⠀⠀⠀⠑⠒⠉⠉⠁⢠⠔⠊⠛⠿⣄⣀⡽⠋[/]
-[#B8860B]⠀⠀⠀⠀⠀⠀⠀⠈⠛⠳⣤⣀⣀⣀⣴⡞⠀⠀⠀⠀⠀⠈⠻⠟⠀⠀[/]
-[#B8860B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⡞[/]
-[#B8860B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠇[/]
-[#B8860B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡋⠀⠀[/]"""
+LYDIA_GOTHIC_L = """[#c4a7e7]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#c4a7e7]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#a78ec4]⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#a78ec4]⠀⠀⠀⠀⠀⠀⠀⠀⣰⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#7f6c96]⠀⠀⠀⠀⠀⠀⢀⣴⠟⠀⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#7f6c96]⠀⠀⠀⠀⠀⢀⡾⠁⢀⡞⠁⠙⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#7f6c96]⠀⠀⠀⠀⠀⣼⠁⠀⢸⠇⠀⠀⠘⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#7f6c96]⠀⠀⠀⠀⣸⠏⠀⠀⣸⠁⠀⠀⢀⠈⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#7f6c96]⠀⠀⠀⢠⡞⠀⠀⢠⡿⠀⠀⢀⡾⠁⠈⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⡮⠁[/]
+[#584b68]⠀⠀⠀⢸⡇⠀⠀⠸⣿⡀⣴⡟⠀⠀⢀⣿⣧⡀⠀⠀⠀⠀⠀⠀⢨⠁[/]
+[#584b68]⠀⠀⠀⠸⣧⡀⠀⠀⠙⢿⣿⠃⠀⢀⣼⠃⠈⢿⣧⡄⠀⠀⠀⡀⡞[/]
+[#584b68]⠀⠀⠀⠈⠛⠿⣄⠀⠀⠀⠑⠒⠉⠉⠁⢠⠔⠊⠛⠿⣄⣀⡽⠋[/]
+[#584b68]⠀⠀⠀⠀⠀⠀⠀⠈⠛⠳⣤⣀⣀⣀⣴⡞⠀⠀⠀⠀⠀⠈⠻⠟⠀⠀[/]
+[#584b68]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⡞[/]
+[#584b68]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠇[/]
+[#584b68]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡋⠀⠀[/]"""
 
 
 def _build_compact_banner() -> str:
@@ -3437,9 +3447,9 @@ def _build_compact_banner() -> str:
         _skin = None
 
     skin_name = getattr(_skin, "name", "default") if _skin else "default"
-    border_color = _skin.get_color("banner_border", "#FFD700") if _skin else "#FFD700"
-    title_color = _skin.get_color("banner_title", "#FFBF00") if _skin else "#FFBF00"
-    dim_color = _skin.get_color("banner_dim", "#B8860B") if _skin else "#B8860B"
+    border_color = _skin.get_color("banner_border", "#56526e") if _skin else "#56526e"
+    title_color = _skin.get_color("banner_title", "#c4a7e7") if _skin else "#c4a7e7"
+    dim_color = _skin.get_color("banner_dim", "#6e6a86") if _skin else "#6e6a86"
 
     if skin_name == "default":
         line1 = "🌹 Lydia - AI Agent Framework"
@@ -5903,10 +5913,10 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
 
                 _skin = get_active_skin()
                 label = _skin.get_branding("response_label", "🌹 Lydia")
-                _text_hex = _skin.get_color("banner_text", "#FFF8DC")
+                _text_hex = _skin.get_color("banner_text", "#e0def4")
             except Exception:
                 label = "🌹 Lydia"
-                _text_hex = "#FFF8DC"
+                _text_hex = "#e0def4"
             # Build a true-color ANSI escape for the response text color
             # so streamed content matches the Rich Panel appearance.
             try:
@@ -6648,11 +6658,11 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
             from lydia_cli.skin_engine import get_active_skin
 
             skin = get_active_skin()
-            separator_color = skin.get_color("banner_dim", "#B8860B")
-            accent_color = skin.get_color("ui_accent", "#FFBF00")
-            label_color = skin.get_color("ui_label", "#DAA520")
+            separator_color = skin.get_color("banner_dim", "#6e6a86")
+            accent_color = skin.get_color("ui_accent", "#ea9a97")
+            label_color = skin.get_color("ui_label", "#908caa")
         except Exception:
-            separator_color, accent_color, label_color = "#B8860B", "#FFBF00", "cyan"
+            separator_color, accent_color, label_color = "#6e6a86", "#ea9a97", "cyan"
         toolsets_info = ""
         if self.enabled_toolsets and "all" not in self.enabled_toolsets:
             toolsets_info = f" [dim {separator_color}]·[/] [{label_color}]toolsets: {', '.join(self.enabled_toolsets)}[/]"
@@ -8759,10 +8769,10 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
                         from lydia_cli.skin_engine import get_active_skin
 
                         _tip_color = get_active_skin().get_color(
-                            "banner_dim", "#B8860B"
+                            "banner_dim", "#6e6a86"
                         )
                     except Exception:
-                        _tip_color = "#B8860B"
+                        _tip_color = "#6e6a86"
                     cc.print(f"[dim {_tip_color}]✦ Tip: {_tip}[/]")
                 except Exception:
                     pass
@@ -8780,10 +8790,10 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
                         from lydia_cli.skin_engine import get_active_skin
 
                         _tip_color = get_active_skin().get_color(
-                            "banner_dim", "#B8860B"
+                            "banner_dim", "#6e6a86"
                         )
                     except Exception:
-                        _tip_color = "#B8860B"
+                        _tip_color = "#6e6a86"
                     self._console_print(f"[dim {_tip_color}]✦ Tip: {_tip}[/]")
                 except Exception:
                     pass
@@ -13120,15 +13130,15 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
                     _skin = get_active_skin()
                     label = _skin.get_branding("response_label", "🌹 Lydia")
                     _resp_color = _maybe_remap_for_light_mode(
-                        _skin.get_color("response_border", "#CD7F32")
+                        _skin.get_color("response_border", "#56526e")
                     )
                     _resp_text = _maybe_remap_for_light_mode(
-                        _skin.get_color("banner_text", "#FFF8DC")
+                        _skin.get_color("banner_text", "#e0def4")
                     )
                 except Exception:
                     label = "🌹 Lydia"
-                    _resp_color = _maybe_remap_for_light_mode("#CD7F32")
-                    _resp_text = _maybe_remap_for_light_mode("#FFF8DC")
+                    _resp_color = _maybe_remap_for_light_mode("#56526e")
+                    _resp_text = _maybe_remap_for_light_mode("#e0def4")
 
                 is_error_response = result and (
                     result.get("failed") or result.get("partial")
@@ -13500,13 +13510,13 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
         except Exception:
             pass
         # Light-mode remap on the style strings.  Each value is a pt
-        # style string like "bg:#1a1a2e #C0C0C0 bold" — split on space,
+        # style string like "bg:#2a273f #e0def4 bold" — split on space,
         # rewrite any "#XXX" tokens (including "bg:#XXX") through the
         # light-mode remap, rejoin.
         #
         # CRITICAL: skip the remap entirely when a style string already
         # specifies its own bg (e.g. status-bar / completion-menu styles
-        # with `bg:#1a1a2e ...`).  Those colors were tuned for that
+        # with `bg:#2a273f ...`).  Those colors were tuned for that
         # specific dark bg and remapping the FG to a dark equivalent
         # would produce dark-on-dark (invisible).  The terminal's BG
         # mode is irrelevant — what matters is the bg the style itself
@@ -13659,12 +13669,12 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
                 "welcome",
                 "Welcome to Lydia Agent! Type your message or /help for commands.",
             )
-            _welcome_color = _welcome_skin.get_color("banner_text", "#FFF8DC")
+            _welcome_color = _welcome_skin.get_color("banner_text", "#e0def4")
         except Exception:
             _welcome_text = (
                 "Welcome to Lydia Agent! Type your message or /help for commands."
             )
-            _welcome_color = "#FFF8DC"
+            _welcome_color = "#e0def4"
         self._console_print(f"[{_welcome_color}]{_welcome_text}[/]")
 
         # Warm the /model picker's provider-models cache off-thread during this
@@ -13712,9 +13722,9 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
                 and detect_openclaw_residue()
             ):
                 try:
-                    _resid_color = _welcome_skin.get_color("banner_dim", "#B8860B")
+                    _resid_color = _welcome_skin.get_color("banner_dim", "#6e6a86")
                 except Exception:
-                    _resid_color = "#B8860B"
+                    _resid_color = "#6e6a86"
                 self._console_print(f"[{_resid_color}]{openclaw_residue_hint_cli()}[/]")
                 try:
                     from lydia_cli.config import get_config_path as _get_cfg_path_resid
@@ -13730,9 +13740,9 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
 
             _tip = get_random_tip()
             try:
-                _tip_color = _welcome_skin.get_color("banner_dim", "#B8860B")
+                _tip_color = _welcome_skin.get_color("banner_dim", "#6e6a86")
             except Exception:
-                _tip_color = "#B8860B"
+                _tip_color = "#6e6a86"
             self._console_print(f"[dim {_tip_color}]✦ Tip: {_tip}[/]")
         except Exception:
             pass  # Tips are non-critical — never break startup
@@ -15703,56 +15713,56 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
             # Input area / prompt: empty style strings inherit the
             # terminal's default foreground/background, so the typed
             # text is readable in both light and dark Terminal.app
-            # color schemes.  (Hardcoding a near-white #FFF8DC made
+            # color schemes.  (Hardcoding a near-white #e0def4 made
             # input invisible on light backgrounds.)
             "input-area": "",
-            "placeholder": "#888888 italic",
+            "placeholder": "#6e6a86 italic",
             "prompt": "",
-            "prompt-working": "#888888 italic",
-            "hint": "#888888 italic",
-            "status-bar": "bg:#1a1a2e #C0C0C0",
-            "status-bar-strong": "bg:#1a1a2e #FFD700 bold",
-            "status-bar-dim": "bg:#1a1a2e #8B8682",
-            "status-bar-good": "bg:#1a1a2e #8FBC8F bold",
-            "status-bar-warn": "bg:#1a1a2e #FFD700 bold",
-            "status-bar-bad": "bg:#1a1a2e #FF8C00 bold",
-            "status-bar-critical": "bg:#1a1a2e #FF6B6B bold",
-            "status-bar-yolo": "bg:#1a1a2e #FF4444 bold",
-            # Bronze horizontal rules around the input area
-            "input-rule": "#CD7F32",
+            "prompt-working": "#6e6a86 italic",
+            "hint": "#6e6a86 italic",
+            "status-bar": "bg:#2a273f #e0def4",
+            "status-bar-strong": "bg:#2a273f #c4a7e7 bold",
+            "status-bar-dim": "bg:#2a273f #6e6a86",
+            "status-bar-good": "bg:#2a273f #9ccfd8 bold",
+            "status-bar-warn": "bg:#2a273f #f6c177 bold",
+            "status-bar-bad": "bg:#2a273f #f6c177 bold",
+            "status-bar-critical": "bg:#2a273f #eb6f92 bold",
+            "status-bar-yolo": "bg:#2a273f #eb6f92 bold",
+            # Rose Pine Moon horizontal rules around the input area
+            "input-rule": "#56526e",
             # Clipboard image attachment badges
-            "image-badge": "#87CEEB bold",
-            "completion-menu": "bg:#1a1a2e #FFF8DC",
-            "completion-menu.completion": "bg:#1a1a2e #FFF8DC",
-            "completion-menu.completion.current": "bg:#333355 #FFD700",
-            "completion-menu.meta.completion": "bg:#1a1a2e #888888",
-            "completion-menu.meta.completion.current": "bg:#333355 #FFBF00",
+            "image-badge": "#9ccfd8 bold",
+            "completion-menu": "bg:#2a273f #e0def4",
+            "completion-menu.completion": "bg:#2a273f #e0def4",
+            "completion-menu.completion.current": "bg:#393552 #c4a7e7",
+            "completion-menu.meta.completion": "bg:#2a273f #6e6a86",
+            "completion-menu.meta.completion.current": "bg:#393552 #ea9a97",
             # Clarify question panel
-            "clarify-border": "#CD7F32",
-            "clarify-title": "#FFD700 bold",
-            "clarify-question": "#FFF8DC bold",
-            "clarify-choice": "#AAAAAA",
-            "clarify-selected": "#FFD700 bold",
-            "clarify-active-other": "#FFD700 italic",
-            "clarify-countdown": "#CD7F32",
+            "clarify-border": "#56526e",
+            "clarify-title": "#c4a7e7 bold",
+            "clarify-question": "#e0def4 bold",
+            "clarify-choice": "#908caa",
+            "clarify-selected": "#c4a7e7 bold",
+            "clarify-active-other": "#c4a7e7 italic",
+            "clarify-countdown": "#56526e",
             # Sudo password panel
-            "sudo-prompt": "#FF6B6B bold",
-            "sudo-border": "#CD7F32",
-            "sudo-title": "#FF6B6B bold",
-            "sudo-text": "#FFF8DC",
+            "sudo-prompt": "#eb6f92 bold",
+            "sudo-border": "#56526e",
+            "sudo-title": "#eb6f92 bold",
+            "sudo-text": "#e0def4",
             # Dangerous command approval panel
-            "approval-border": "#CD7F32",
-            "approval-title": "#FF8C00 bold",
-            "approval-desc": "#FFF8DC bold",
-            "approval-cmd": "#AAAAAA italic",
-            "approval-choice": "#AAAAAA",
-            "approval-selected": "#FFD700 bold",
+            "approval-border": "#56526e",
+            "approval-title": "#f6c177 bold",
+            "approval-desc": "#e0def4 bold",
+            "approval-cmd": "#908caa italic",
+            "approval-choice": "#908caa",
+            "approval-selected": "#c4a7e7 bold",
             # Voice mode
-            "voice-prompt": "#87CEEB",
-            "voice-recording": "#FF4444 bold",
+            "voice-prompt": "#9ccfd8",
+            "voice-recording": "#eb6f92 bold",
             "voice-processing": "#FFA500 italic",
-            "voice-status": "bg:#1a1a2e #87CEEB",
-            "voice-status-recording": "bg:#1a1a2e #FF4444 bold",
+            "voice-status": "bg:#2a273f #9ccfd8",
+            "voice-status-recording": "bg:#2a273f #eb6f92 bold",
         }
         style = PTStyle.from_dict(self._build_tui_style_dict())
 
