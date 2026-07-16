@@ -147,3 +147,4 @@ infographic/
 # Graphify pipeline outputs
 graphify-out/
 GRAPH_REPORT.md
+.tmp/
