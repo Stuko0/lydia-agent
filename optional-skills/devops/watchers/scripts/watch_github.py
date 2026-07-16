@@ -6,7 +6,7 @@ Usage (via cron with --no-agent):
     lydia cron create lydia-issues \\
       --schedule "*/5 * * * *" --no-agent \\
       --script "$LYDIA_HOME/skills/devops/watchers/scripts/watch_github.py" \\
-      --script-args "--name lydia-issues --repo NousResearch/lydia-agent --scope issues"
+      --script-args "--name lydia-issues --repo Stuko/lydia-agent --scope issues"
 
 Set GITHUB_TOKEN (or GH_TOKEN) in the Lydia .env file
 (``${LYDIA_HOME:-~/.lydia}/.env``) to avoid the 60 req/hr

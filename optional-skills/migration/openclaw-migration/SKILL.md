@@ -2,7 +2,7 @@
 name: openclaw-migration
 description: Migrate a user's OpenClaw customization footprint into Lydia Agent. Imports Lydia-compatible memories, SOUL.md, command allowlists, user skills, and selected workspace assets from ~/.openclaw, then reports exactly what could not be migrated and why.
 version: 1.0.0
-author: Lydia Agent (Nous Research)
+author: Lydia Agent (Stuko)
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

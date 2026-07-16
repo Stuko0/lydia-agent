@@ -2,10 +2,10 @@
   "id": "lydia-agent",
   "name": "Lydia Agent",
   "version": "0.17.0",
-  "description": "Self-improving open-source AI agent by Nous Research with ACP editor integration, persistent memory, skills, and rich tool support.",
-  "repository": "https://github.com/NousResearch/lydia-agent",
-  "website": "https://lydia-agent.nousresearch.com/docs/user-guide/features/acp",
-  "authors": ["Nous Research"],
+  "description": "Self-improving open-source AI agent by Stuko with ACP editor integration, persistent memory, skills, and rich tool support.",
+  "repository": "https://github.com/Stuko/lydia-agent",
+  "website": "https://lydia-agent.stuko.dev/docs/user-guide/features/acp",
+  "authors": ["Stuko"],
   "license": "MIT",
   "distribution": {
     "uvx": {

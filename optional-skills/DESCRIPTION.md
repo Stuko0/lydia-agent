@@ -1,6 +1,6 @@
 # Optional Skills
 
-Official skills maintained by Nous Research that are **not activated by default**.
+Official skills maintained by Stuko that are **not activated by default**.
 
 These skills ship with the lydia-agent repository but are not copied to
 `~/.lydia/skills/` during setup. They are discoverable via the Skills Hub:

@@ -2,7 +2,7 @@
 name = "lydia-bootstrap"
 version = "0.0.1"
 description = "Lydia Setup — signed installer that drives scripts/install.ps1"
-authors = ["Nous Research <info@nousresearch.com>"]
+authors = ["Stuko <info@stuko.dev>"]
 edition = "2021"
 rust-version = "1.77"
 

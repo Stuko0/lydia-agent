@@ -2,12 +2,12 @@
 
 <p align="center">
   <a href="https://10.1.200.116:3000/arquant-admin/NewLydia/releases"><img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-FFD700?style=for-the-badge" alt="Download"></a>
-  <a href="https://lydia-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-lydia--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
-  <a href="https://discord.gg/NousResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://lydia-agent.stuko.dev/docs/"><img src="https://img.shields.io/badge/Docs-lydia--agent.stuko.dev-FFD700?style=for-the-badge" alt="Documentation"></a>
+  <a href="https://discord.gg/Stuko"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
   <a href="https://10.1.200.116:3000/arquant-admin/NewLydia/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
 </p>
 
-**The native desktop app for [Lydia Agent](../../README.md) — the self-improving AI agent from [Nous Research](https://nousresearch.com).** Same agent, same skills, same memory as the CLI and gateway, in a polished native window — chat with streaming tool output, side-by-side previews, a file browser, voice, and settings, no terminal required. Available for **macOS, Windows, and Linux**.
+**The native desktop app for [Lydia Agent](../../README.md) — the self-improving AI agent from [Stuko](https://stuko.dev).** Same agent, same skills, same memory as the CLI and gateway, in a polished native window — chat with streaming tool output, side-by-side previews, a file browser, voice, and settings, no terminal required. Available for **macOS, Windows, and Linux**.
 
 <table>
 <tr><td><b>Chat with the full agent</b></td><td>Streaming responses, live tool activity, structured tool summaries, and the same conversation history as every other Lydia surface.</td></tr>
@@ -34,7 +34,7 @@ It builds and launches the GUI against your existing install — same config, ke
 
 ### Prebuilt installers
 
-Prebuilt installers are built and distributed via [the Lydia Desktop website.](https://lydia-agent.nousresearch.com/).
+Prebuilt installers are built and distributed via [the Lydia Desktop website.](https://lydia-agent.stuko.dev/).
 
 ---
 
@@ -128,8 +128,8 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\lydia\lydia-agent\venv"
 
 ## Community
 
-- 💬 [Discord](https://discord.gg/NousResearch)
-- 📖 [Documentation](https://lydia-agent.nousresearch.com/docs/)
+- 💬 [Discord](https://discord.gg/Stuko)
+- 📖 [Documentation](https://lydia-agent.stuko.dev/docs/)
 - 🐛 [Issues](https://10.1.200.116:3000/arquant-admin/NewLydia/issues)
 
 ---
@@ -138,4 +138,4 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\lydia\lydia-agent\venv"
 
 MIT — see [LICENSE](../../LICENSE).
 
-Built by [Nous Research](https://nousresearch.com).
+Built by [Stuko](https://stuko.dev).

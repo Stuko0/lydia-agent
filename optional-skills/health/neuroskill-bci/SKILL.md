@@ -8,7 +8,7 @@ description: >
   running locally.
 platforms: [linux, macos, windows]
 version: 1.0.0
-author: Lydia Agent + Nous Research
+author: Lydia Agent + Stuko
 license: MIT
 metadata:
   lydia:

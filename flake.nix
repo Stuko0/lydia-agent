@@ -1,5 +1,5 @@
 {
-  description = "Lydia Agent - AI agent framework by Nous Research";
+  description = "Lydia Agent - AI agent framework by Stuko";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

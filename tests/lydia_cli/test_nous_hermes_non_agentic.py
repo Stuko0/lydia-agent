@@ -5,7 +5,7 @@ Prior to this check, the warning fired on any model whose name contained
 local Modelfiles such as ``lydia-brain:qwen3-14b-ctx16k`` — a tool-capable
 Qwen3 wrapper that happens to live under the "lydia" tag namespace.
 
-``is___PROT_NOUS_LYDIA___non_agentic`` should only match the actual Nous Research
+``is___PROT_NOUS_LYDIA___non_agentic`` should only match the actual Stuko
 Lydia-3 / Lydia-4 chat family.
 """
 

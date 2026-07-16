@@ -7,10 +7,10 @@ const config: Config = {
   tagline: 'The self-improving AI agent',
   favicon: 'img/favicon.ico',
 
-  url: 'https://lydia-agent.nousresearch.com',
+  url: 'https://lydia-agent.stuko.dev',
   baseUrl: '/docs/',
 
-  organizationName: 'NousResearch',
+  organizationName: 'Stuko',
   projectName: 'lydia-agent',
 
   onBrokenLinks: 'warn',
@@ -163,7 +163,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://lydia-agent.nousresearch.com/',
+          href: 'https://lydia-agent.stuko.dev/',
           label: 'Download',
           position: 'left',
         },
@@ -172,7 +172,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://lydia-agent.nousresearch.com',
+          href: 'https://lydia-agent.stuko.dev',
           label: 'Home',
           position: 'right',
         },
@@ -182,7 +182,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://discord.gg/NousResearch',
+          href: 'https://discord.gg/Stuko',
           label: 'Discord',
           position: 'right',
         },
@@ -203,7 +203,7 @@ const config: Config = {
         {
           title: 'Community',
           items: [
-            { label: 'Discord', href: 'https://discord.gg/NousResearch' },
+            { label: 'Discord', href: 'https://discord.gg/Stuko' },
             { label: 'GitHub Issues', href: 'https://10.1.200.116:3000/arquant-admin/NewLydia/issues' },
             { label: 'Skills Hub', href: 'https://agentskills.io' },
           ],
@@ -211,13 +211,13 @@ const config: Config = {
         {
           title: 'More',
           items: [
-            { label: 'Desktop Download', href: 'https://lydia-agent.nousresearch.com/' },
+            { label: 'Desktop Download', href: 'https://lydia-agent.stuko.dev/' },
             { label: 'GitHub', href: 'https://10.1.200.116:3000/arquant-admin/NewLydia' },
-            { label: 'Nous Research', href: 'https://nousresearch.com' },
+            { label: 'Stuko', href: 'https://stuko.dev' },
           ],
         },
       ],
-      copyright: `Built by <a href="https://nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
+      copyright: `Built by <a href="https://stuko.dev">Stuko</a> · MIT License · ${new Date().getFullYear()}`,
     },
     prism: {
       theme: prismThemes.github,
