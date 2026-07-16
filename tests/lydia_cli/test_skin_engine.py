@@ -27,7 +27,7 @@ class TestSkinConfig:
     def test_get_color_with_fallback(self):
         from lydia_cli.skin_engine import load_skin
         skin = load_skin("default")
-        assert skin.get_color("banner_title") == "#FFD700"
+        assert skin.get_color("banner_title") == "#c4a7e7"
         assert skin.get_color("nonexistent", "#000") == "#000"
 
     def test_get_branding_with_fallback(self):
@@ -80,13 +80,13 @@ class TestBuiltinSkins:
         skin = load_skin("daylight")
         assert skin.name == "daylight"
         assert skin.tool_prefix == "│"
-        assert skin.get_color("banner_title") == "#0F172A"
-        assert skin.get_color("status_bar_bg") == "#E5EDF8"
-        assert skin.get_color("voice_status_bg") == "#E5EDF8"
-        assert skin.get_color("completion_menu_bg") == "#F8FAFC"
-        assert skin.get_color("completion_menu_current_bg") == "#DBEAFE"
-        assert skin.get_color("completion_menu_meta_bg") == "#EEF2FF"
-        assert skin.get_color("completion_menu_meta_current_bg") == "#BFDBFE"
+        assert skin.get_color("banner_title") == "#575279"
+        assert skin.get_color("status_bar_bg") == "#fffaf3"
+        assert skin.get_color("voice_status_bg") == "#fffaf3"
+        assert skin.get_color("completion_menu_bg") == "#fffaf3"
+        assert skin.get_color("completion_menu_current_bg") == "#f2e9e1"
+        assert skin.get_color("completion_menu_meta_bg") == "#f4ede8"
+        assert skin.get_color("completion_menu_meta_current_bg") == "#dfdad9"
 
     def test_warm_lightmode_skin_loads(self):
         from lydia_cli.skin_engine import load_skin
@@ -205,7 +205,7 @@ class TestUserSkins:
         assert skin.get_branding("agent_name") == "Custom Agent"
         assert skin.tool_prefix == "▸"
         # Should inherit defaults for unspecified colors
-        assert skin.get_color("banner_border") == "#CD7F32"  # from default
+        assert skin.get_color("banner_border") == "#56526e"  # from default
 
     def test_load_user_skin_invalid_section_types_fall_back_to_defaults(self, tmp_path, monkeypatch):
         from lydia_cli.skin_engine import load_skin
@@ -232,7 +232,7 @@ class TestUserSkins:
         skin = load_skin("broken")
 
         assert skin.name == "broken"
-        assert skin.get_color("banner_title") == "#FFD700"
+        assert skin.get_color("banner_title") == "#c4a7e7"
         assert skin.get_branding("agent_name") == "Lydia Agent"
         assert skin.spinner.get("waiting_faces", []) == []
         assert skin.tool_emojis == {}

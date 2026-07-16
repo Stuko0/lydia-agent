@@ -111,7 +111,7 @@ def _build_full_manifest(
         "display_information": {
             "name": bot_name[:35],
             "description": (bot_description or "Your Lydia Agent on Slack")[:140],
-            "background_color": "#1a1a2e",
+            "background_color": "#2a273f",
         },
         "features": features,
         "oauth_config": {

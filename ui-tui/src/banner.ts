@@ -77,9 +77,19 @@ const LOGO_GRADIENT = [0, 0, 1, 1, 2, 2] as const
 const CADUC_GRADIENT = [2, 2, 1, 1, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3] as const
 
 const colorize = (art: string[], gradient: readonly number[], c: ThemeColors): Line[] => {
-  const p = [c.primary, c.accent, c.border, c.muted]
+  // Monochromatic gradient from the primary color — darkens by mixing with black
+  // so the banner reads as a single hue (Iris) with depth, not 3 different colors.
+  const darken = (hex: string, amount: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    const lerp = (c: number) => Math.round(c * (1 - amount))
+    return '#' + ((1 << 24) | (lerp(r) << 16) | (lerp(g) << 8) | lerp(b)).toString(16).slice(1)
+  }
+  const base = c.primary
+  const p = [base, darken(base, 0.2), darken(base, 0.4), darken(base, 0.6)]
 
-  return art.map((text, i) => [p[gradient[i]!] ?? c.muted, text])
+  return art.map((text, i) => [p[gradient[i]!] ?? p[3], text])
 }
 
 export const LOGO_WIDTH = Math.max(...LOGO_ART.map(line => line.length))

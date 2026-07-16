@@ -62,8 +62,8 @@ def _diff_ansi() -> dict[str, str]:
         file_c = _hex_fg("session_label", (180, 160, 255))
         hunk = _hex_fg("session_border", (120, 120, 140))
         # minus/plus use background colors — derive from ui_error/ui_ok
-        err_h = skin.get_color("ui_error", "#ef5350")
-        ok_h = skin.get_color("ui_ok", "#4caf50")
+        err_h = skin.get_color("ui_error", "#eb6f92")
+        ok_h = skin.get_color("ui_ok", "#9ccfd8")
         if err_h and len(err_h) == 7:
             er, eg, eb = int(err_h[1:3], 16), int(err_h[3:5], 16), int(err_h[5:7], 16)
             # Use a dark tinted version as background

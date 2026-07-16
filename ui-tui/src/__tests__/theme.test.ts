@@ -51,8 +51,8 @@ describe('DEFAULT_THEME', () => {
   it('has color palette', async () => {
     const { DEFAULT_THEME } = await importThemeWithCleanEnv()
 
-    expect(DEFAULT_THEME.color.primary).toBe('#FFD700')
-    expect(DEFAULT_THEME.color.error).toBe('#ef5350')
+    expect(DEFAULT_THEME.color.primary).toBe('#c4a7e7')
+    expect(DEFAULT_THEME.color.error).toBe('#eb6f92')
   })
 })
 
@@ -60,10 +60,10 @@ describe('LIGHT_THEME', () => {
   it('avoids bright-yellow accents unreadable on white backgrounds (#11300)', async () => {
     const { LIGHT_THEME } = await importThemeWithCleanEnv()
 
-    expect(LIGHT_THEME.color.primary).not.toBe('#FFD700')
-    expect(LIGHT_THEME.color.accent).not.toBe('#FFBF00')
-    expect(LIGHT_THEME.color.muted).not.toBe('#B8860B')
-    expect(LIGHT_THEME.color.statusWarn).not.toBe('#FFD700')
+    expect(LIGHT_THEME.color.primary).not.toBe('#c4a7e7')
+    expect(LIGHT_THEME.color.accent).not.toBe('#ea9a97')
+    expect(LIGHT_THEME.color.muted).not.toBe('#6e6a86')
+    expect(LIGHT_THEME.color.statusWarn).not.toBe('#f6c177')
   })
 
   it('keeps the same shape as DARK_THEME', async () => {
