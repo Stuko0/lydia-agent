@@ -29,6 +29,95 @@ _COMMIT_CONTEXT_UNTRACKED_MAX = 80
 _TRUNK_BRANCHES = ("main", "master")
 
 
+# Git provider detection — the desktop statusbar swaps its icon & PR-creation
+# flow based on the remote URL. URLs come in many flavors; we identify by host
+# fragment after normalizing ssh://user@host and https://user@host forms.
+def detect_git_provider(remote_url: str | None) -> str:
+    """Return one of: ``"github"`` | ``"gitlab"`` | ``"gitea"`` | ``"bitbucket"`` |
+    ``"azure-devops"`` | ``"other"`` | ``"none"``.
+
+    Matches host fragment, not path — the same host can host many orgs. SSH and
+    HTTPS forms both work (``git@github.com:foo/bar`` and
+    ``https://github.com/foo/bar``) since we look at the substring after the
+    first ``@`` (or after the scheme) up to the next ``/`` or ``:``.
+    """
+    if not remote_url:
+        return "none"
+    # strip scheme
+    url = remote_url.strip()
+    for prefix in ("https://", "http://", "ssh://", "git://"):
+        if url.startswith(prefix):
+            url = url[len(prefix):]
+            break
+    # strip userinfo (user@host…)
+    if "@" in url:
+        url = url.split("@", 1)[1]
+    # host is up to first "/" (https/ssh URIs) OR up to the first ":" for
+    # scp-style SSH ("git@host:owner/repo.git" → host only).
+    if "/" in url:
+        host = url.split("/", 1)[0]
+    else:
+        host = url.split(":", 1)[0]
+    host = host.lower()
+    if not host:
+        return "none"
+    if "github" in host:
+        return "github"
+    if "gitlab" in host:
+        return "gitlab"
+    if "bitbucket" in host:
+        return "bitbucket"
+    if "dev.azure" in host or "visualstudio" in host:
+        return "azure-devops"
+    # gitea: any self-hosted host matching the gitea convention; we use a few
+    # common domains plus a fallback for custom self-hosted instances.
+    if host == "gitea.com" or host.endswith(".gitea.com") or host == "gitea.io":
+        return "gitea"
+    # unknown host: still "other" so the UI can show the GitBranch icon
+    return "other"
+
+
+def _pr_target_url(remote_url: str | None, provider: str, branch: str | None) -> str | None:
+    """Build the web URL the user should land on to create a PR/MR for ``branch``.
+
+    GitHub/GitLab/Bitbucket/Gitea all use a `/{owner}/{repo}/compare/{base}...{head}`
+    shape. Azure DevOps uses a different shape entirely. We return None when
+    the URL can't be parsed reliably.
+    """
+    if not remote_url or not branch:
+        return None
+    url = remote_url.strip()
+    for prefix in ("https://", "http://", "ssh://", "git://"):
+        if url.startswith(prefix):
+            url = url[len(prefix):]
+            break
+    if url.startswith("git@"):
+        url = url[4:]
+    if "@" in url:
+        url = url.split("@", 1)[1]
+    # scp-style SSH: "host:owner/repo" — turn the first ":" into "/" so the
+    # rest of the parser (split on "/") works the same as for HTTPS URIs.
+    # Only replace the FIRST ":" (the one separating host from path); later
+    # ":" in the URL (e.g. port) stay intact because we anchor with split.
+    if ":" in url.split("/", 1)[0]:
+        host_part, _, rest = url.partition(":")
+        url = f"{host_part}/{rest}" if rest else host_part
+    host = url.split("/", 1)[0]
+    path = url.split("/", 1)[1] if "/" in url else ""
+    path = path.removesuffix(".git")
+    if not host or not path:
+        return None
+    if provider == "azure-devops":
+        # shape: https://dev.azure.com/{org}/{project}/_git/{repo}/pullrequestcreate?sourceRef={branch}
+        parts = path.split("/")
+        if len(parts) < 4:
+            return None
+        org, project, _, repo = parts[0], parts[1], parts[2], parts[3]
+        return f"https://{host}/{org}/{project}/_git/{repo}/pullrequestcreate?sourceRef={branch}"
+    # GitHub/GitLab/Bitbucket/Gitea: compare against the default branch
+    return f"https://{host}/{path}/compare/{branch}"
+
+
 def _git(cwd: str, args: list[str], *, timeout: int = _GIT_TIMEOUT) -> tuple[int, str, str]:
     """Run ``git`` in ``cwd``. Returns (returncode, stdout, stderr); never raises
     on a non-zero exit (callers decide what an error means)."""
@@ -199,6 +288,27 @@ def _status_letter(tag: str, xy: str) -> str:
 
 
 # ── coding rail ──────────────────────────────────────────────────────────────
+
+
+def remote_info(cwd: str) -> dict:
+    """Return the resolved origin remote URL + detected provider + PR target.
+
+    Safe on a non-repo (returns ``{"remote": None, "provider": "none",
+    "prUrl": None}``). Used by the desktop statusbar to render a provider-aware
+    Git button without re-running ``git remote`` from the renderer.
+    """
+    if not _is_dir(cwd):
+        return {"remote": None, "provider": "none", "prUrl": None}
+    code, out, _err = _git(cwd, ["remote", "get-url", "origin"])
+    remote = out.strip() if code == 0 and out.strip() else None
+    provider = detect_git_provider(remote)
+    # current branch for the PR URL
+    branch: str | None = None
+    code, out, _ = _git(cwd, ["rev-parse", "--abbrev-ref", "HEAD"])
+    if code == 0 and out.strip() and out.strip() != "HEAD":
+        branch = out.strip()
+    pr_url = _pr_target_url(remote, provider, branch)
+    return {"remote": remote, "provider": provider, "prUrl": pr_url, "branch": branch}
 
 
 def repo_status(cwd: str) -> dict | None:

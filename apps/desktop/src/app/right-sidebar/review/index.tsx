@@ -25,6 +25,7 @@ import {
   $reviewFiles,
   $reviewIsRepo,
   $reviewLoading,
+  $reviewRemoteInfo,
   $reviewRevertTarget,
   $reviewSelectedPath,
   $reviewTreeMode,
@@ -43,6 +44,7 @@ import { SidebarPanelLabel } from '../../shell/sidebar-label'
 import { PaneEmptyState, RightSidebarSectionHeader } from '../index'
 
 import { ReviewFileTree } from './file-tree'
+import { ReviewProviderChip } from './provider-chip'
 import { ReviewShipBar } from './ship-bar'
 
 // Compact header/diff action buttons — micro hit targets packed tight, matching
@@ -61,6 +63,7 @@ export function ReviewPane() {
   const diffLoading = useStore($reviewDiffLoading)
   const revertTarget = useStore($reviewRevertTarget)
   const treeMode = useStore($reviewTreeMode)
+  const remoteInfo = useStore($reviewRemoteInfo)
 
   const selectedFile = files.find(file => file.path === selectedPath)
   const hasFiles = files.length > 0
@@ -86,6 +89,7 @@ export function ReviewPane() {
           <div className="flex min-w-0 flex-1">
             <SidebarPanelLabel>{c.review}</SidebarPanelLabel>
           </div>
+          <ReviewProviderChip remoteInfo={remoteInfo} />
           <Tip label={treeMode === 'tree' ? c.viewAsList : c.viewAsTree}>
             <Button
               aria-label={treeMode === 'tree' ? c.viewAsList : c.viewAsTree}

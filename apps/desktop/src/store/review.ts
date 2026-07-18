@@ -75,6 +75,17 @@ export const $reviewSelectedPath = persistentAtom<null | string>(SELECTED_KEY, n
 export const $reviewDiff = atom<null | string>(null)
 export const $reviewDiffLoading = atom(false)
 
+// Provider detection for the active repo. Drives a small chip in the review
+// pane header so the user knows which host their PR/MR will land on without
+// running `git remote -v` themselves. The atom is null until a fetch resolves
+// (or there is no repo).
+export const $reviewRemoteInfo = atom<null | {
+  branch: null | string
+  prUrl: null | string
+  provider: 'azure-devops' | 'bitbucket' | 'gitea' | 'github' | 'gitlab' | 'none' | 'other'
+  remote: null | string
+}>(null)
+
 // Ship state: gh availability + this branch's PR, and a busy flag for the
 // commit/push/PR action bar (disables buttons + shows progress).
 export const $reviewShipInfo = atom<LydiaReviewShipInfo>({ ghReady: false, pr: null })
@@ -150,6 +161,8 @@ export async function refreshReview(): Promise<void> {
     } else if (selectedFile && $reviewDiff.get() === null) {
       void selectReviewFile(selectedFile)
     }
+    // Keep the provider chip fresh alongside the file list.
+    refreshReviewRemoteInfoIfStale()
   } catch {
     if (seq === reviewRefreshSeq) {
       $reviewFiles.set([])
@@ -212,6 +225,41 @@ export function clearReviewSelection(): void {
   $reviewDiffLoading.set(false)
 }
 
+// Fetch the origin remote + provider for the active repo. Cached for the
+// lifetime of the cwd so repeated renders don't re-issue. Mirrors the
+// `review.shipInfo` pattern (stale-after-threshold refresh) so the chip
+// stays accurate after a `git remote set-url`.
+let remoteInfoLastCheckedAt = 0
+const REMOTE_INFO_STALE_MS = 30_000
+let remoteInfoSeq = 0
+
+export async function refreshReviewRemoteInfo(): Promise<void> {
+  const ctx = reviewCtx()
+  const seq = (remoteInfoSeq += 1)
+
+  if (!ctx) {
+    $reviewRemoteInfo.set(null)
+    return
+  }
+  try {
+    const info = await desktopGit()?.remoteInfo(ctx.cwd)
+    if (seq === remoteInfoSeq && repoCwd() === ctx.cwd && info) {
+      $reviewRemoteInfo.set(info)
+      remoteInfoLastCheckedAt = Date.now()
+    }
+  } catch {
+    if (seq === remoteInfoSeq) {
+      $reviewRemoteInfo.set(null)
+    }
+  }
+}
+
+function refreshReviewRemoteInfoIfStale(): void {
+  if (Date.now() - remoteInfoLastCheckedAt > REMOTE_INFO_STALE_MS) {
+    void refreshReviewRemoteInfo()
+  }
+}
+
 // ── View state ───────────────────────────────────────────────────────────────
 
 export async function refreshShipInfo(): Promise<void> {
@@ -249,6 +297,9 @@ export function openReview(): void {
   $reviewOpen.set(true)
   void refreshReview()
   void refreshShipInfo()
+  // Refresh the provider chip in the same open-cycle so the user sees a
+  // GitHub/GitLab/Gitea/... badge in the header on first open.
+  void refreshReviewRemoteInfo()
 }
 
 export function closeReview(): void {

@@ -1,5 +1,6 @@
 import type {
   LydiaGitBranch,
+  LydiaGitRemoteInfo,
   LydiaGitWorktree,
   LydiaRepoStatus,
   LydiaReviewList,
@@ -58,6 +59,8 @@ const remoteGit: GitBridge = {
   branchList: async repoPath =>
     (await gitGet<{ branches: LydiaGitBranch[] }>('branches', { path: repoPath })).branches,
 
+  remoteInfo: repoPath => gitGet<LydiaGitRemoteInfo>('remote', { path: repoPath }),
+
   repoStatus: repoPath => gitGet<LydiaRepoStatus | null>('status', { path: repoPath }),
 
   fileDiff: async (repoPath, filePath) =>
@@ -96,6 +99,33 @@ const remoteGit: GitBridge = {
   scanRepos: async () => []
 }
 
+// Always-routes-through-HTTP implementation of `remoteInfo`. The local
+// Electron bridge (`window.lydiaDesktop.git`) doesn't expose `remoteInfo` —
+// the gateway REST API is the single source of truth for the origin remote,
+// so we go through `desktop.api` regardless of whether the FS is local or
+// remote. This keeps the desktop-git surface area uniform and prevents
+// "n.remoteInfo is not a function" crashes when the user opens the Git
+// statusbar button on a local session.
+function httpRemoteInfo(repoPath: string): Promise<LydiaGitRemoteInfo> {
+  const desktop = window.lydiaDesktop
+  if (!desktop) {
+    return Promise.reject(new Error('Lydia Desktop bridge is unavailable'))
+  }
+  return desktop.api<LydiaGitRemoteInfo>({
+    path: `/api/git/remote?path=${encodeURIComponent(repoPath)}`,
+    profile: desktopFsProfile()
+  })
+}
+
 export function desktopGit(): GitBridge | undefined {
-  return isDesktopFsRemoteMode() ? remoteGit : window.lydiaDesktop?.git
+  if (isDesktopFsRemoteMode()) {
+    return remoteGit
+  }
+  // Local mode: wrap the Electron bridge and override `remoteInfo` with the
+  // HTTP path. Other methods stay on the native bridge (faster).
+  const local = window.lydiaDesktop?.git
+  if (!local) {
+    return undefined
+  }
+  return { ...local, remoteInfo: httpRemoteInfo }
 }

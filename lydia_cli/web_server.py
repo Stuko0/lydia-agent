@@ -1985,6 +1985,12 @@ async def git_status_route(path: str):
     return await _git_op(_web_git.repo_status, _git_path(path))
 
 
+@app.get("/api/git/remote")
+async def git_remote_route(path: str):
+    """Origin remote URL + provider + PR target — desktop statusbar indicator."""
+    return await _git_op(_web_git.remote_info, _git_path(path))
+
+
 @app.get("/api/git/worktrees")
 async def git_worktrees_route(path: str):
     return {"worktrees": await _git_op(_web_git.worktree_list, _git_path(path))}

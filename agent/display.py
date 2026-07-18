@@ -716,11 +716,7 @@ def _resolve_local_edit_paths(tool_name: str, function_args: dict | None) -> lis
     if not isinstance(function_args, dict):
         return []
 
-    if tool_name == "write_file":
-        path = function_args.get("path")
-        return [_resolved_path(path)] if path else []
-
-    if tool_name == "patch":
+    if tool_name in {"write_file", "patch", "edit_file"}:
         path = function_args.get("path")
         return [_resolved_path(path)] if path else []
 
@@ -794,15 +790,27 @@ def extract_edit_diff(
     function_args: dict | None = None,
     snapshot: LocalEditSnapshot | None = None,
 ) -> str | None:
-    """Extract a unified diff from a file-edit tool result."""
-    if tool_name == "patch" and result:
+    """Extract a unified diff from a file-edit tool result.
+
+    The desktop renders any non-empty return value inline in the chat as a
+    syntax-highlighted `FileDiffPanel`. The function must therefore return a
+    diff string for any tool the user perceives as a file edit (`patch`,
+    `edit_file`, `write_file`, `skill_manage`). Order of preference:
+      1. A pre-rendered `diff` field in the tool's JSON result (cheap path,
+         no snapshot needed — used by ``patch`` when it returns a diff in its
+         own response).
+      2. A pre/post snapshot diff (`write_file` / `edit_file` / `skill_manage`
+         — server captures the file content before the call, then the display
+         layer diffs against the file's current content afterwards).
+    """
+    if tool_name in {"patch", "edit_file"} and result:
         data = safe_json_loads(result)
         if isinstance(data, dict):
             diff = data.get("diff")
             if isinstance(diff, str) and diff.strip():
                 return diff
 
-    if tool_name not in {"write_file", "patch", "skill_manage"}:
+    if tool_name not in {"write_file", "patch", "edit_file", "skill_manage"}:
         return None
     if not _result_succeeded(result):
         return None

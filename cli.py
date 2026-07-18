@@ -6366,7 +6366,7 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
         if is___PROT_NOUS_LYDIA___non_agentic(model_name):
             self._console_print()
             self._console_print(
-                "[bold yellow]⚠  Nous Research __PROT_LYDIA_MODEL__ & 4 models are NOT agentic and are not "
+                "[bold yellow]⚠  Stuko __PROT_LYDIA_MODEL__ & 4 models are NOT agentic and are not "
                 "designed for use with Lydia Agent.[/]"
             )
             self._console_print(
@@ -15609,19 +15609,20 @@ class LydiaCLI(CLIAgentSetupMixin, CLICommandsMixin):
             filter=Condition(lambda: cli_ref._model_picker_state is not None),
         )
 
-        # Horizontal rules above and below the input.
         # On narrow/mobile terminals we keep the top separator for structure but
         # hide the bottom one to recover a full row for conversation content.
         input_rule_top = Window(
-            char="─",
+            char="═",
             height=lambda: cli_ref._tui_input_rule_height("top"),
             style="class:input-rule",
         )
         input_rule_bot = Window(
-            char="─",
+            char="═",
             height=lambda: cli_ref._tui_input_rule_height("bottom"),
             style="class:input-rule",
-        )
+            )
+        # Prompt symbol uses skin's configured prompt_symbol (e.g. ♠, ⚔, †)
+        # styled with the skin's prompt color.
 
         # Image attachment indicator — shows badges like [📎 Image #1] above input
         cli_ref = self

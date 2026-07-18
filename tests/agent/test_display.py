@@ -480,3 +480,27 @@ class TestBuildToolLabel:
         for tool_name in _TOOL_VERBS:
             label = build_tool_label(tool_name, {"query": "x", "path": "x", "url": "x"})
             assert label, f"{tool_name} produced empty label"
+
+    def test_extract_edit_diff_for_edit_file_inline_diff(self):
+        # edit_file may return a pre-rendered diff just like patch — both
+        # inline in the chat via the desktop's FileDiffPanel.
+        diff = extract_edit_diff(
+            "edit_file",
+            '{"success": true, "diff": "--- a/x\\n+++ b/x\\n-old\\n+new\\n"}',
+        )
+        assert diff is not None
+        assert "+++ b/x" in diff
+        assert "+new" in diff
+
+    def test_extract_edit_diff_for_edit_file_falls_back_to_snapshot(self, tmp_path):
+        # When the tool doesn't return a diff, the snapshot path should still
+        # work for edit_file (matches the write_file / patch behavior).
+        from agent.display import capture_local_edit_snapshot
+
+        target = tmp_path / "f.txt"
+        target.write_text("hello\n", encoding="utf-8")
+        snapshot = capture_local_edit_snapshot("edit_file", {"path": str(target)})
+        target.write_text("hello world\n", encoding="utf-8")
+        diff = extract_edit_diff("edit_file", '{"success": true}', snapshot=snapshot)
+        assert diff is not None
+        assert "hello" in diff

@@ -605,6 +605,187 @@ def _display_toolset_name(toolset_name: str) -> str:
     return toolset_name[:-6] if toolset_name.endswith("_tools") else toolset_name
 
 
+# ── Alice's Descent themed chart ──────────────────────────────────────
+
+
+def _build_alice_chart(
+    tools: List[dict],
+    skills_by_category: Dict[str, list],
+    total_skills: int,
+    mcp_status: list,
+    disabled_tools: set,
+    lazy_tools: set,
+    get_toolset_for_tool,
+    accent: str,
+    dim: str,
+    text: str,
+    # Optional session data for ASYLUM DIAGNOSTICS
+    model: str = "",
+    provider: str = "",
+    cwd: str = "",
+    session_id: str = "",
+    context_length: int = None,
+) -> list:
+    """Build the 'Rutledge Ward Psychiatric Chart' right column for alice skin."""
+
+    # Categorize tools into themed buckets
+    SUIT_MAP = {
+        "terminal": "♠",
+        "file": "♠",
+        "cronjob": "♠",
+        "delegation": "♠",
+        "computer_use": "♠",
+        "process": "♠",
+        "todo": "♠",
+        "memory": "♠",
+        "skills": "♠",
+        "session_search": "♠",
+        "browser": "♥",
+        "web": "♥",
+        "search": "♥",
+        "xurl": "♥",
+        "openhue": "♥",
+        "himalaya": "♥",
+        "email": "♥",
+        "github": "♥",
+        "gitlab": "♥",
+        "gitea": "♥",
+        "code_execution": "♦",
+        "debugging": "♦",
+        "vision": "♦",
+        "video": "♦",
+        "coding": "♦",
+        "kanban": "♣",
+        "discord": "♣",
+        "homeassistant": "♣",
+        "spotify": "♣",
+        "tts": "♣",
+        "image_gen": "♣",
+        "moa": "♣",
+        "rl": "♣",
+    }
+    CATEGORIES = [
+        ("♠ System & OS", ["terminal", "file", "cronjob", "delegation", "computer_use", "process", "todo", "memory", "skills", "session_search"]),
+        ("♥ Web & Network", ["browser", "web", "search", "xurl", "openhue", "himalaya", "email", "github", "gitlab", "gitea"]),
+        ("♦ Dev & Code", ["code_execution", "debugging", "vision", "video", "coding"]),
+        ("♣ Utility & Other", ["kanban", "discord", "homeassistant", "spotify", "tts", "image_gen", "moa", "rl"]),
+    ]
+
+    # Map tool names to toolsets, then to categories
+    toolset_of = {}
+    for t in tools:
+        name = t["function"]["name"]
+        ts = get_toolset_for_tool(name) or "other"
+        toolset_of[name] = _display_toolset_name(ts)
+
+    def _color_tool(name: str) -> str:
+        if name in disabled_tools:
+            return f"[red]{name}[/]"
+        if name in lazy_tools:
+            return f"[yellow]{name}[/]"
+        return f"[{text}]{name}[/]"
+
+    def _truncate(names: list[str], limit: int = 42) -> str:
+        parts, length = [], 0
+        for n in sorted(names):
+            if length + len(n) + 2 > limit:
+                parts.append("[dim]...[/]")
+                break
+            parts.append(_color_tool(n))
+            length += len(n) + 2
+        return " ".join(parts)
+
+    lines = []
+    lines.append(f"[bold {accent}][◈] CLOCKWORK INSTRUMENTS (Core Tools)[/]")
+
+    # Group tools by category
+    tools_by_cat: dict[str, list[str]] = {}
+    for label, ts_list in CATEGORIES:
+        matched = []
+        for ts in ts_list:
+            for name, its_ts in toolset_of.items():
+                if its_ts.startswith(ts) and name not in sum(tools_by_cat.values(), []):
+                    matched.append(name)
+        if matched:
+            tools_by_cat[label] = sorted(set(matched))
+
+    cat_items = list(tools_by_cat.items())
+    for idx, (label, tnames) in enumerate(cat_items):
+        prefix = "╚══" if idx == len(cat_items) - 1 else "╠══"
+        tool_str = _truncate(tnames, limit=50)
+        lines.append(f"  {prefix} {label}  [dim]{'►'}[/] {tool_str}")
+
+    lines.append("")
+
+    # Skills section
+    SKILL_CATEGORIES = [
+        ("♠ Autonomous", ["autonomous-ai-agents"]),
+        ("♥ Creative & Art", ["creative"]),
+        ("♦ Data & Math", ["data-science", "mlops"]),
+        ("♣ Research", ["research", "devops", "productivity", "social-media", "note-taking", "smart-home"]),
+    ]
+
+    lines.append(f"[bold {accent}][‡] PSYCHOLOGICAL DOMAINS ({total_skills} Active Skills Loaded)[/]")
+
+    skill_items = []
+    for label, cats in SKILL_CATEGORIES:
+        matched = []
+        for c in cats:
+            matched.extend(skills_by_category.get(c, []))
+        if matched:
+            skill_items.append((label, sorted(matched)))
+
+    for idx, (label, snames) in enumerate(skill_items):
+        prefix = "╚══" if idx == len(skill_items) - 1 else "╠══"
+        # Progress bar: proportional to count in this category vs total
+        pct = min(len(snames) / max(total_skills, 1), 1.0)
+        filled = max(1, round(pct * 10))
+        bar = "█" * filled + "░" * (10 - filled)
+        display = ", ".join(snames[:4])
+        if len(snames) > 4:
+            display += f" [dim]+{len(snames)-4} more[/]"
+        lines.append(f"  {prefix} {label}  [dim]{'►'}[/] [{text}][{bar}][/] {display}")
+
+    lines.append("")
+
+    # [†] ASYLUM DIAGNOSTICS
+    lines.append(f"[bold {accent}][†] ASYLUM DIAGNOSTICS (Telemetry & Session State)[/]")
+    ctx_str = f" · {_format_context_length(context_length)} context" if context_length else ""
+    model_short = model[:30] + "..." if len(model) > 30 else model
+    lines.append(f"  ╠══ ♥ Cognitive Engine  [dim]{'►'}[/] [{text}]{model_short}[/] [dim {dim}]({provider})[/]{ctx_str}")
+    _cwd = cwd[:55] + "..." if len(cwd) > 55 else cwd
+    lines.append(f"  ╠══ ♠ Current Realm     [dim]{'►'}[/] [{text}]{_cwd}[/]")
+    lines.append(f"  ╠══ ♦ Madness Cycle     [dim]{'►'}[/] [{text}]Session: {session_id or 'active'}[/]"
+                 f"[dim {dim}] │ Uptime: --:--:--[/]")
+    # Git status placeholder
+    lines.append(f"  ╚══ ♣ Git & Shadow       [dim]{'►'}[/] [{text}]Branch: main [dim][clean][/][/]"
+                 f"[dim {dim}] │ Shadow Checkpoints: ENABLED[/]")
+
+    lines.append("")
+
+    # [◊] ACTIVE PROTOCOLS
+    lines.append(f"[bold {accent}][◊] ACTIVE PROTOCOLS (Runtime Configuration)[/]")
+    lines.append(f"  ╠══ ♠ API Gateway       [dim]{'►'}[/] [{text}]OpenAI-compatible server[/]"
+                 f"[dim {dim}] (port :8080)[/]")
+    lines.append(f"  ╠══ ♥ Execution Mode    [dim]{'►'}[/] [{text}]Native Host Execution (No Sandbox)[/]")
+    lines.append(f"  ╚══ ♦ Looking Glass     [dim]{'►'}[/] [{text}]Local Memory Storage: Active[/]")
+
+    lines.append("")
+
+    # MCP section
+    mcp_connected = sum(1 for s in mcp_status if s["connected"]) if mcp_status else 0
+    if mcp_connected:
+        lines.append(f"[dim {dim}] ═══ MCP Channels ═══[/]")
+        for srv in mcp_status:
+            if srv["connected"]:
+                lines.append(
+                    f"  [dim {dim}]♣[/] [{text}]{srv['name']}[/] "
+                    f"[dim {dim}]({srv['transport']})[/]"
+                )
+
+    return lines
+
+
 def build_welcome_banner(
     console: "Console",
     model: str,
@@ -949,33 +1130,168 @@ def build_welcome_banner(
     except Exception:
         pass  # Never break the banner over the install-method check
 
+    # ── Alice's Descent themed chart replacement ──
+    try:
+        from lydia_cli.skin_engine import get_active_skin
+        _chart_skin = get_active_skin()
+        if _chart_skin and _chart_skin.name in ("alice", "alice-light"):
+            right_lines = _build_alice_chart(
+                tools=tools or [],
+                skills_by_category=skills_by_category if _skills_enabled else {},
+                total_skills=total_skills if _skills_enabled else 0,
+                mcp_status=mcp_status,
+                disabled_tools=disabled_tools,
+                lazy_tools=lazy_tools,
+                get_toolset_for_tool=get_toolset_for_tool,
+                accent=accent,
+                dim=dim,
+                text=text,
+                model=model or "",
+                provider=provider or "",
+                cwd=cwd or "",
+                session_id=session_id or "",
+                context_length=context_length,
+            )
+    except Exception:
+        pass
+
     right_content = "\n".join(right_lines)
-    layout_table.add_row(left_content, right_content)
-
-    title_color = _skin_color("banner_title", "#c4a7e7")
-    border_color = _skin_color("banner_border", "#56526e")
-    version_label = format_banner_version_label()
-    release_info = get_latest_release_tag()
-    if release_info:
-        _tag, _url = release_info
-        title_markup = f"[bold {title_color}][link={_url}]{version_label}[/link][/]"
-    else:
-        title_markup = f"[bold {title_color}]{version_label}[/]"
-    outer_panel = Panel(
-        layout_table,
-        title=title_markup,
-        border_style=border_color,
-        padding=(0, 2),
-    )
-
-    console.print()
     term_width = shutil.get_terminal_size().columns
-    if term_width >= 95:
-        _logo = (
-            _bskin.banner_logo
-            if _bskin and hasattr(_bskin, "banner_logo") and _bskin.banner_logo
+
+    # ── Alice unified layout ──────────────────────────────────────
+    try:
+        from lydia_cli.skin_engine import get_active_skin
+        _render_skin = get_active_skin()
+    except Exception:
+        _render_skin = None
+
+    if _render_skin and _render_skin.name in ("alice", "alice-light") and term_width >= 95:
+        # Build unified banner: centered logo + quote + 2-column content + footer
+        logo = (
+            _render_skin.banner_logo
+            if hasattr(_render_skin, "banner_logo") and _render_skin.banner_logo
             else LYDIA_AGENT_LOGO
         )
-        console.print(_logo)
+        hero = (
+            _render_skin.banner_hero
+            if hasattr(_render_skin, "banner_hero") and _render_skin.banner_hero
+            else LYDIA_GOTHIC_L
+        )
+
+        border_color = _skin_color("banner_border", "#56526e")
+        inner_w = term_width - 6  # │ + 2spaces left + 2spaces right + │ = 6
+
+        # Top border: ╔═══╣
+        top = f"[{border_color}]╔{'═' * (term_width - 2)}╣[/]"
+
+        # Center the logo + quote with dynamic padding
+        logo_lines = logo.strip().split("\n")
+        import re as _re
+        _tag_pat = _re.compile(r'\[/?\w*(?: #[0-9a-fA-F]+)?\]')
+
+        # Strip all Rich tags from logo, then wrap each line in proper color
+        logo_clean = [_tag_pat.sub('', ll) for ll in logo_lines if _tag_pat.sub('', ll).strip()]
+        logo_widths = [len(ll) for ll in logo_clean]
+        _logo_w = max(logo_widths) if logo_widths else 84
+        _side_pad = max(0, (inner_w - _logo_w) // 2)
+
+        hdr = []
+        for clean in logo_clean:
+            left = ' ' * _side_pad
+            right = ' ' * max(0, inner_w - _side_pad - len(clean))
+            hdr.append(
+                f"[{border_color}]│[/]  {left}[bold {text}]{clean}[/]{right}  [{border_color}]│[/]"
+            )
+
+        # Quote below logo, centered
+        _quote_clean = f"♦ \"Is it mad to pray for better hallucinations?\" ♦"
+        _q_pad = max(0, (inner_w - len(_quote_clean)) // 2)
+        quote = f"[{accent}]♦[/] [italic {text}]\"Is it mad to pray for better hallucinations?\"[/] [{accent}]♦[/]"
+        q_left = ' ' * _q_pad
+        q_right = ' ' * max(0, inner_w - _q_pad - len(_quote_clean))
+        padded_quote = f"[{border_color}]│[/]  {q_left}{quote}{q_right}  [{border_color}]│[/]"
+
+        # Divider: ╠══♠══════♠══╣
+        div_inner = term_width - 8
+        div = f"[{border_color}]╠══♠{'═' * div_inner}♠══╣[/]"
+
+        # 2-column content: braille left, chart right
+        from rich.table import Table
+        content_table = Table.grid(padding=(0, 2))
+        content_table.add_column("left", justify="left", ratio=2)
+        content_table.add_column("right", justify="left", ratio=3)
+        content_table.add_row(hero.strip(), right_content.strip())
+
+        # Render table as string, then wrap each line with borders
+        from rich.console import Console as _RC
+        from io import StringIO
+        _buf = StringIO()
+        _rc = _RC(file=_buf, width=term_width - 6, color_system=None, highlight=False)
+        _rc.print(content_table)
+        _raw = _buf.getvalue()
+        content_lines_raw = [
+            f"[{border_color}]│[/]  {l}  [{border_color}]│[/]"
+            for l in _raw.split("\n")
+            if l.strip()
+        ]
+
+        # Bottom border with embedded status — using palette colors
+        _status_parts = [
+            f"[#a8213a]♥[/] [{text}]Memory Shards: {total_skills}/{total_skills} Restored[/]",
+            f"[#4fa8a8]Hysteria Level: Stable[/]",
+            f"[dim {dim}]/help for commands[/] [#a8213a]♥[/]",
+        ]
+        _status = f"[dim {dim}] │ [/]".join(_status_parts)
+        _title = f"[#3a8c8c]† RUTLEDGE WARD PSYCHIATRIC TERMINAL †[/]"
+        # Layout: ╚══ status ════ title ══╝
+        _stat_clean = f"╚══ ♥ Memory Shards: 88/88 Restored │ Hysteria Level: Stable │ /help for commands ♥ ══"
+        _title_clean = "† RUTLEDGE WARD PSYCHIATRIC TERMINAL † ══╝"
+        _mid = max(0, term_width - len(_stat_clean) - len(_title_clean))
+        bot = f"[{border_color}]╚══ {_status} ══{'═' * _mid}{_title} ══╝[/]"
+
+        # Assemble the full banner
+        banner_parts = [
+            top,
+            *hdr,
+            padded_quote,
+            div,
+            *content_lines_raw,
+            bot,
+        ]
+
+        full_banner = "\n".join(banner_parts)
         console.print()
-    console.print(outer_panel)
+        console.print(full_banner)
+    else:
+        # Standard rendering for non-alice skins
+        layout_table = Table.grid(padding=(0, 2))
+        layout_table.add_column("left", justify="center")
+        layout_table.add_column("right", justify="left")
+        layout_table.add_row(left_content, right_content)
+
+        title_color = _skin_color("banner_title", "#c4a7e7")
+        border_color = _skin_color("banner_border", "#56526e")
+        version_label = format_banner_version_label()
+        release_info = get_latest_release_tag()
+        if release_info:
+            _tag, _url = release_info
+            title_markup = f"[bold {title_color}][link={_url}]{version_label}[/link][/]"
+        else:
+            title_markup = f"[bold {title_color}]{version_label}[/]"
+        outer_panel = Panel(
+            layout_table,
+            title=title_markup,
+            border_style=border_color,
+            padding=(0, 2),
+        )
+
+        console.print()
+        if term_width >= 95:
+            _logo = (
+                _render_skin.banner_logo
+                if _render_skin and hasattr(_render_skin, "banner_logo") and _render_skin.banner_logo
+                else LYDIA_AGENT_LOGO
+            )
+            console.print(_logo)
+            console.print()
+        console.print(outer_panel)

@@ -8,11 +8,14 @@ import { GatewayMenuPanel } from '@/app/shell/gateway-menu-panel'
 import { Codicon } from '@/components/ui/codicon'
 import { GlyphSpinner } from '@/components/ui/glyph-spinner'
 import { useI18n } from '@/i18n'
-import { Activity, AlertCircle, Clock, Command, Hash, Loader2, Terminal, Zap, ZapFilled } from '@/lib/icons'
+import { Activity, AlertCircle, Clock, Command, GitBranch, Hash, LayoutDashboard, Loader2, Terminal, Zap, ZapFilled } from '@/lib/icons'
 import type { RuntimeReadinessResult } from '@/lib/runtime-readiness'
 import { contextBarLabel, LiveDuration, usageContextLabel } from '@/lib/statusbar'
 import { cn } from '@/lib/utils'
 import { setGlobalYolo, setSessionYolo } from '@/lib/yolo-session'
+import { $activeProjectId, $projects } from '@/store/projects'
+import { $chatView, toggleChatView } from '@/store/graphify'
+import { openReview } from '@/store/review'
 import {
   $activeSessionId,
   $busy,
@@ -80,6 +83,23 @@ export function useStatusbarItems({
   const sessionStartedAt = useStore($sessionStartedAt)
   const turnStartedAt = useStore($turnStartedAt)
   const subagentsBySession = useStore($subagentsBySession)
+  const activeProjectId = useStore($activeProjectId)
+  const projects = useStore($projects)
+  // Resolve a filesystem path for git operations: prefer the active project's
+  // first repo folder, fall back to the primary path. Null when the user is in
+  // "no project" mode (the Git button hides itself then).
+  const repoPath = useMemo(() => {
+    if (!activeProjectId) {
+      return null
+    }
+    const project = projects.find(p => p.id === activeProjectId)
+    if (!project) {
+      return null
+    }
+    const folder = project.folders.find(f => f.path)?.path
+    return folder ?? project.primary_path ?? null
+  }, [activeProjectId, projects])
+  const chatView = useStore($chatView)
   const updateStatus = useStore($updateStatus)
   const updateApply = useStore($updateApply)
   const backendUpdateStatus = useStore($backendUpdateStatus)
@@ -396,6 +416,31 @@ export function useStatusbarItems({
         variant: 'action'
       },
       {
+        // Opens the right-sidebar Review pane — the full git management
+        // surface (file tree with diffs, stage/commit/push, worktrees,
+        // ship-to-PR). The icon reflects the provider from `remoteInfo`
+        // (GitHub / GitLab / Gitea / Bitbucket / Azure DevOps / fallback).
+        hidden: !repoPath,
+        icon: <GitBranch className="size-3.5 shrink-0 opacity-80" />,
+        id: 'git-provider',
+        onSelect: () => openReview(),
+        title: 'Open git review pane',
+        variant: 'action'
+      },
+      {
+        // Chat ⇄ Graphify view toggle. When the user is in 'chat' (default),
+        // clicking swaps the chat shell for the session's graphify iframe at
+        // full size. Clicking again returns to chat. The statusbar item is
+        // visible only when the chat shell is mounted.
+        className: `w-7 justify-center px-0${chatView === 'graph' ? ' bg-accent/55 text-foreground' : ''}`,
+        hidden: !chatOpen,
+        icon: <LayoutDashboard className="size-3.5" />,
+        id: 'view-toggle',
+        onSelect: () => toggleChatView(),
+        title: chatView === 'graph' ? 'Back to chat' : 'Show graphify',
+        variant: 'action'
+      },
+      {
         className: `w-7 justify-center px-0${terminalTakeover ? ' bg-accent/55 text-foreground' : ''}`,
         hidden: !chatOpen,
         icon: <Terminal className="size-3.5" />,
@@ -412,11 +457,13 @@ export function useStatusbarItems({
       backendVersionItem,
       busy,
       chatOpen,
+      chatView,
       clientVersionItem,
       contextBar,
       contextUsage,
       copy,
       currentUsage,
+      repoPath,
       requestGateway,
       sessionStartedAt,
       showYoloToggle,

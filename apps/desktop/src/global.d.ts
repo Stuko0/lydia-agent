@@ -116,6 +116,9 @@ declare global {
         branchSwitch: (repoPath: string, branch: string) => Promise<{ branch: string }>
         // Local branches for the "convert a branch into a worktree" picker.
         branchList: (repoPath: string) => Promise<LydiaGitBranch[]>
+        // Origin remote URL + provider detection (used by the statusbar's
+        // provider-aware Git button). Defaults to "none" on a non-repo.
+        remoteInfo: (repoPath: string) => Promise<LydiaGitRemoteInfo>
         // Compact working-tree status for the composer coding rail. Null on a
         // non-repo / remote backend (where the Electron probe can't run).
         repoStatus: (repoPath: string) => Promise<LydiaRepoStatus | null>
@@ -615,6 +618,25 @@ export interface LydiaRepoStatus {
   removed: number
   // Capped changed-file list (REPO_STATUS_FILE_CAP) for the diff/open actions.
   files: LydiaRepoStatusFile[]
+}
+
+// Origin remote + provider detection — drives the desktop statusbar's
+// provider-aware Git button (icon, label, PR-creation target).
+export interface LydiaGitRemoteInfo {
+  branch: null | string
+  // Web URL the user lands on to create a PR/MR for `branch` against the repo's
+  // default branch. Null when no remote, no branch (detached), or provider is
+  // unrecognized. Used to deep-link the statusbar's "create PR" action.
+  prUrl: null | string
+  provider:
+    | 'azure-devops'
+    | 'bitbucket'
+    | 'gitea'
+    | 'github'
+    | 'gitlab'
+    | 'none'
+    | 'other'
+  remote: null | string
 }
 
 // Diff scope for the review pane, mirroring Codex: uncommitted working-tree

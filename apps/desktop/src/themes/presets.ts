@@ -277,13 +277,93 @@ export const slateTheme: DesktopTheme = {
   }
 }
 
+/**
+ * Alice's Descent — Victorian card-deck gothic dark aesthetic.
+ *
+ *   ♠ Spade   → Teal (pine)    #3a8c8c
+ *   ♥ Heart   → Carmesí (love) #a8213a
+ *   ♦ Diamond → Teal (foam)    #4fa8a8
+ *   ♣ Club    → Gold (tarnished) #b8864e
+ *
+ * Light mode: warm parchment/cream foundation with the same suit accents.
+ * Dark mode (primary): deep gothic purple-black with crema/parchment text.
+ */
+export const aliceTheme: DesktopTheme = {
+  name: 'alice',
+  label: "Alice's Descent",
+  description: 'Victorian card-deck gothic dark — ♠♥♦♣',
+
+  colors: {
+    background: '#f5f0e8',
+    foreground: '#2a2438',
+    card: '#faf6ee',
+    cardForeground: '#2a2438',
+    muted: '#ece6da',
+    mutedForeground: '#6e687c',
+    popover: '#ffffff',
+    popoverForeground: '#2a2438',
+    primary: '#c45a6b',
+    primaryForeground: '#ffffff',
+    secondary: '#e8e0d4',
+    secondaryForeground: '#4a4458',
+    accent: '#ede4d6',
+    accentForeground: '#2a2438',
+    border: '#d4ccc0',
+    input: '#d4ccc0',
+    ring: '#b8864e',
+    midground: '#7848a0',
+    destructive: '#a8213a',
+    destructiveForeground: '#ffffff',
+    sidebarBackground: '#f0ebe0',
+    sidebarBorder: '#d4ccc0',
+    userBubble: '#ece6da',
+    userBubbleBorder: '#d4ccc0'
+  },
+
+  darkColors: {
+    background: '#0c0a12',
+    foreground: '#d4cfc7',
+    card: '#16131f',
+    cardForeground: '#d4cfc7',
+    muted: '#191622',
+    mutedForeground: '#6e687c',
+    popover: '#221e30',
+    popoverForeground: '#d4cfc7',
+    primary: '#c45a6b',
+    primaryForeground: '#0c0a12',
+    secondary: '#2d2940',
+    secondaryForeground: '#958da5',
+    accent: '#2d2940',
+    accentForeground: '#d4cfc7',
+    border: '#413d57',
+    input: '#2d2940',
+    ring: '#b8864e',
+    midground: '#7848a0',
+    destructive: '#a8213a',
+    destructiveForeground: '#d4cfc7',
+    sidebarBackground: '#0c0a12',
+    sidebarBorder: '#2d2940',
+    userBubble: '#16131f',
+    userBubbleBorder: '#2d2940'
+  },
+
+  typography: {
+    fontSans:
+      '"Inter", "Segoe WPC", "Segoe UI", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif, ' +
+      EMOJI_FALLBACK,
+    fontUrl:
+      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&display=swap'
+  }
+}
+
 export const BUILTIN_THEMES: Record<string, DesktopTheme> = {
   nous: nousTheme,
   midnight: midnightTheme,
   ember: emberTheme,
   mono: monoTheme,
   cyberpunk: cyberpunkTheme,
-  slate: slateTheme
+  slate: slateTheme,
+  alice: aliceTheme
 }
 
 export const BUILTIN_THEME_LIST = Object.values(BUILTIN_THEMES)

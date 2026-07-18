@@ -21,6 +21,10 @@ const api = vi.fn(async ({ path }: { path: string }) => {
     return { diff: 'remote-diff' }
   }
 
+  if (path.startsWith('/api/git/remote')) {
+    return { branch: 'main', provider: 'github', prUrl: 'https://github.com/foo/bar/compare/main', remote: 'git@github.com:foo/bar.git' }
+  }
+
   return { ok: true }
 })
 
@@ -89,5 +93,37 @@ describe('desktop git facade', () => {
       path: '/api/git/review/stage'
     })
     expect(localGit.review.stage).not.toHaveBeenCalled()
+  })
+
+  // Regression: the local Electron bridge doesn't expose `remoteInfo`. The
+  // facade used to return it as-is, so opening the Git statusbar button on a
+  // local session threw "n.remoteInfo is not a function". The facade must
+  // route `remoteInfo` through the gateway HTTP API in BOTH local and
+  // remote modes.
+  it('exposes remoteInfo on the local bridge via the HTTP route', async () => {
+    $connection.set({ mode: 'local' } as never)
+
+    const info = await desktopGit()?.remoteInfo('/work')
+
+    expect(info).toEqual({
+      branch: 'main',
+      provider: 'github',
+      prUrl: 'https://github.com/foo/bar/compare/main',
+      remote: 'git@github.com:foo/bar.git'
+    })
+    expect(api).toHaveBeenCalledWith(
+      expect.objectContaining({ path: '/api/git/remote?path=%2Fwork' })
+    )
+  })
+
+  it('exposes remoteInfo on a remote gateway via the HTTP route', async () => {
+    $connection.set({ mode: 'remote' } as never)
+
+    const info = await desktopGit()?.remoteInfo('/srv/work')
+
+    expect(info?.provider).toBe('github')
+    expect(api).toHaveBeenCalledWith(
+      expect.objectContaining({ path: '/api/git/remote?path=%2Fsrv%2Fwork' })
+    )
   })
 })

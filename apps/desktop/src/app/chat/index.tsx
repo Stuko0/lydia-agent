@@ -7,7 +7,7 @@ import {
 import { useStore } from '@nanostores/react'
 import { useQuery } from '@tanstack/react-query'
 import type * as React from 'react'
-import { Suspense, useCallback, useMemo, useRef } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { Thread } from '@/components/assistant-ui/thread'
@@ -50,6 +50,8 @@ import type { ModelOptionsResponse } from '@/types/lydia'
 
 import { routeSessionId } from '../routes'
 import { titlebarHeaderBaseClass, titlebarHeaderShadowClass, titlebarHeaderTitleClass } from '../shell/titlebar'
+import { GraphifyCanvas } from '../shell/graphify-canvas'
+import { $chatView, setChatView } from '@/store/graphify'
 
 import { ChatDropOverlay } from './chat-drop-overlay'
 import { ChatSwapOverlay } from './chat-swap-overlay'
@@ -439,14 +441,15 @@ export function ChatView({
 
       <PromptOverlays />
 
-      <ChatRuntimeBoundary
-        busy={busy}
-        onCancel={onCancel}
-        onEdit={onEdit}
-        onReload={onReload}
-        onThreadMessagesChange={onThreadMessagesChange}
-        suppressMessages={routeSessionMismatch}
-      >
+      <ChatViewSwitch activeSessionId={activeSessionId}>
+        <ChatRuntimeBoundary
+          busy={busy}
+          onCancel={onCancel}
+          onEdit={onEdit}
+          onReload={onReload}
+          onThreadMessagesChange={onThreadMessagesChange}
+          suppressMessages={routeSessionMismatch}
+        >
         <div
           className="relative min-h-0 max-w-full flex-1 overflow-hidden bg-(--ui-chat-surface-background) contain-[layout_paint]"
           data-slot="composer-bounds"
@@ -521,6 +524,36 @@ export function ChatView({
           </Suspense>
         )}
       </ChatRuntimeBoundary>
+      </ChatViewSwitch>
     </div>
   )
+}
+
+// Renders children when `$chatView === 'chat'`, otherwise renders the
+// fullscreen `<GraphifyCanvas />` for the active session. Auto-flips back to
+// 'chat' when the user navigates to a different session so they don't end
+// up looking at a stale graph.
+function ChatViewSwitch({
+  activeSessionId,
+  children
+}: {
+  activeSessionId: null | string
+  children: React.ReactNode
+}) {
+  const view = useStore($chatView)
+
+  useEffect(() => {
+    // When the user switches sessions while in graph view, drop them back
+    // into chat — the graph path is the prior session's cwd.
+    if (view === 'graph') {
+      setChatView('chat')
+    }
+    // Intentionally only on activeSessionId change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSessionId])
+
+  if (view === 'graph') {
+    return <GraphifyCanvas onClose={() => setChatView('chat')} />
+  }
+  return <>{children}</>
 }
