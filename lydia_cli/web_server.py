@@ -23,6 +23,7 @@ import logging
 import mimetypes
 import os
 import re
+import uuid
 import secrets
 import shutil
 import stat
@@ -1983,6 +1984,87 @@ class GitBranchSwitchBody(BaseModel):
 @app.get("/api/git/status")
 async def git_status_route(path: str):
     return await _git_op(_web_git.repo_status, _git_path(path))
+
+
+# ── Git askpass (username / password / SSH passphrase) ───────────────────
+# When git push / fetch / pull needs a credential, the desktop's
+# `GIT_ASKPASS` shim POSTs the prompt here. The route holds the request
+# open (long-poll, 5 min) until the renderer answers via the paired
+# `/api/git/askpass/respond` endpoint. The shim then prints the answer to
+# stdout and git reads it. Returning `{"answer": ""}` cleanly cancels
+# the operation (git will print its own auth failure).
+#
+# This avoids the original-terminal-prompt UX: the user sees a floating
+# modal in the desktop, not stdin on the shell where they launched the app.
+import asyncio as _asyncio
+
+_askpass_pending: dict[str, _asyncio.Future[str]] = {}
+_askpass_lock = _asyncio.Lock()
+
+
+@app.post("/api/git/askpass")
+async def git_askpass_route(request: Request) -> dict:
+    """Long-poll endpoint for git credential prompts.
+
+    The desktop's ``GIT_ASKPASS`` shim POSTs the prompt here. We hold the
+    request open until either the renderer responds (via the paired
+    ``/api/git/askpass/respond`` endpoint) or the 5-minute timeout fires.
+    The shim is a generic Python script (no jsonrpc), so it talks to us
+    over plain HTTP — that's the entire reason this endpoint exists.
+    """
+    try:
+        body = await request.json()
+    except Exception:
+        return {"answer": ""}
+    prompt = str(body.get("prompt", ""))
+    rid = uuid.uuid4().hex[:8]
+    loop = _asyncio.get_running_loop()
+    future: _asyncio.Future[str] = loop.create_future()
+    async with _askpass_lock:
+        _askpass_pending[rid] = future
+    # Best-effort broadcast to the renderer. The desktop listens for
+    # `git.askpass.request` via the gateway event stream and opens a modal.
+    try:
+        from tui_gateway.server import _emit
+
+        _emit("git.askpass.request", "*", {"prompt": prompt, "request_id": rid})
+    except Exception:
+        # If the gateway isn't running (CLI-only mode), the modal can't
+        # be shown — return empty so git aborts cleanly.
+        async with _askpass_lock:
+            _askpass_pending.pop(rid, None)
+        return {"answer": ""}
+    try:
+        answer = await _asyncio.wait_for(future, timeout=300)
+    except _asyncio.TimeoutError:
+        answer = ""
+    finally:
+        async with _askpass_lock:
+            _askpass_pending.pop(rid, None)
+    return {"answer": answer}
+
+
+@app.post("/api/git/askpass/respond")
+async def git_askpass_respond_route(request: Request) -> dict:
+    """Pair endpoint — the renderer calls this to submit the user's answer.
+
+    The request body is ``{"request_id": "...", "answer": "..."}``. We
+    resolve the matching long-poll future; an empty ``answer`` means the
+    user cancelled, which propagates to git as a no-credential-given
+    error.
+    """
+    try:
+        body = await request.json()
+    except Exception:
+        return {"status": "ok"}
+    rid = str(body.get("request_id", ""))
+    answer = str(body.get("answer", ""))
+    async with _askpass_lock:
+        future = _askpass_pending.get(rid)
+    if future is None or future.done():
+        return {"status": "ok"}
+    future.get_loop().call_soon_threadsafe(future.set_result, answer)
+    return {"status": "ok"}
 
 
 @app.get("/api/git/remote")

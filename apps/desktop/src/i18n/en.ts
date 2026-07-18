@@ -2201,7 +2201,22 @@ export const en: Translations = {
     sudoPlaceholder: 'sudo password',
     secretTitle: 'Secret required',
     secretDesc: 'Lydia needs a credential to continue.',
-    secretPlaceholder: 'secret value'
+    secretPlaceholder: 'secret value',
+    // Git askpass (HTTPS username / password / SSH passphrase). The
+    // modal replaces the original-terminal-prompt UX — the credential
+    // is collected inside the desktop window, never on the shell where
+    // the user launched the app.
+    askpassTitle: 'Git credential required',
+    askpassDescriptionWithHost: host => `Git is asking for credentials to talk to ${host}.`,
+    askpassDescriptionGeneric: 'Git is asking for credentials. Enter the requested value below.',
+    askpassUsernameLabel: 'Username',
+    askpassPasswordLabel: 'Password',
+    askpassPassphraseLabel: 'Passphrase',
+    askpassHint: 'The value is sent only to your local agent for this single git operation.',
+    askpassSendFailed: 'Could not send git credential',
+    submitting: 'Submitting…',
+    submit: 'Submit',
+    cancel: 'Cancel'
   },
 
   desktop: {

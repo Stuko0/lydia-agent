@@ -118,9 +118,118 @@ def _pr_target_url(remote_url: str | None, provider: str, branch: str | None) ->
     return f"https://{host}/{path}/compare/{branch}"
 
 
+# Auto-generated askpass script path. We embed a small Python script that
+# git invokes whenever it needs a credential (HTTPS password, SSH
+# passphrase, username prompt). The script POSTs the prompt to the desktop
+# gateway and prints the user's answer to stdout. The path is stable so
+# `git` keeps a single cached askpass invocation per process.
+_LYDIA_ASKPASS_SCRIPT: str | None = None
+ASKPASS_FILENAME = "lydia-git-askpass.py"
+
+
+def askpass_path() -> str:
+    """Return the on-disk path of the git-askpass shim. Lazily materializes
+    the script under the user's lydia config dir; git reads the path from
+    ``GIT_ASKPASS`` and exec's the file with the prompt as argv[1].
+
+    The script is plain Python (any Python on PATH) so it works in
+    bundled/pip-installed environments where ``sh`` might not be on PATH.
+    """
+    global _LYDIA_ASKPASS_SCRIPT
+    if _LYDIA_ASKPASS_SCRIPT is not None:
+        return _LYDIA_ASKPASS_SCRIPT
+    import os as _os
+    from pathlib import Path as _Path
+
+    base = _Path(_os.environ.get("LYDIA_HOME", str(_Path.home() / ".lydia")))
+    base.mkdir(parents=True, exist_ok=True)
+    script = base / ASKPASS_FILENAME
+    if not script.exists() or script.stat().st_size < 100:
+        script.write_text(_ASKPASS_BODY, encoding="utf-8")
+        try:
+            script.chmod(0o755)
+        except OSError:
+            # Windows doesn't support chmod uniformly; the python invocation
+            # in the shebang works regardless.
+            pass
+    _LYDIA_ASKPASS_SCRIPT = str(script)
+    return _LYDIA_ASKPASS_SCRIPT
+
+
+_ASKPASS_BODY = '''#!/usr/bin/env python3
+"""Lydia git askpass shim.
+
+Invoked by git whenever it needs a credential (HTTPS password, SSH
+passphrase, username, etc.). Forwards the prompt to the running desktop
+gateway and prints the user's answer to stdout. If no gateway is reachable
+or the user cancels, prints nothing — git then aborts the operation,
+which is the correct fallback.
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+import urllib.error
+import urllib.request
+
+PROMPT = sys.argv[1] if len(sys.argv) > 1 else "Input:"
+GATEWAY_PORT = os.environ.get("LYDIA_GATEWAY_PORT", "8765")
+# localhost-only — the askpass must never talk to anything else.
+URL = f"http://127.0.0.1:{GATEWAY_PORT}/api/git/askpass"
+
+# Git treats a non-zero exit / empty stdout as "no credential given" and
+# aborts the operation, so we mirror that: if the gateway is unreachable
+# we print nothing and exit 0 (git itself prints the auth failure).
+try:
+    body = json.dumps({"prompt": PROMPT}).encode("utf-8")
+    req = urllib.request.Request(
+        URL,
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        data = resp.read().decode("utf-8", errors="replace")
+    payload = json.loads(data)
+    answer = payload.get("answer", "")
+    if answer:
+        sys.stdout.write(answer)
+        sys.stdout.flush()
+except (urllib.error.URLError, ConnectionError, TimeoutError, OSError, ValueError):
+    # No gateway — fall through, print nothing.
+    pass
+except Exception:
+    # Any unexpected error must not leak the prompt to stderr in a way
+    # that exposes secrets. Swallow silently.
+    pass
+sys.exit(0)
+'''
+
+
+def _askpass_env() -> dict[str, str]:
+    """Build the env additions that route git's credential prompts through
+    the desktop gateway. Sets ``GIT_ASKPASS`` to the generated shim and
+    forces git to *always* ask (so the user's "saved in keychain" choice
+    is overridden — the desktop wants to be the single source of truth).
+    """
+    import os
+    env = {
+        "GIT_ASKPASS": askpass_path(),
+        # git won't run askpass for known creds unless we set this. 5
+        # minutes matches the renderer's modal timeout.
+        "GIT_ASKPASS_TIMEOUT": "300",
+    }
+    return env
+
+
 def _git(cwd: str, args: list[str], *, timeout: int = _GIT_TIMEOUT) -> tuple[int, str, str]:
     """Run ``git`` in ``cwd``. Returns (returncode, stdout, stderr); never raises
     on a non-zero exit (callers decide what an error means)."""
+    import os as _os
+    # All git operations get the askpass env. Read-only ops never prompt,
+    # so the only overhead is the (cached) env merge.
+    merged = {**_os.environ, **_askpass_env()}
     try:
         proc = subprocess.run(
             ["git", *args],
@@ -128,6 +237,7 @@ def _git(cwd: str, args: list[str], *, timeout: int = _GIT_TIMEOUT) -> tuple[int
             capture_output=True,
             text=True,
             timeout=timeout,
+            env=merged,
         )
     except (OSError, subprocess.SubprocessError):
         return 1, "", "git invocation failed"

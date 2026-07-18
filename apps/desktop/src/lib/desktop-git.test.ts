@@ -25,6 +25,10 @@ const api = vi.fn(async ({ path }: { path: string }) => {
     return { branch: 'main', provider: 'github', prUrl: 'https://github.com/foo/bar/compare/main', remote: 'git@github.com:foo/bar.git' }
   }
 
+  if (path.startsWith('/api/git/askpass/respond')) {
+    return { status: 'ok' }
+  }
+
   return { ok: true }
 })
 
@@ -124,6 +128,36 @@ describe('desktop git facade', () => {
     expect(info?.provider).toBe('github')
     expect(api).toHaveBeenCalledWith(
       expect.objectContaining({ path: '/api/git/remote?path=%2Fsrv%2Fwork' })
+    )
+  })
+
+  // The git-credential modal posts the user's answer here from both
+  // local and remote modes. The local-mode wrap (added when we wired
+  // the askpass shim) used to forget `askpassRespond`, so opening the
+  // modal would throw "n.askpassRespond is not a function". This
+  // regression test pins both paths.
+  it('posts askpass answers through the HTTP route in local mode', async () => {
+    $connection.set({ mode: 'local' } as never)
+
+    const result = await desktopGit()?.askpassRespond('req-1', 'hunter2')
+
+    expect(result).toEqual({ status: 'ok' })
+    expect(api).toHaveBeenCalledWith({
+      body: { answer: 'hunter2', request_id: 'req-1' },
+      method: 'POST',
+      path: '/api/git/askpass/respond'
+    })
+  })
+
+  it('posts askpass answers through the HTTP route in remote mode', async () => {
+    $connection.set({ mode: 'remote' } as never)
+
+    const result = await desktopGit()?.askpassRespond('req-2', '')
+
+    // Empty answer is the cancel path — git aborts the operation.
+    expect(result).toEqual({ status: 'ok' })
+    expect(api).toHaveBeenCalledWith(
+      expect.objectContaining({ body: { answer: '', request_id: 'req-2' } })
     )
   })
 })

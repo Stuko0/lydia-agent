@@ -5,6 +5,7 @@ import { type FormEvent, useCallback, useEffect, useState } from 'react'
 
 import { PendingApprovalFallback } from '@/components/assistant-ui/tool/approval'
 import { Button } from '@/components/ui/button'
+import { GitAskpassModal } from '@/components/git-askpass-modal'
 import {
   Dialog,
   DialogContent,
@@ -230,6 +231,7 @@ export function PromptOverlays() {
       <PendingApprovalFallback />
       <SudoDialog />
       <SecretDialog />
+      <GitAskpassModal />
     </>
   )
 }

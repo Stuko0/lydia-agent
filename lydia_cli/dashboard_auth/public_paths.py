@@ -52,4 +52,12 @@ PUBLIC_API_PATHS: frozenset[str] = frozenset({
     # the NAS relay's bearer-only callback reaches the verifier instead of a
     # 401 no_cookie. The JWT — not this allowlist — is the security boundary.
     "/api/cron/fire",
+    # Git credential askpass long-poll — called by the `GIT_ASKPASS` shim
+    # that the web_git module injects into every git subprocess. The shim
+    # is a localhost-only Python script (no cookies, no auth) so it must
+    # bypass the dashboard gate. Security boundary: the route only listens
+    # on 127.0.0.1 (see web_git.askpass_path), and the renderer-side
+    # answer modal is gated by the same auth as the rest of the dashboard.
+    "/api/git/askpass",
+    "/api/git/askpass/respond",
 })

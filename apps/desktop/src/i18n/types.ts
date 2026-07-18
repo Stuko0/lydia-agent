@@ -1810,6 +1810,19 @@ export interface Translations {
     secretTitle: string
     secretDesc: string
     secretPlaceholder: string
+    // Git askpass (HTTPS username / password / SSH passphrase). The
+    // modal replaces the original-terminal-prompt UX.
+    askpassTitle: string
+    askpassDescriptionWithHost: (host: string) => string
+    askpassDescriptionGeneric: string
+    askpassUsernameLabel: string
+    askpassPasswordLabel: string
+    askpassPassphraseLabel: string
+    askpassHint: string
+    askpassSendFailed: string
+    submitting: string
+    submit: string
+    cancel: string
   }
 
   desktop: {

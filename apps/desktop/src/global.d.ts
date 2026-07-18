@@ -150,6 +150,11 @@ declare global {
         }
         // Repo-first discovery: scan bounded roots for git repos (depth-capped).
         scanRepos: (roots: string[], options?: { maxDepth?: number }) => Promise<{ root: string; label: string }[]>
+        // Post the user's answer to a git credential prompt. The gateway
+        // long-poll endpoint is `/api/git/askpass/respond`; both local and
+        // remote modes route through it. Empty `answer` cleanly cancels
+        // the operation (git prints its own auth failure).
+        askpassRespond: (requestId: string, answer: string) => Promise<{ status: string }>
       }
       terminal: {
         dispose: (id: string) => Promise<boolean>

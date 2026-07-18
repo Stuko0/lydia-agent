@@ -61,6 +61,9 @@ const remoteGit: GitBridge = {
 
   remoteInfo: repoPath => gitGet<LydiaGitRemoteInfo>('remote', { path: repoPath }),
 
+  askpassRespond: (requestId, answer) =>
+    gitPost<{ status: string }>('askpass/respond', { answer, request_id: requestId }),
+
   repoStatus: repoPath => gitGet<LydiaRepoStatus | null>('status', { path: repoPath }),
 
   fileDiff: async (repoPath, filePath) =>
@@ -117,15 +120,33 @@ function httpRemoteInfo(repoPath: string): Promise<LydiaGitRemoteInfo> {
   })
 }
 
+// Same story for `askpassRespond`: the gateway long-poll endpoint accepts
+// the user's answer via plain HTTP. We wrap it the same way as
+// `httpRemoteInfo` so the renderer doesn't have to care whether the
+// desktop is in local or remote mode.
+function httpAskpassRespond(requestId: string, answer: string): Promise<{ status: string }> {
+  const desktop = window.lydiaDesktop
+  if (!desktop) {
+    return Promise.reject(new Error('Lydia Desktop bridge is unavailable'))
+  }
+  return desktop.api<{ status: string }>({
+    body: { answer, request_id: requestId },
+    method: 'POST',
+    path: '/api/git/askpass/respond',
+    profile: desktopFsProfile()
+  })
+}
+
 export function desktopGit(): GitBridge | undefined {
   if (isDesktopFsRemoteMode()) {
     return remoteGit
   }
-  // Local mode: wrap the Electron bridge and override `remoteInfo` with the
-  // HTTP path. Other methods stay on the native bridge (faster).
+  // Local mode: wrap the Electron bridge and override methods that the
+  // native bridge doesn't expose yet (remoteInfo + askpassRespond) with
+  // the HTTP path. Other methods stay on the native bridge (faster).
   const local = window.lydiaDesktop?.git
   if (!local) {
     return undefined
   }
-  return { ...local, remoteInfo: httpRemoteInfo }
+  return { ...local, askpassRespond: httpAskpassRespond, remoteInfo: httpRemoteInfo }
 }

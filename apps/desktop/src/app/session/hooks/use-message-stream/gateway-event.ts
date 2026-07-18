@@ -20,7 +20,7 @@ import { notify } from '@/store/notifications'
 import { requestDesktopOnboarding } from '@/store/onboarding'
 import { flashPetActivity, markPetUnread, setPetActivity } from '@/store/pet'
 import { followActiveSessionCwd } from '@/store/projects'
-import { clearAllPrompts, setApprovalRequest, setSecretRequest, setSudoRequest } from '@/store/prompts'
+import { clearAllPrompts, setApprovalRequest, setAskpassRequest, setSecretRequest, setSudoRequest } from '@/store/prompts'
 import {
   $currentCwd,
   setCurrentBranch,
@@ -520,6 +520,20 @@ export function useGatewayEventHandler(deps: GatewayEventDeps) {
             sessionId,
             title: translateNow('notifications.native.inputTitle')
           })
+        }
+      } else if (event.type === 'git.askpass.request') {
+        // Git credential prompt (HTTPS password, SSH passphrase, username).
+        // Emitted from web_server when the GIT_ASKPASS shim long-polls
+        // /api/git/askpass. The renderer shows a floating modal so the
+        // user never sees the prompt in the terminal where they launched
+        // the desktop. Blocked on POST /api/git/askpass/respond {request_id,
+        // answer} (we don't use jsonrpc for this one because the shim is
+        // a generic Python script, not a gateway client).
+        const requestId = typeof payload?.request_id === 'string' ? payload.request_id : ''
+        const promptText = typeof payload?.prompt === 'string' ? payload.prompt : ''
+
+        if (requestId) {
+          setAskpassRequest({ requestId, prompt: promptText })
         }
       } else if (event.type === 'terminal.read.request') {
         // read_terminal tool: serialize the renderer's xterm buffer and answer
