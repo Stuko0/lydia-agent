@@ -478,6 +478,11 @@ def _resolve_runtime_from_pool_entry(
     # https://opencode.ai/zen/go/v1/messages instead of .../v1/v1/messages).
     if api_mode == "anthropic_messages" and provider in {"opencode-zen", "opencode-go"}:
         base_url = re.sub(r"/v1/?$", "", base_url)
+    # Re-add /v1 for OpenCode chat_completions models (mirrors the same fix
+    # in the api_key provider path below — refs #16878).
+    if api_mode == "chat_completions" and provider in {"opencode-zen", "opencode-go"}:
+        if not re.search(r"/v1/?$", base_url):
+            base_url = base_url.rstrip("/") + "/v1"
 
     # Optional opt-in: route OpenAI/Codex turns through `codex app-server`.
     # Inert when `model.openai_runtime` is unset or "auto".
@@ -1941,6 +1946,11 @@ def resolve_runtime_provider(
         # Strip trailing /v1 for OpenCode Anthropic models (see comment above).
         if api_mode == "anthropic_messages" and provider in {"opencode-zen", "opencode-go"}:
             base_url = re.sub(r"/v1/?$", "", base_url)
+        # Re-add /v1 for OpenCode chat_completions models when the persisted
+        # config has a stripped base_url from a prior anthropic switch (refs #16878).
+        if api_mode == "chat_completions" and provider in {"opencode-zen", "opencode-go"}:
+            if not re.search(r"/v1/?$", base_url):
+                base_url = base_url.rstrip("/") + "/v1"
         if provider == "lmstudio":
             base_url = auth_mod._normalize_lmstudio_runtime_base_url(base_url)
         return {

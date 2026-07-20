@@ -17,6 +17,17 @@
   src: url('../../../node_modules/@nous-research/ui/dist/fonts/Collapse-Bold.woff2') format('woff2');
 }
 
+/* Grenze Gotisch — gothic display for the "LYDIA AGENT" wordmark in the
+   Alice's Descent theme. Downloaded from Google Fonts; bundled locally to
+   avoid depending on the theme's fontUrl (which is per-theme). */
+@font-face {
+  font-family: 'Grenze Gotisch';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/GrenzeGotisch-Bold.woff2') format('woff2');
+}
+
 /* JetBrains Mono — bundled terminal font (Apache-2.0) so bold/italic share the
    regular face's metrics instead of squeezing against a system fallback. */
 @font-face {

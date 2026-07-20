@@ -1317,6 +1317,17 @@ def switch_model(
         and base_url
     ):
         base_url = re.sub(r"/v1/?$", "", base_url)
+    # Re-add /v1 when switching back to a chat_completions model on OpenCode.
+    # The previous anthropic switch stripped it; without this fix the config
+    # persists the stripped URL and all subsequent chat_completions requests 404.
+    if (
+        api_mode == "chat_completions"
+        and target_provider in {"opencode-zen", "opencode-go"}
+        and isinstance(base_url, str)
+        and base_url
+        and not re.search(r"/v1/?$", base_url)
+    ):
+        base_url = base_url.rstrip("/") + "/v1"
 
     # --- Get capabilities (legacy) ---
     capabilities = get_model_capabilities(target_provider, new_model)

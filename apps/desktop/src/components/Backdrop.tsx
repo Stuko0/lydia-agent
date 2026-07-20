@@ -68,17 +68,17 @@ export function Backdrop() {
     'Backdrop / Statue',
     {
       enabled: { value: true, label: 'on' },
-      opacity: { value: 0.025, min: 0, max: 1, step: 0.005 },
+      opacity: { value: 0.02, min: 0, max: 1, step: 0.005 },
       blendMode: { value: 'difference' as BlendMode, options: BLEND_MODES, label: 'blend' },
       invert: { value: true, label: 'invert color' },
-      saturate: { value: 1, min: 0, max: 3, step: 0.05, label: 'saturate' },
-      brightness: { value: 1, min: 0, max: 2, step: 0.05, label: 'brightness' },
+      saturate: { value: 0.6, min: 0, max: 3, step: 0.05, label: 'saturate' },
+      brightness: { value: 1.2, min: 0, max: 2, step: 0.05, label: 'brightness' },
       objectPosition: {
-        value: 'top left',
+        value: 'center',
         options: ['top left', 'top right', 'bottom left', 'bottom right', 'center', 'top', 'bottom', 'left', 'right'],
         label: 'position'
       },
-      scale: { value: 160, min: 100, max: 300, step: 5, label: 'height (dvh)' }
+      scale: { value: 100, min: 100, max: 300, step: 5, label: 'height (dvh)' },
     },
     { collapsed: true }
   )
@@ -98,11 +98,10 @@ export function Backdrop() {
         >
           <img
             alt=""
-            className="w-auto min-w-dvw object-cover"
+            className="h-full w-full object-cover"
             fetchPriority="low"
-            src={assetPath('ds-assets/filler-bg0.jpg')}
+            src={assetPath('ds-assets/filler-bg1.jpg')}
             style={{
-              height: `${statue.scale}dvh`,
               objectPosition: statue.objectPosition,
               filter: `invert(calc(${statue.invert ? 1 : 0} * var(--backdrop-invert-mul, 1))) saturate(${statue.saturate}) brightness(${statue.brightness})`
             }}

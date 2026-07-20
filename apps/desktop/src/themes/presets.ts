@@ -352,7 +352,7 @@ export const aliceTheme: DesktopTheme = {
       '"Inter", "Segoe WPC", "Segoe UI", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif, ' +
       EMOJI_FALLBACK,
     fontUrl:
-      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&display=swap'
+      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&family=Grenze+Gotisch:wght@700&display=swap'
   }
 }
 
