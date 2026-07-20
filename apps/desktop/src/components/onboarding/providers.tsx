@@ -4,15 +4,18 @@ import { Check, ChevronRight, Terminal } from '@/lib/icons'
 import type { OAuthProvider } from '@/types/lydia'
 
 const PROVIDER_DISPLAY: Record<string, { order: number; title: string }> = {
-  nous: { order: 0, title: 'Nous Portal' },
-  'openai-codex': { order: 1, title: 'OpenAI OAuth (ChatGPT)' },
-  'minimax-oauth': { order: 2, title: 'MiniMax' },
+  // GitHub Copilot is the first/recommended — free with GitHub account, no API key.
+  'copilot-acp': { order: 0, title: 'GitHub Copilot' },
+  // OAuth-first providers
+  'xai-oauth': { order: 1, title: 'xAI Grok' },
+  'openai-codex': { order: 2, title: 'OpenAI OAuth (ChatGPT)' },
   'qwen-oauth': { order: 3, title: 'Qwen Code' },
-  'xai-oauth': { order: 4, title: 'xAI Grok' },
-  // Both Anthropic entries sit at the bottom: the API-key path first, then
-  // the subscription OAuth path (only works with extra usage credits).
+  'minimax-oauth': { order: 4, title: 'MiniMax' },
+  // API-key providers
   anthropic: { order: 5, title: 'Anthropic API Key' },
-  'claude-code': { order: 6, title: 'Anthropic OAuth: Required Extra Usage Credits to Use Subscription' }
+  'claude-code': { order: 6, title: 'Anthropic OAuth: Requires Extra Usage Credits' },
+  // Legacy/third-party providers (available but not recommended)
+  nous: { order: 99, title: 'Nous Portal' },
 }
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`

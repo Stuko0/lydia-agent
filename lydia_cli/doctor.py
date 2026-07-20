@@ -2379,6 +2379,6 @@ def run_doctor(args):
             print(color("  Tip: run 'lydia doctor --fix' to auto-fix what's possible.", Colors.DIM))
     else:
         print(color("─" * 60, Colors.GREEN))
-        print(color("  All checks passed! 🎉", Colors.GREEN, Colors.BOLD))
+        print(color("  All checks passed! ★", Colors.GREEN, Colors.BOLD))
     
     print()

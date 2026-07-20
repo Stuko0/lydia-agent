@@ -370,7 +370,7 @@ function Header() {
   )
 }
 
-export const FEATURED_ID = 'nous'
+export const FEATURED_ID = 'copilot-acp'
 const SHOW_ALL_KEY = 'lydia-onboarding-show-all-v1'
 
 const readShowAll = () => {

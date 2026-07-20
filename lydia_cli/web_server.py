@@ -586,7 +586,7 @@ _SCHEMA_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "display.skin": {
         "type": "select",
         "description": "CLI visual theme",
-        "options": ["default", "ares", "mono", "slate"],
+        "options": ["default", "mono", "slate", "alice"],
     },
     "dashboard.theme": {
         "type": "select",
@@ -6441,13 +6441,28 @@ def _copilot_acp_status() -> Dict[str, Any]:
 # verification URL + poll, ``external`` = read-only (delegated to a third-party
 # CLI like Claude Code or Qwen), ``loopback`` = 127.0.0.1 callback listener.
 _OAUTH_PROVIDER_CATALOG: tuple[Dict[str, Any], ...] = (
+    # ── OAuth providers in recommended order ──────────────────────────
+    # GitHub Copilot is the first/default — free with a GitHub account,
+    # no API key needed. Followed by other OAuth-first providers, then
+    # API-key providers, then Nous Portal (available but not default).
     {
-        "id": "nous",
-        "name": "Nous Portal",
-        "flow": "device_code",
-        "cli_command": "lydia auth add nous",
-        "docs_url": "https://portal.nousresearch.com",
-        "status_fn": None,  # dispatched via auth.get_nous_auth_status
+        "id": "copilot-acp",
+        "name": "GitHub Copilot (ACP)",
+        "flow": "external",
+        "cli_command": "copilot /login",
+        "docs_url": "https://docs.github.com/en/copilot",
+        "status_fn": _copilot_acp_status,
+    },
+    {
+        "id": "xai-oauth",
+        "name": "xAI Grok OAuth (SuperGrok / Premium+)",
+        # Loopback PKCE: the desktop's local backend binds a 127.0.0.1
+        # callback server, the client opens the browser, and the redirect
+        # lands back on the loopback listener — no code to copy/paste.
+        "flow": "loopback",
+        "cli_command": "lydia auth add xai-oauth",
+        "docs_url": "https://lydia-agent.nousresearch.com/docs/guides/xai-grok-oauth",
+        "status_fn": None,  # dispatched via auth.get_xai_oauth_auth_status
     },
     {
         "id": "openai-codex",
@@ -6478,28 +6493,7 @@ _OAUTH_PROVIDER_CATALOG: tuple[Dict[str, Any], ...] = (
         "docs_url": "https://www.minimax.io",
         "status_fn": None,  # dispatched via auth.get_minimax_oauth_auth_status
     },
-    {
-        "id": "xai-oauth",
-        "name": "xAI Grok OAuth (SuperGrok / Premium+)",
-        # Loopback PKCE: the desktop's local backend binds a 127.0.0.1
-        # callback server, the client opens the browser, and the redirect
-        # lands back on the loopback listener — no code to copy/paste.
-        "flow": "loopback",
-        "cli_command": "lydia auth add xai-oauth",
-        "docs_url": "https://lydia-agent.nousresearch.com/docs/guides/xai-grok-oauth",
-        "status_fn": None,  # dispatched via auth.get_xai_oauth_auth_status
-    },
-    {
-        "id": "copilot-acp",
-        "name": "GitHub Copilot (ACP)",
-        "flow": "external",
-        "cli_command": "copilot /login",
-        "docs_url": "https://docs.github.com/en/copilot",
-        "status_fn": _copilot_acp_status,
-    },
-    # ── Anthropic / Claude entries sit at the bottom: the API-key path
-    # first, then the subscription OAuth path (which only works with extra
-    # usage credits on top of a Claude Max plan — see disclaimer in name).
+    # ── API-key providers ────────────────────────────────────────────
     {
         "id": "anthropic",
         "name": "Anthropic API Key",
@@ -6515,6 +6509,17 @@ _OAUTH_PROVIDER_CATALOG: tuple[Dict[str, Any], ...] = (
         "cli_command": "claude setup-token",
         "docs_url": "https://docs.claude.com/en/docs/claude-code",
         "status_fn": _claude_code_only_status,
+    },
+    # ── Legacy / third-party providers ───────────────────────────────
+    # Nous Portal is available as an optional provider but is NOT the
+    # default or recommended. Users who want it can find it here.
+    {
+        "id": "nous",
+        "name": "Nous Portal",
+        "flow": "device_code",
+        "cli_command": "lydia auth add nous",
+        "docs_url": "https://portal.nousresearch.com",
+        "status_fn": None,  # dispatched via auth.get_nous_auth_status
     },
 )
 

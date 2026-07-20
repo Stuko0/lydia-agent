@@ -1217,6 +1217,15 @@ DEFAULT_CONFIG = {
             "rewrite_loopback_urls": False,
             "loopback_host_alias": "host.docker.internal",
         },
+        # User-facing browser — the real browser Lydia opens when it needs
+        # to show the user a rendered web page (e.g. a launched dev server,
+        # a preview, or a page from browser_navigate that the user wants to
+        # inspect visually).  Set automatically by ``lydia setup`` via the
+        # browser scanner, or manually in config.yaml.
+        "user_browser": {
+            "name": "",   # human label (e.g. "Firefox", "Brave")
+            "command": "",  # executable path or shell command (e.g. "firefox", "flatpak run ...")
+        },
     },
 
     # Filesystem checkpoints — automatic snapshots before destructive file ops.
@@ -2290,7 +2299,7 @@ DEFAULT_CONFIG = {
         "thread_require_mention": False,  # If True, require @mention in threads too (multi-bot threads)
         "history_backfill": True,         # If True, prepend recent channel scrollback when bot is triggered (recovers messages missed while require_mention gated them out)
         "history_backfill_limit": 50,     # Max number of recent messages to scan when assembling the backfill block
-        "reactions": True,             # Add 👀/✅/❌ reactions to messages during processing
+        "reactions": True,             # Add 👀/✦/✗ reactions to messages during processing
         "channel_prompts": {},         # Per-channel ephemeral system prompts (forum parents apply to child threads)
         # Opt-in DM role-based auth (#12136). By default, DISCORD_ALLOWED_ROLES
         # authorizes only guild messages in the role's own guild — DMs require
@@ -2344,14 +2353,14 @@ DEFAULT_CONFIG = {
     # WhatsApp platform settings (gateway mode)
     "whatsapp": {
         # Reply prefix prepended to every outgoing WhatsApp message.
-        # Default (None) uses the built-in "🌹 *Lydia Agent*" header.
+        # Default (None) uses the built-in "✦ *Lydia Agent*" header.
         # Set to "" (empty string) to disable the header entirely.
         # Supports \n for newlines, e.g. "🤖 *My Bot*\n──────\n"
     },
 
     # Telegram platform settings (gateway mode)
     "telegram": {
-        "reactions": False,            # Add 👀/✅/❌ reactions to messages during processing
+        "reactions": False,            # Add 👀/✦/✗ reactions to messages during processing
         "channel_prompts": {},         # Per-chat/topic ephemeral system prompts (topics inherit from parent group)
         "allowed_chats": "",           # If set, bot ONLY responds in these group/supergroup chat IDs (whitelist)
         "extra": {
@@ -7180,7 +7189,7 @@ def show_config():
 
     print()
     print(color("┌─────────────────────────────────────────────────────────┐", Colors.CYAN))
-    print(color("│              🌹 Lydia Configuration                    │", Colors.CYAN))
+    print(color("│              ✦ Lydia Configuration                    │", Colors.CYAN))
     print(color("└─────────────────────────────────────────────────────────┘", Colors.CYAN))
 
     # Managed scope: surface that some settings are administrator-pinned so the

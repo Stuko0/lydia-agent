@@ -2137,7 +2137,7 @@ def _launch_tui(
         from lydia_cli.relaunch import relaunch
 
         print()
-        print("🌹 Launching update...")
+        print("✦ Launching update...")
         print()
         relaunch(["update"], preserve_inherited=False)
 
@@ -2434,7 +2434,7 @@ def cmd_whatsapp(args):
     from lydia_constants import find_node_executable, with_lydia_node_path
 
     print()
-    print("🌹 WhatsApp Setup")
+    print("✦ WhatsApp Setup")
     print("=" * 50)
 
     # ── Step 1: Choose mode ──────────────────────────────────────────────
@@ -2645,14 +2645,14 @@ def cmd_whatsapp(args):
             print("    2. Send a message to the bot's WhatsApp number")
             print("    3. The agent will reply automatically")
             print()
-            print("  Tip: Agent responses are prefixed with '🌹 Lydia Agent'")
+            print("  Tip: Agent responses are prefixed with '✦ Lydia Agent'")
         else:
             print("  Next steps:")
             print("    1. Start the gateway:  lydia gateway")
             print("    2. Open WhatsApp → Message Yourself")
             print("    3. Type a message — the agent will reply")
             print()
-            print("  Tip: Agent responses are prefixed with '🌹 Lydia Agent'")
+            print("  Tip: Agent responses are prefixed with '✦ Lydia Agent'")
             print("  so you can tell them apart from your own messages.")
         print()
         print("  Or install as a service: lydia gateway install")
@@ -2693,7 +2693,7 @@ def cmd_postinstall(args):
 
     stamp_install_method("pip")
 
-    print("🌹 Lydia post-install bootstrap")
+    print("✦ Lydia post-install bootstrap")
     print()
 
     for dep in ("node", "browser", "ripgrep", "ffmpeg"):
@@ -3843,7 +3843,7 @@ def _remove_custom_provider(config):
     removed_name = (
         removed.get("name", "unnamed") if isinstance(removed, dict) else str(removed)
     )
-    print(f'✅ Removed "{removed_name}" from custom providers.')
+    print(f'✦ Removed "{removed_name}" from custom providers.')
 
 
 
@@ -8393,7 +8393,7 @@ def _cmd_update_check(branch: str = "main", *, branch_explicit: bool = False):
         elif result == 0:
             print("✓ Already up to date.")
         else:
-            print("🌹 Update available on PyPI.")
+            print("✦ Update available on PyPI.")
             print(f"  Run '{recommended_update_command()}' to install.")
         return
 
@@ -8502,7 +8502,7 @@ def _cmd_update_check(branch: str = "main", *, branch_explicit: bool = False):
         if head_sha and target_sha and head_sha == target_sha:
             print("✓ Already up to date.")
         else:
-            print(f"🌹 Update available (behind {compare_branch}).")
+            print(f"✦ Update available (behind {compare_branch}).")
             from lydia_cli.config import recommended_update_command
 
             print(f"  Run '{recommended_update_command()}' to install.")
@@ -8521,7 +8521,7 @@ def _cmd_update_check(branch: str = "main", *, branch_explicit: bool = False):
         print("✓ Already up to date.")
     else:
         commits_word = "commit" if behind == 1 else "commits"
-        print(f"🌹 Update available: {behind} {commits_word} behind {compare_branch}.")
+        print(f"✦ Update available: {behind} {commits_word} behind {compare_branch}.")
         from lydia_cli.config import recommended_update_command
 
         print(f"  Run '{recommended_update_command()}' to install.")
@@ -9074,7 +9074,7 @@ def cmd_update(args):
         == 0
     )
     if not _has_origin:
-        print("🌹 Offline mode: Lydia is installed from a local fork with no git remote.")
+        print("✦ Offline mode: Lydia is installed from a local fork with no git remote.")
         print("  Updates are handled internally — run 'git pull <your-mirror>' manually")
         print("  or use the internal package distribution mechanism.")
         sys.exit(0)
@@ -9218,7 +9218,7 @@ def _cmd_update_impl(args, gateway_mode: bool):
             logger.debug("Could not read updates.non_interactive_local_changes: %s", exc)
             discard_local_changes = False
 
-    print("🌹 Updating Lydia Agent...")
+    print("✦ Updating Lydia Agent...")
     print()
 
     # On Windows, abort early if another lydia.exe is holding the venv shim
@@ -13086,7 +13086,7 @@ def main():
                 if not st["installed"]:
                     print("cua-driver: not installed. Run: lydia computer-use install")
                     sys.exit(1)
-                glyph = lambda v: "✅" if v is True else ("❌" if v is False else "•")  # noqa: E731
+                glyph = lambda v: "✦" if v is True else ("✗" if v is False else "•")  # noqa: E731
                 print(f"cua-driver: {st['version'] or 'installed'} ({st['platform']})")
                 if st["can_grant"]:  # macOS TCC permissions
                     print(f"  {glyph(st['accessibility'])} Accessibility")

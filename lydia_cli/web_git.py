@@ -209,9 +209,15 @@ sys.exit(0)
 
 def _askpass_env() -> dict[str, str]:
     """Build the env additions that route git's credential prompts through
-    the desktop gateway. Sets ``GIT_ASKPASS`` to the generated shim and
-    forces git to *always* ask (so the user's "saved in keychain" choice
+    the desktop gateway. Sets ``GIT_ASKPASS`` and ``SSH_ASKPASS`` to the
+    generated shim so both HTTPS git credentials and SSH key passphrases
+    are captured by the desktop modal instead of the launching terminal.
+
+    Forces git to *always* ask (so the user's "saved in keychain" choice
     is overridden — the desktop wants to be the single source of truth).
+    Forces SSH to use the askpass program even when a terminal is present
+    (``SSH_ASKPASS_REQUIRE=force``) — otherwise SSH reads the passphrase
+    directly from /dev/tty, bypassing our modal.
     """
     import os
     env = {
@@ -219,6 +225,13 @@ def _askpass_env() -> dict[str, str]:
         # git won't run askpass for known creds unless we set this. 5
         # minutes matches the renderer's modal timeout.
         "GIT_ASKPASS_TIMEOUT": "300",
+        # SSH key passphrases also route through the same askpass shim.
+        # Without SSH_ASKPASS, ssh prompts on /dev/tty — invisible to
+        # the desktop gateway.
+        "SSH_ASKPASS": askpass_path(),
+        # SSH_ASKPASS_REQUIRE=force tells ssh to use the askpass program
+        # even though DISPLAY may not be set or a terminal is available.
+        "SSH_ASKPASS_REQUIRE": "force",
     }
     return env
 

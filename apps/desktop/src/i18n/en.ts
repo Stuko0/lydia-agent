@@ -1719,7 +1719,7 @@ export const en: Translations = {
     chooseLater: "I'll choose a provider later",
     recommended: 'Recommended',
     connected: 'Connected',
-    featuredPitch: 'One subscription, 300+ frontier models — the recommended way to run Lydia',
+    featuredPitch: 'Free with your GitHub account — no API key needed. Includes GPT-4o, Claude, and more.',
     openRouterPitch: 'One key, hundreds of models — a solid default',
     apiKeyOptions: {
       openrouter: {

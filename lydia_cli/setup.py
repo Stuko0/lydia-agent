@@ -176,7 +176,7 @@ def is_interactive_stdin() -> bool:
 def print_noninteractive_setup_guidance(reason: str | None = None) -> None:
     """Print guidance for headless/non-interactive setup flows."""
     print()
-    print(color("🌹 Lydia Setup — Non-interactive mode", Colors.CYAN, Colors.BOLD))
+    print(color("✦ Lydia Setup — Non-interactive mode", Colors.CYAN, Colors.BOLD))
     print()
     if reason:
         print_info(reason)
@@ -2210,6 +2210,70 @@ def setup_tools(config: dict, first_install: bool = False):
     tools_command(first_install=first_install, config=config)
 
 
+def setup_browser(config: dict):
+    """Configure the user-facing browser for opening rendered web pages.
+
+    Scans the system for installed browsers and lets the user pick one.
+    Lydia will use this browser to open URLs when it wants to show the
+    user a rendered page (dev server preview, browser_navigate result, etc).
+    """
+    from lydia_cli.browser_scanner import scan_browsers
+
+    print_header("Browser")
+    print_info("Pick which browser Lydia opens rendered web pages in.")
+    print_info("Lydia uses a headless browser for automation — this is the")
+    print_info("REAL browser that opens when you want to view a page visually.")
+    print()
+
+    current_cmd = cfg_get(config, "browser", "user_browser", "command", default="")
+    current_name = cfg_get(config, "browser", "user_browser", "name", default="")
+
+    if current_cmd and current_name:
+        print_info(f"  Current: {current_name} ({current_cmd})")
+        print()
+        keep = prompt_yes_no("Keep current browser?", default=True)
+        if keep:
+            return
+
+    browsers = scan_browsers()
+
+    if not browsers:
+        print_warning("No browsers detected on this system.")
+        print_info("Lydia will use your system default browser.")
+        print_info("You can configure a browser later with: lydia setup browser")
+        # Clear any stale config
+        config.setdefault("browser", {}).setdefault("user_browser", {})
+        config["browser"]["user_browser"]["name"] = ""
+        config["browser"]["user_browser"]["command"] = ""
+        return
+
+    choices = [f"{b.name} ({b.command})" for b in browsers]
+    choices.append("Specify browser path manually")
+    choices.append("Skip — use system default")
+
+    idx = prompt_choice("Select your browser:", choices, 0)
+
+    if idx < len(browsers):
+        selected = browsers[idx]
+        config.setdefault("browser", {}).setdefault("user_browser", {})["name"] = selected.name
+        config["browser"]["user_browser"]["command"] = selected.command
+        print_success(f"Browser set to {selected.name}")
+    elif idx == len(browsers):
+        # Manual path entry
+        manual_path = input("  Enter browser path or command: ").strip()
+        if manual_path:
+            manual_name = os.path.basename(manual_path).replace(".exe", "").title()
+            config.setdefault("browser", {}).setdefault("user_browser", {})["name"] = manual_name
+            config["browser"]["user_browser"]["command"] = manual_path
+            print_success(f"Browser set to {manual_name} ({manual_path})")
+    else:
+        # Skip — use system default
+        print_info("Using system default browser.")
+        config.setdefault("browser", {}).setdefault("user_browser", {})
+        config["browser"]["user_browser"]["name"] = ""
+        config["browser"]["user_browser"]["command"] = ""
+
+
 # =============================================================================
 # Post-Migration Section Skip Logic
 # =============================================================================
@@ -2648,7 +2712,7 @@ def _run_portal_one_shot(config: dict) -> None:
             Colors.MAGENTA,
         )
     )
-    print(color("│     🌹 Lydia Setup — Nous Portal (one-shot)             │", Colors.MAGENTA))
+    print(color("│     ✦ Lydia Setup — Nous Portal (one-shot)             │", Colors.MAGENTA))
     print(
         color(
             "└─────────────────────────────────────────────────────────┘",
@@ -2778,7 +2842,7 @@ def run_setup_wizard(args):
                         Colors.MAGENTA,
                     )
                 )
-                print(color(f"│     🌹 Lydia Setup — {label:<34s} │", Colors.MAGENTA))
+                print(color(f"│     ✦ Lydia Setup — {label:<34s} │", Colors.MAGENTA))
                 print(
                     color(
                         "└─────────────────────────────────────────────────────────┘",
@@ -2814,7 +2878,7 @@ def run_setup_wizard(args):
     )
     print(
         color(
-            "│             🌹 Lydia Agent Setup Wizard                │", Colors.MAGENTA
+            "│             ✦ Lydia Agent Setup Wizard                │", Colors.MAGENTA
         )
     )
     print(
@@ -2881,7 +2945,7 @@ def run_setup_wizard(args):
         setup_mode = prompt_choice(
             "How would you like to set up Lydia?",
             [
-                "Quick Setup (Nous Portal) — free OAuth login, no API keys, model + tools (recommended)",
+                "Quick Setup (GitHub Copilot) — free with GitHub account, no API keys needed (recommended)",
                 "Full setup — configure every provider, tool & option yourself (bring your own keys)",
                 "Blank Slate — everything off except the bare minimum; opt in to each capability",
             ],
@@ -2932,6 +2996,10 @@ def run_setup_wizard(args):
     if not (migration_ran and _skip_configured_section(config, "tools", "Tools")):
         setup_tools(config, first_install=not is_existing)
 
+    # Section 6: Browser — pick which browser Lydia opens for rendered pages
+    if not (migration_ran and _skip_configured_section(config, "browser", "Browser")):
+        setup_browser(config)
+
     # Save and show summary
     save_config(config)
     if _backup_path and _backup_path.exists():
@@ -2942,45 +3010,85 @@ def run_setup_wizard(args):
 
 
 def _run_first_time_quick_setup(config: dict, lydia_home, is_existing: bool):
-    """Streamlined first-time setup via Nous Portal: OAuth, model, terminal & messaging.
+    """Streamlined first-time setup with GitHub Copilot as the recommended option.
 
-    Routes straight to the Nous Portal provider — runs the device-code OAuth
-    login, picks a Nous model, then configures the terminal backend and (optionally)
-    a messaging platform. Applies sensible defaults for everything else (agent
-    settings, tools); the user can customize later via ``lydia setup <section>``
+    Shows a provider picker (Copilot first, then xAI, then other OAuth), runs
+    the selected provider's login/model flow, then configures terminal backend
+    and (optionally) messaging platforms. Applies sensible defaults for agent
+    settings and tools; the user can customize later via ``lydia setup <section>``
     or switch providers with ``lydia model``.
     """
     from lydia_cli.config import load_config
 
-    # Step 1: Nous Portal — OAuth login + model selection.
-    # _model_flow_nous() handles both the logged-out path (device-code OAuth,
-    # which selects a model internally) and the already-logged-in path (curated
-    # Nous model picker). Provider is set to "nous" by the login/model save.
+    # Step 1: Provider selection — GitHub Copilot is the default/recommended.
+    # Other OAuth and API-key providers are available as alternatives.
     print()
-    print_header("Nous Portal")
-    print_info("One subscription, 300+ models, plus the Tool Gateway:")
-    print_info("  web search, image generation, TTS, browser automation.")
-    print_info("Sign up: https://portal.nousresearch.com/manage-subscription")
-    print()
-    try:
-        from lydia_cli.main import _model_flow_nous
-        _model_flow_nous(config)
-    except (KeyboardInterrupt, EOFError):
-        print()
-        print_info("Nous Portal setup cancelled.")
-    except Exception as exc:
-        logger.debug("_model_flow_nous error during quick setup: %s", exc)
-        print_warning(f"Nous Portal setup encountered an error: {exc}")
-        print_info("You can try again later with: lydia model")
+    providers = [
+        ("copilot-acp", "GitHub Copilot — free with GitHub account (recommended)"),
+        ("xai-oauth", "xAI Grok — OAuth login (SuperGrok / Premium+)"),
+        ("openai-codex", "OpenAI OAuth (ChatGPT)"),
+        ("nous", "Nous Portal"),
+        ("_api_key", "Bring your own API key (Anthropic, OpenAI, Google, DeepSeek...)"),
+    ]
+    provider_ids = [p[0] for p in providers]
+    provider_labels = [p[1] for p in providers]
 
-    # Re-sync the wizard's config dict from disk — _model_flow_nous (and the
-    # underlying login/model save) write via their own load/save cycle, and the
-    # wizard's later save_config(config) must not clobber those values (#4172).
+    choice = prompt_choice(
+        "Choose your provider",
+        provider_labels,
+        0,  # default: GitHub Copilot
+    )
+
+    selected_id = provider_ids[choice]
+
+    # Route to the appropriate setup flow
+    if selected_id == "_api_key":
+        # Full setup for API-key providers
+        from lydia_cli.main import _model_flow
+        _model_flow(config, run_picker=True)
+    elif selected_id == "nous":
+        try:
+            from lydia_cli.main import _model_flow_nous
+            _model_flow_nous(config)
+        except (KeyboardInterrupt, EOFError):
+            print()
+            print_info("Nous Portal setup cancelled.")
+        except Exception as exc:
+            logger.debug("_model_flow_nous error during quick setup: %s", exc)
+            print_warning(f"Nous Portal setup encountered an error: {exc}")
+            print_info("You can try again later with: lydia model")
+    elif selected_id == "xai-oauth":
+        try:
+            from lydia_cli.main import _model_flow_xai_oauth
+            _model_flow_xai_oauth(config)
+        except (KeyboardInterrupt, EOFError):
+            print()
+            print_info("xAI Grok setup cancelled.")
+        except Exception as exc:
+            logger.debug("_model_flow_xai_oauth error during quick setup: %s", exc)
+            print_warning(f"xAI Grok setup encountered an error: {exc}")
+            print_info("You can try again later with: lydia model")
+    else:
+        # GitHub Copilot ACP — the default/recommended path.
+        try:
+            from lydia_cli.model_setup_flows import _model_flow_copilot_acp
+            _model_flow_copilot_acp(config)
+        except (KeyboardInterrupt, EOFError):
+            print()
+            print_info("GitHub Copilot setup cancelled.")
+        except Exception as exc:
+            logger.debug("_model_flow_copilot_acp error during quick setup: %s", exc)
+            print_warning(f"GitHub Copilot setup encountered an error: {exc}")
+            print_info("You can try again later with: lydia model")
+
+    # Re-sync the wizard's config dict from disk — the model flows write via
+    # their own load/save cycle, and the wizard's later save_config(config)
+    # must not clobber those values (#4172).
     _refreshed = load_config()
     config.clear()
     config.update(_refreshed)
 
-    # Step 2: Terminal Backend — where commands run is a core decision
+    # Step 2: Terminal Backend
     setup_terminal_backend(config)
 
     # Step 3: Apply defaults for everything else

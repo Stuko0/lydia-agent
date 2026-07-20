@@ -348,7 +348,7 @@ def _cmd_migrate(args):
     )
     print(
         color(
-            "│          🌹 Lydia — OpenClaw Migration                 │",
+            "│          ✦ Lydia — OpenClaw Migration                 │",
             Colors.MAGENTA,
         )
     )
@@ -574,7 +574,7 @@ def _cmd_cleanup(args):
     )
     print(
         color(
-            "│          🌹 Lydia — OpenClaw Cleanup                   │",
+            "│          ✦ Lydia — OpenClaw Cleanup                   │",
             Colors.MAGENTA,
         )
     )

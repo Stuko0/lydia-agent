@@ -105,7 +105,7 @@ class CLICommandsMixin:
                         else:
                             print(f"\n{diff}")
             else:
-                print(f"  ❌ {result['error']}")
+                print(f"  ✗ {result['error']}")
             return
 
         # Resolve checkpoint reference (number or hash)
@@ -124,9 +124,9 @@ class CLICommandsMixin:
         result = mgr.restore(cwd, target_hash, file_path=file_path)
         if result["success"]:
             if file_path:
-                print(f"  ✅ Restored {file_path} from checkpoint {result['restored_to']}: {result['reason']}")
+                print(f"  ✦ Restored {file_path} from checkpoint {result['restored_to']}: {result['reason']}")
             else:
-                print(f"  ✅ Restored to checkpoint {result['restored_to']}: {result['reason']}")
+                print(f"  ✦ Restored to checkpoint {result['restored_to']}: {result['reason']}")
             print("  A pre-rollback snapshot was saved automatically.")
 
             # Also undo the last conversation turn so the agent's context
@@ -135,7 +135,7 @@ class CLICommandsMixin:
                 self.undo_last(prefill=False)
                 print("  Chat turn undone to match restored file state.")
         else:
-            print(f"  ❌ {result['error']}")
+            print(f"  ✗ {result['error']}")
 
     def _handle_snapshot_command(self, command: str):
         """Handle /snapshot — lightweight state snapshots for Lydia config/state.
@@ -252,10 +252,10 @@ class CLICommandsMixin:
         if running:
             print(f"  Stopping {len(running)} background process(es)...")
             killed = process_registry.kill_all()
-            print(f"  ✅ Stopped {killed} process(es).")
+            print(f"  ✦ Stopped {killed} process(es).")
         if n_async and interrupt_all is not None:
             stopped = interrupt_all(reason="/stop")
-            print(f"  ✅ Interrupted {stopped} background delegation(s).")
+            print(f"  ✦ Interrupted {stopped} background delegation(s).")
 
     def _handle_agents_command(self):
         """Handle /agents — show background processes and agent status."""
@@ -1635,18 +1635,18 @@ class CLICommandsMixin:
                     time.sleep(0.05)  # brief pause for refresh
                 print()
                 ChatConsole().print(f"[{_accent_hex()}]{'─' * 40}[/]")
-                _cprint(f"  ✅ Background task #{task_num} complete")
+                _cprint(f"  ✦ Background task #{task_num} complete")
                 _cprint(f"  Prompt: \"{prompt[:60]}{'...' if len(prompt) > 60 else ''}\"")
                 ChatConsole().print(f"[{_accent_hex()}]{'─' * 40}[/]")
                 if response:
                     try:
                         from lydia_cli.skin_engine import get_active_skin
                         _skin = get_active_skin()
-                        label = _skin.get_branding("response_label", "🌹 Lydia")
+                        label = _skin.get_branding("response_label", "✦ Lydia")
                         _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#c4a7e7"))
                         _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#e0def4"))
                     except Exception:
-                        label = "🌹 Lydia"
+                        label = "✦ Lydia"
                         _resp_color = "#56526e"
                         _resp_text = "#e0def4"
 
@@ -1675,7 +1675,7 @@ class CLICommandsMixin:
                     self._app.invalidate()
                     time.sleep(0.05)
                 print()
-                _cprint(f"  ❌ Background task #{task_num} failed: {e}")
+                _cprint(f"  ✗ Background task #{task_num} failed: {e}")
             finally:
                 try:
                     set_sudo_password_callback(None)
@@ -2623,7 +2623,7 @@ class CLICommandsMixin:
             ("cancel", "Cancel", "keep the current session"),
         ]
         raw = self._prompt_text_input_modal(
-            title="🌹  Update Lydia Agent",
+            title="✦  Update Lydia Agent",
             detail="This will exit the current session and run `lydia update`.",
             choices=choices,
         )
@@ -2636,7 +2636,7 @@ class CLICommandsMixin:
             return False
 
         print()
-        print("  🌹 Launching update...")
+        print("  ✦ Launching update...")
         print()
 
         # Store the relaunch args so run() can exec them from the main thread

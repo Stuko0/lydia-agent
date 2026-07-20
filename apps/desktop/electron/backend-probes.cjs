@@ -51,11 +51,15 @@ function lydiaRuntimeImportProbe() {
  * Return true iff the Lydia runtime import probe exits 0.
  *
  * Used to gate the "fallback to system Python with lydia_cli installed"
- * rung of resolveLydiaBackend. Without this, a system Python 3.11-3.13
- * registered in PEP 514 makes findSystemPython() succeed regardless of
- * whether lydia_cli has actually been pip-installed into its
- * site-packages -- and the resolver returns a backend that immediately
- * dies on spawn.
+ * rung of resolveLydiaBackend, and the "bundled Python" rung (when a
+ * `script` path is provided — the probe passes the script itself with
+ * `--probe`, trusting the entry point to set up sys.path for the bundled
+ * site-packages).
+ *
+ * Without this, a system Python 3.11-3.13 registered in PEP 514 makes
+ * findSystemPython() succeed regardless of whether lydia_cli has actually
+ * been pip-installed into its site-packages -- and the resolver returns a
+ * backend that immediately dies on spawn.
  *
  * The probe intentionally imports lydia_cli.config, not just the top-level
  * package: a broken/empty Windows launcher venv can still see the source tree
@@ -64,12 +68,20 @@ function lydiaRuntimeImportProbe() {
  * @param {string} pythonPath - Absolute path to a python.exe / python.
  * @param {object} [opts]
  * @param {object} [opts.env] - Additional environment for the probe.
+ * @param {string} [opts.script] - Optional path to an entry point script
+ *   (e.g. the bundled lydia-serve.py). When set, runs `${script} --probe`
+ *   instead of `-c "import ..."` so the entry point can set up sys.path
+ *   for a bundled site-packages directory.
  * @returns {boolean}
  */
 function canImportLydiaCli(pythonPath, opts = {}) {
   if (!pythonPath) return false
+  const { script } = opts
   try {
-    execFileSync(pythonPath, ['-c', lydiaRuntimeImportProbe()], {
+    const args = script
+      ? [script, '--probe']
+      : ['-c', lydiaRuntimeImportProbe()]
+    execFileSync(pythonPath, args, {
       env: { ...process.env, ...(opts.env || {}) },
       stdio: 'ignore',
       timeout: PROBE_TIMEOUT_MS,

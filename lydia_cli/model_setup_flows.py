@@ -1506,7 +1506,7 @@ def _model_flow_named_custom(config, provider_info):
         # Save model name to the custom_providers entry for next time
         _save_custom_provider(base_url, config_api_key, model_name, api_mode=api_mode)
 
-    print(f"\n✅ Model set to: {model_name}")
+    print(f"\n✦ Model set to: {model_name}")
     print(f"   Provider: {name} ({base_url})")
 
 def _model_flow_copilot(config, current_model=""):
@@ -2433,7 +2433,7 @@ def _model_flow_api_key_provider(config, provider_id, current_model=""):
             if tier == "free":
                 print()
                 print(
-                    "❌ This Google API key is on the free tier "
+                    "✗ This Google API key is on the free tier "
                     "(<= 250 requests/day for gemini-2.5-flash)."
                 )
                 print(

@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: lydia-agent
 Version: 0.17.0
 Summary: Lydia — AI agent fork for Arquant, based on Lydia Agent
-Author: Stuko
+Author: Nous Research
 License-Expression: MIT
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
@@ -171,15 +171,15 @@ Dynamic: license-file
   <img src="assets/banner.png" alt="Lydia Agent" width="100%">
 </p>
 
-# Lydia Agent ☤
+# Lydia Agent 🌹
 <p align="center">
   <a href="https://lydia-agent.stuko.dev/">Lydia Agent</a> | <a href="https://lydia-agent.stuko.dev/">Lydia Desktop</a>
 </p>
 <p align="center">
-  <a href="https://lydia-agent.stuko.dev/docs/"><img src="https://img.shields.io/badge/Docs-lydia--agent.stuko.dev-FFD700?style=for-the-badge" alt="Documentation"></a>
+  <a href="https://lydia-agent.stuko.dev/en/docs/"><img src="https://img.shields.io/badge/Docs-lydia--agent.stuko.dev-FFD700?style=for-the-badge" alt="Documentation"></a>
   <a href="https://discord.gg/Stuko"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
   <a href="https://10.1.200.116:3000/arquant-admin/NewLydia/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
-  <a href="https://stuko.dev"><img src="https://img.shields.io/badge/Built%20by-Nous%20Research-blueviolet?style=for-the-badge" alt="Built by Stuko"></a>
+  <a href="https://stuko.dev"><img src="https://img.shields.io/badge/Built%20by-Stuko0-blueviolet?style=for-the-badge" alt="Built by Stuko"></a>
   <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/Lang-中文-red?style=for-the-badge" alt="中文"></a>
   <a href="README.ur-pk.md"><img src="https://img.shields.io/badge/Lang-اردو-green?style=for-the-badge" alt="اردو"></a>
   <a href="README.es.md"><img src="https://img.shields.io/badge/Lang-Español-orange?style=for-the-badge" alt="Español"></a>
@@ -187,7 +187,7 @@ Dynamic: license-file
 
 **The self-improving AI agent built by [Stuko](https://stuko.dev).** It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. Run it on a $5 VPS, a GPU cluster, or serverless infrastructure that costs nearly nothing when idle. It's not tied to your laptop — talk to it from Telegram while it works on a cloud VM.
 
-Use any model you want — [Nous Portal](https://portal.stuko.dev), OpenRouter, OpenAI, your own endpoint, and [many others](https://lydia-agent.stuko.dev/docs/integrations/providers). Switch with `lydia model` — no code changes, no lock-in.
+Use any model you want — OpenRouter, OpenAI, your own endpoint, and [many others](https://lydia-agent.stuko.dev/en/docs/integrations/providers). Switch with `lydia model` — no code changes, no lock-in.
 
 <table>
 <tr><td><b>A real terminal interface</b></td><td>Full TUI with multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output.</td></tr>
@@ -211,7 +211,7 @@ curl -fsSL https://lydia-agent.stuko.dev/install.sh | bash
 
 ### Windows (native, PowerShell)
 
-> **Heads up:** Native Windows runs Lydia without WSL — CLI, gateway, TUI, and tools all work natively. If you'd rather use WSL2, the Linux/macOS one-liner above works there too. Found a bug? Please [file issues](https://10.1.200.116:3000/arquant-admin/NewLydia/issues).
+> **Heads up:** Native Windows runs Lydia without WSL — CLI, gateway, TUI, and tools all work natively. If you'd rather use WSL2, the Linux/macOS one-liner above works there too. Found a bug? Please [file issues]([https://github.com/Stuko0/lydia-agent/]).
 
 Run this in PowerShell:
 
@@ -223,7 +223,7 @@ The installer handles everything: uv, Python 3.11, Node.js, ripgrep, ffmpeg, **a
 
 If you already have Git installed, the installer detects it and uses that instead. Otherwise a ~45MB MinGit download is all you need — it won't touch or interfere with any system Git.
 
-> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://lydia-agent.stuko.dev/docs/getting-started/termux). On Termux, Lydia installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
+> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://lydia-agent.stuko.dev/en/docs/getting-started/termux). On Termux, Lydia installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
 >
 > **Windows:** Native Windows is fully supported — the PowerShell one-liner above installs everything. If you'd rather use WSL2, the Linux command works there too. Native Windows install lives under `%LOCALAPPDATA%\lydia`; WSL2 installs under `~/.lydia` as on Linux.
 
@@ -285,24 +285,11 @@ lydia update       # Update to the latest version
 lydia doctor       # Diagnose any issues
 ```
 
-📖 **[Full documentation →](https://lydia-agent.stuko.dev/docs/)**
+📖 **[Full documentation →](https://lydia-agent.stuko.dev/en/docs/)**
 
 ---
 
-## Skip the API-key collection — Nous Portal
-
-Lydia works with whatever provider you want — that's not changing. But if you'd rather not collect five separate API keys for the model, web search, image generation, TTS, and a cloud browser, **[Nous Portal](https://portal.stuko.dev)** covers all of them under one subscription:
-
-- **300+ models** — pick any of them with `/model <name>`
-- **Tool Gateway** — web search (Firecrawl), image generation (FAL), text-to-speech (OpenAI), cloud browser (Browser Use), all routed through your sub. No extra accounts.
-
-One command from a fresh install:
-
-```bash
-lydia setup --portal
-```
-
-That logs you in via OAuth, sets Nous as your provider, and turns on the Tool Gateway. Check what's wired up any time with `lydia portal info`. Full details on the [Tool Gateway docs page](https://lydia-agent.stuko.dev/docs/user-guide/features/tool-gateway).
+That logs you in via OAuth, sets Nous as your provider, and turns on the Tool Gateway. Check what's wired up any time with `lydia portal info`. Full details on the [Tool Gateway docs page](https://lydia-agent.stuko.dev/en/docs/user-guide/features/tool-gateway).
 
 You can still bring your own keys per-tool whenever you want — the gateway is per-backend, not all-or-nothing.
 
@@ -324,31 +311,31 @@ Lydia has two entry points: start the terminal UI with `lydia`, or run the gatew
 | Interrupt current work         | `Ctrl+C` or send a new message                | `/stop` or send a new message                                                    |
 | Platform-specific status       | `/platforms`                                  | `/status`, `/sethome`                                                            |
 
-For the full command lists, see the [CLI guide](https://lydia-agent.stuko.dev/docs/user-guide/cli) and the [Messaging Gateway guide](https://lydia-agent.stuko.dev/docs/user-guide/messaging).
+For the full command lists, see the [CLI guide](https://lydia-agent.stuko.dev/en/docs/user-guide/cli) and the [Messaging Gateway guide](https://lydia-agent.stuko.dev/en/docs/user-guide/messaging).
 
 ---
 
 ## Documentation
 
-All documentation lives at **[lydia-agent.stuko.dev/docs](https://lydia-agent.stuko.dev/docs/)**:
+All documentation lives at **[lydia-agent.stuko.dev/en/docs](https://lydia-agent.stuko.dev/en/docs/)**:
 
 | Section                                                                                             | What's Covered                                             |
 | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Quickstart](https://lydia-agent.stuko.dev/docs/getting-started/quickstart)                 | Install → setup → first conversation in 2 minutes          |
-| [CLI Usage](https://lydia-agent.stuko.dev/docs/user-guide/cli)                              | Commands, keybindings, personalities, sessions             |
-| [Configuration](https://lydia-agent.stuko.dev/docs/user-guide/configuration)                | Config file, providers, models, all options                |
-| [Messaging Gateway](https://lydia-agent.stuko.dev/docs/user-guide/messaging)                | Telegram, Discord, Slack, WhatsApp, Signal, Home Assistant |
-| [Security](https://lydia-agent.stuko.dev/docs/user-guide/security)                          | Command approval, DM pairing, container isolation          |
-| [Tools & Toolsets](https://lydia-agent.stuko.dev/docs/user-guide/features/tools)            | 40+ tools, toolset system, terminal backends               |
-| [Skills System](https://lydia-agent.stuko.dev/docs/user-guide/features/skills)              | Procedural memory, Skills Hub, creating skills             |
-| [Memory](https://lydia-agent.stuko.dev/docs/user-guide/features/memory)                     | Persistent memory, user profiles, best practices           |
-| [MCP Integration](https://lydia-agent.stuko.dev/docs/user-guide/features/mcp)               | Connect any MCP server for extended capabilities           |
-| [Cron Scheduling](https://lydia-agent.stuko.dev/docs/user-guide/features/cron)              | Scheduled tasks with platform delivery                     |
-| [Context Files](https://lydia-agent.stuko.dev/docs/user-guide/features/context-files)       | Project context that shapes every conversation             |
-| [Architecture](https://lydia-agent.stuko.dev/docs/developer-guide/architecture)             | Project structure, agent loop, key classes                 |
-| [Contributing](https://lydia-agent.stuko.dev/docs/developer-guide/contributing)             | Development setup, PR process, code style                  |
-| [CLI Reference](https://lydia-agent.stuko.dev/docs/reference/cli-commands)                  | All commands and flags                                     |
-| [Environment Variables](https://lydia-agent.stuko.dev/docs/reference/environment-variables) | Complete env var reference                                 |
+| [Quickstart](https://lydia-agent.stuko.dev/en/docs/getting-started/quickstart)                 | Install → setup → first conversation in 2 minutes          |
+| [CLI Usage](https://lydia-agent.stuko.dev/en/docs/user-guide/cli)                              | Commands, keybindings, personalities, sessions             |
+| [Configuration](https://lydia-agent.stuko.dev/en/docs/user-guide/configuration)                | Config file, providers, models, all options                |
+| [Messaging Gateway](https://lydia-agent.stuko.dev/en/docs/user-guide/messaging)                | Telegram, Discord, Slack, WhatsApp, Signal, Home Assistant |
+| [Security](https://lydia-agent.stuko.dev/en/docs/user-guide/security)                          | Command approval, DM pairing, container isolation          |
+| [Tools & Toolsets](https://lydia-agent.stuko.dev/en/docs/user-guide/features/tools)            | 40+ tools, toolset system, terminal backends               |
+| [Skills System](https://lydia-agent.stuko.dev/en/docs/user-guide/features/skills)              | Procedural memory, Skills Hub, creating skills             |
+| [Memory](https://lydia-agent.stuko.dev/en/docs/user-guide/features/memory)                     | Persistent memory, user profiles, best practices           |
+| [MCP Integration](https://lydia-agent.stuko.dev/en/docs/user-guide/features/mcp)               | Connect any MCP server for extended capabilities           |
+| [Cron Scheduling](https://lydia-agent.stuko.dev/en/docs/user-guide/features/cron)              | Scheduled tasks with platform delivery                     |
+| [Context Files](https://lydia-agent.stuko.dev/en/docs/user-guide/features/context-files)       | Project context that shapes every conversation             |
+| [Architecture](https://lydia-agent.stuko.dev/en/docs/developer-guide/architecture)             | Project structure, agent loop, key classes                 |
+| [Contributing](https://lydia-agent.stuko.dev/en/docs/developer-guide/contributing)             | Development setup, PR process, code style                  |
+| [CLI Reference](https://lydia-agent.stuko.dev/en/docs/reference/cli-commands)                  | All commands and flags                                     |
+| [Environment Variables](https://lydia-agent.stuko.dev/en/docs/reference/environment-variables) | Complete env var reference                                 |
 
 ---
 
@@ -384,7 +371,7 @@ See `lydia claw migrate --help` for all options, or use the `openclaw-migration`
 
 ## Contributing
 
-We welcome contributions! See the [Contributing Guide](https://lydia-agent.stuko.dev/docs/developer-guide/contributing) for development setup, code style, and PR process.
+We welcome contributions! See the [Contributing Guide](https://lydia-agent.stuko.dev/en/docs/developer-guide/contributing) for development setup, code style, and PR process.
 
 Quick start for contributors — use the standard installer, then work from the
 full git checkout it creates at `$LYDIA_HOME/lydia-agent` (usually
@@ -419,7 +406,7 @@ scripts/run_tests.sh
 
 - 💬 [Discord](https://discord.gg/Stuko)
 - 📚 [Skills Hub](https://agentskills.io)
-- 🐛 [Issues](https://10.1.200.116:3000/arquant-admin/NewLydia/issues)
+- 🐛 [Issues]([https://github.com/Stuko0/lydia-agent/issues])
 - 🔌 [computer-use-linux](https://github.com/avifenesh/computer-use-linux) — Linux desktop-control MCP server for Lydia and other MCP hosts, with AT-SPI accessibility trees, Wayland/X11 input, screenshots, and compositor window targeting.
 - 🔌 [LydiaClaw](https://github.com/AaronWong1999/lydiaclaw) — Community WeChat bridge: Run Lydia Agent and OpenClaw on the same WeChat account.
 
