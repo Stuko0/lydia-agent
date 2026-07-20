@@ -320,6 +320,23 @@ function resolveLydiaHome() {
 
 const LYDIA_HOME = resolveLydiaHome()
 
+// ---------------------------------------------------------------------------
+// SSH askpass — route SSH key passphrase prompts through the desktop modal
+// instead of the spawning terminal.  Points to the same Python askpass shim
+// the Python backend writes at ~/.lydia/lydia-git-askpass.py.  Git's own
+// credential prompts (HTTPS username/password) go through GIT_ASKPASS via
+// the backend's web_git module; SSH passphrases need a separate env var.
+// SSH_ASKPASS_REQUIRE=force tells ssh to use the program even when DISPLAY
+// is unset or a terminal is available — otherwise it reads /dev/tty directly.
+// ---------------------------------------------------------------------------
+const ASKPASS_SHIM = path.join(LYDIA_HOME, 'lydia-git-askpass.py')
+if (!process.env.SSH_ASKPASS) {
+  process.env.SSH_ASKPASS = ASKPASS_SHIM
+}
+if (!process.env.SSH_ASKPASS_REQUIRE) {
+  process.env.SSH_ASKPASS_REQUIRE = 'force'
+}
+
 function lydiaManagedNodePathEntries() {
   // NOTE: keep this ordering in sync with iter_lydia_node_dirs() in
   // lydia_constants.py — this Node main process cannot import the Python
