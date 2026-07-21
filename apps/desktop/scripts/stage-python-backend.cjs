@@ -325,14 +325,13 @@ function installDependencies() {
 
   console.log(`[stage-python-backend] using: ${uvCmd}`)
 
-  // Install the project in editable mode + all dependencies into target.
-  // Exclude the `desktop` extra if it exists (it pulls in Electron tooling
-  // that's not needed at runtime).
+  // Install the project + all dependencies into target directory.
+  // We use non-editable install (no -e) so the package files are
+  // actually copied into site-packages/ instead of creating a
+  // .egg-link / .pth redirect.  --only-binary is NOT set because
+  // the local package (lydia-agent) must be built from source.
   const result = execSync(
-    `${uvCmd} pip install --target "${installTarget}" -e "${REPO_ROOT}"` +
-    `  --no-build-isolation` +
-    `  --python-platform windows` +
-    `  --only-binary :all:` +
+    `${uvCmd} pip install --target "${installTarget}" "${REPO_ROOT}"` +
     `  --no-verify-hashes` +
     `  -q`,
     {
