@@ -27,7 +27,6 @@ function formatTime(iso: string): string {
   }
 }
 
-/** Strip trailing slash + protocol prefix for compact display. */
 function displayUrl(url: string): string {
   try {
     const u = new URL(url)
@@ -37,7 +36,17 @@ function displayUrl(url: string): string {
   }
 }
 
-function TabRow({ tab, onOpen, onClose }: { tab: BrowserTab; onOpen: (url: string) => void; onClose: (id: string) => void }) {
+function TabRow({
+  tab,
+  onNavigate,
+  onOpenExternal,
+  onClose,
+}: {
+  tab: BrowserTab
+  onNavigate: (url: string) => void
+  onOpenExternal: (url: string) => void
+  onClose: (id: string) => void
+}) {
   const domain = (() => {
     try {
       return new URL(tab.url).hostname
@@ -51,9 +60,14 @@ function TabRow({ tab, onOpen, onClose }: { tab: BrowserTab; onOpen: (url: strin
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <Codicon name="globe" size="0.75rem" className="shrink-0 text-(--ui-text-tertiary)" />
-          <span className="truncate text-[0.77rem] font-medium leading-5 text-foreground">
+          <button
+            className="truncate text-[0.77rem] font-medium leading-5 text-foreground hover:underline text-left"
+            onClick={() => onNavigate(tab.url)}
+            title={tab.url}
+            type="button"
+          >
             {tab.title || tab.url}
-          </span>
+          </button>
         </div>
         <div className="mt-0.5 flex items-center gap-2">
           <span className="truncate text-[0.65rem] text-(--ui-text-tertiary)">{domain}</span>
@@ -62,28 +76,21 @@ function TabRow({ tab, onOpen, onClose }: { tab: BrowserTab; onOpen: (url: strin
       </div>
       <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
         <Button
-          aria-label="Open in browser"
+          aria-label="Open in system browser"
           className="text-(--ui-text-tertiary) hover:text-foreground"
-          onClick={() => onOpen(tab.url)}
+          onClick={() => onOpenExternal(tab.url)}
           size="icon-xs"
+          title="Open in system browser"
           variant="ghost"
         >
           <Codicon name="link-external" size="0.8125rem" />
-        </Button>
-        <Button
-          aria-label="Navigate"
-          className="text-(--ui-text-tertiary) hover:text-foreground"
-          onClick={() => onOpen(tab.url)}
-          size="icon-xs"
-          variant="ghost"
-        >
-          <Codicon name="arrow-right" size="0.8125rem" />
         </Button>
         <Button
           aria-label="Close tab"
           className="text-(--ui-text-tertiary) hover:text-foreground"
           onClick={() => onClose(tab.id)}
           size="icon-xs"
+          title="Close tab"
           variant="ghost"
         >
           <Codicon name="close" size="0.8125rem" />
@@ -98,20 +105,33 @@ export function BrowserPane() {
   const panesFlipped = useStore($panesFlipped)
   const { t } = useI18n()
   const [inputUrl, setInputUrl] = useState('')
+  const [activeUrl, setActiveUrl] = useState<string | null>(null)
+  const [loadingEmbed, setLoadingEmbed] = useState(false)
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const iframeRef = useRef<HTMLIFrameElement | null>(null)
+
+  const openUrl = useCallback((url: string) => {
+    setActiveUrl(url)
+    setLoadingEmbed(true)
+    upsertBrowserTab(url, displayUrl(url))
+  }, [])
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault()
     let url = inputUrl.trim()
     if (!url) return
-    // Auto-prepend https:// if missing
     if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(url)) {
       url = 'https://' + url
     }
     setInputUrl('')
-    upsertBrowserTab(url, displayUrl(url))
-    openExternalLink(url)
-  }, [inputUrl])
+    openUrl(url)
+  }, [inputUrl, openUrl])
+
+  const handleIframeLoad = useCallback(() => {
+    setLoadingEmbed(false)
+  }, [])
+
+  const iframeSrc = activeUrl
 
   return (
     <aside
@@ -136,7 +156,7 @@ export function BrowserPane() {
           <Button
             aria-label="Clear all tabs"
             className="text-(--ui-text-tertiary) hover:text-foreground"
-            onClick={() => $browserTabs.set([])}
+            onClick={() => { $browserTabs.set([]); setActiveUrl(null) }}
             size="icon-xs"
             title="Clear all"
             variant="ghost"
@@ -146,7 +166,6 @@ export function BrowserPane() {
         )}
       </RightSidebarSectionHeader>
 
-      {/* URL input bar */}
       <form className="flex shrink-0 gap-1 px-2 pb-2" onSubmit={handleSubmit}>
         <Input
           className="min-w-0 flex-1 text-[0.77rem]"
@@ -160,30 +179,90 @@ export function BrowserPane() {
           className="shrink-0"
           disabled={!inputUrl.trim()}
           size="sm"
-          title="Open URL"
+          title="Navigate"
           type="submit"
         >
           <Codicon name="arrow-right" size="0.8125rem" />
         </Button>
       </form>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-        {tabs.length === 0 ? (
+      {/* Tab list */}
+      {tabs.length > 0 && (
+        <div className="flex flex-col gap-0.5 border-b border-(--ui-stroke-secondary) px-1.5 py-1">
+          {tabs.map(tab => (
+            <TabRow
+              key={tab.id}
+              tab={tab}
+              onNavigate={openUrl}
+              onOpenExternal={openExternalLink}
+              onClose={closeBrowserTab}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Embedded webview */}
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        {iframeSrc ? (
+          <>
+            {/* Navigation toolbar */}
+            <div className="flex shrink-0 items-center gap-1 border-b border-(--ui-stroke-secondary) bg-(--ui-surface-background) px-2 py-1">
+              <Button
+                className="text-(--ui-text-tertiary) hover:text-foreground"
+                disabled={!activeUrl}
+                onClick={() => {
+                  if (iframeRef.current?.contentWindow) {
+                    try { iframeRef.current.contentWindow.history.back() } catch {}
+                  }
+                }}
+                size="icon-xs"
+                title="Back"
+                variant="ghost"
+              >
+                <Codicon name="arrow-left" size="0.75rem" />
+              </Button>
+              <Button
+                className="text-(--ui-text-tertiary) hover:text-foreground"
+                disabled={!activeUrl}
+                onClick={() => {
+                  if (iframeRef.current?.contentWindow) {
+                    try { iframeRef.current.contentWindow.history.forward() } catch {}
+                  }
+                }}
+                size="icon-xs"
+                title="Forward"
+                variant="ghost"
+              >
+                <Codicon name="arrow-right" size="0.75rem" />
+              </Button>
+              <span className="min-w-0 flex-1 truncate px-1 text-[0.65rem] text-(--ui-text-quaternary)">
+                {loadingEmbed ? 'Loading…' : activeUrl}
+              </span>
+              <Button
+                className="text-(--ui-text-tertiary) hover:text-foreground"
+                onClick={() => openExternalLink(activeUrl)}
+                size="icon-xs"
+                title="Open in system browser"
+                variant="ghost"
+              >
+                <Codicon name="link-external" size="0.75rem" />
+              </Button>
+            </div>
+            {/* The iframe */}
+            <iframe
+              className="min-h-0 flex-1 border-0 bg-white"
+              onLoad={handleIframeLoad}
+              ref={iframeRef}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              src={iframeSrc}
+              title={activeUrl}
+            />
+          </>
+        ) : (
           <div className="flex flex-1 items-center justify-center px-4">
             <SidebarPanelLabel className="pl-0 text-(--ui-text-quaternary)">
-              No active browser tabs
+              Enter a URL above to browse
             </SidebarPanelLabel>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-0.5 p-2">
-            {tabs.map(tab => (
-              <TabRow
-                key={tab.id}
-                tab={tab}
-                onOpen={openExternalLink}
-                onClose={closeBrowserTab}
-              />
-            ))}
           </div>
         )}
       </div>
