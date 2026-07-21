@@ -333,7 +333,7 @@ function installDependencies() {
     `  --no-build-isolation` +
     `  --python-platform windows` +
     `  --only-binary :all:` +
-    `  --no-verify` +
+    `  --no-verify-hashes` +
     `  -q`,
     {
       stdio: ['ignore', 'pipe', 'pipe'],
