@@ -320,6 +320,23 @@ function resolveLydiaHome() {
 
 const LYDIA_HOME = resolveLydiaHome()
 
+// ---------------------------------------------------------------------------
+// SSH askpass — route SSH key passphrase prompts through the desktop modal
+// instead of the spawning terminal.  Points to the same Python askpass shim
+// the Python backend writes at ~/.lydia/lydia-git-askpass.py.  Git's own
+// credential prompts (HTTPS username/password) go through GIT_ASKPASS via
+// the backend's web_git module; SSH passphrases need a separate env var.
+// SSH_ASKPASS_REQUIRE=force tells ssh to use the program even when DISPLAY
+// is unset or a terminal is available — otherwise it reads /dev/tty directly.
+// ---------------------------------------------------------------------------
+const ASKPASS_SHIM = path.join(LYDIA_HOME, 'lydia-git-askpass.py')
+if (!process.env.SSH_ASKPASS) {
+  process.env.SSH_ASKPASS = ASKPASS_SHIM
+}
+if (!process.env.SSH_ASKPASS_REQUIRE) {
+  process.env.SSH_ASKPASS_REQUIRE = 'force'
+}
+
 function lydiaManagedNodePathEntries() {
   // NOTE: keep this ordering in sync with iter_lydia_node_dirs() in
   // lydia_constants.py — this Node main process cannot import the Python
@@ -2905,6 +2922,38 @@ function createActiveBackend(backendArgs) {
 }
 
 function resolveLydiaBackend(backendArgs) {
+  // 0. Bundled Python (standalone Windows desktop install).
+  //    When running from a packaged Windows build, python-embed and the
+  //    bundled site-packages live under resources/python/.  This rung takes
+  //    priority over everything except the explicit dev overrides because
+  //    the bundled runtime is the "correct" one for this .exe — it matches
+  //    the version we built and tested against.  If the probe fails (broken
+  //    install, corrupted files), we fall through to the other rungs so the
+  //    existing install.ps1 / PATH / system-Python ladder still works.
+  if (IS_PACKAGED && process.platform === 'win32') {
+    const bundledPython = path.join(process.resourcesPath, 'python', 'python.exe')
+    const bundledScript = path.join(process.resourcesPath, 'python', 'scripts', 'lydia-serve.py')
+
+    if (fileExists(bundledPython) && fileExists(bundledScript)) {
+      rememberLog(`[backend] found bundled Python at ${bundledPython}`)
+      // Probe with the entry script's --probe mode, which sets up sys.path
+      // for the bundled site-packages before importing lydia_cli.
+      if (canImportLydiaCli(bundledPython, { script: bundledScript })) {
+        rememberLog('[backend] bundled Python probe passed — using bundled backend')
+        return {
+          kind: 'bundled',
+          label: 'Bundled Lydia for Windows',
+          command: bundledPython,
+          args: [bundledScript, ...backendArgs],
+          bootstrap: false,
+          env: buildDesktopBackendEnv({ lydiaHome: LYDIA_HOME }),
+          shell: false
+        }
+      }
+      rememberLog('[backend] bundled Python found but import probe failed; falling through')
+    }
+  }
+
   // 1. Explicit override -- LYDIA_DESKTOP_LYDIA_ROOT points at a developer
   //    checkout. Honour it as-is (no bootstrap; the user is driving).
   const overrideRoot = process.env.LYDIA_DESKTOP_LYDIA_ROOT && path.resolve(process.env.LYDIA_DESKTOP_LYDIA_ROOT)
