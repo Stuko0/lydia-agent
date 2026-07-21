@@ -47,7 +47,7 @@ const CACHE_DIR = path.join(APP_ROOT, 'build', '.cache')
 // ---------------------------------------------------------------------------
 // Python version
 // ---------------------------------------------------------------------------
-const PYTHON_VERSION = process.env.PYTHON_EMBED_VERSION || '3.11.11'
+const PYTHON_VERSION = process.env.PYTHON_EMBED_VERSION || '3.11.9'
 const PYTHON_EMBED_URL =
   `https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-embed-amd64.zip`
 const PYTHON_ZIP_CACHE = path.join(CACHE_DIR, `python-${PYTHON_VERSION}-embed-amd64.zip`)
