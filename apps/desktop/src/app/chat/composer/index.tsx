@@ -816,16 +816,11 @@ export function ChatBar({
       <ComposerPrimitive.Unstable_TriggerPopoverRoot>
         <ComposerPrimitive.Root
           className={cn(
-            'group/composer z-30 overflow-visible rounded-2xl',
-            poppedOut
-              ? // Floating: the composer (with its own border) floats with an even
-                // 5px transparent grab margin around it — drag that to move it.
-                'fixed w-[var(--composer-popout-width)] max-w-[calc(100vw-1.5rem)] bg-transparent p-[5px]'
-              : 'absolute bottom-0 left-1/2 w-[min(var(--composer-width),calc(100%-2rem))] max-w-full -translate-x-1/2 pt-2 pb-[var(--composer-shell-pad-block-end)]',
+            'absolute bottom-0 left-1/2 z-30 w-[min(var(--composer-width),calc(100%-2rem))] max-w-full -translate-x-1/2 overflow-visible rounded-2xl pt-2 pb-[var(--composer-shell-pad-block-end)]',
             dragging && 'cursor-grabbing select-none touch-none'
           )}
-          data-drag-active={dragActive ? '' : undefined}
-          data-popped-out={poppedOut ? '' : undefined}
+          data-drag-active={undefined}
+          data-popped-out={undefined}
           data-slot="composer-root"
           data-status-stack={statusStackVisible ? '' : undefined}
           data-thread-scrolled-up={scrolledUp ? '' : undefined}
@@ -844,16 +839,7 @@ export function ChatBar({
             submitDraft()
           }}
           ref={composerRef}
-          style={
-            poppedOut
-              ? {
-                  bottom: `${popoutPosition.bottom}px`,
-                  right: `${popoutPosition.right}px`,
-                  // A compact one-sentence width when floating.
-                  ['--composer-popout-width' as string]: `${POPOUT_WIDTH_REM}rem`
-                }
-              : undefined
-          }
+          style={undefined}
         >
           {showHelpHint && <HelpHint />}
           {trigger && !argStageEmpty && (
