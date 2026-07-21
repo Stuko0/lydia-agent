@@ -3,12 +3,16 @@ import { atom } from 'nanostores'
 import { persistBoolean, storedBoolean } from '@/lib/storage'
 
 const TAKEOVER_KEY = 'lydia.desktop.terminalTakeover'
+const BROWSER_OPEN_KEY = 'lydia.desktop.browserTabsOpen'
 
 export const $terminalTakeover = atom(storedBoolean(TAKEOVER_KEY, false))
+export const $browserTabsOpen = atom(storedBoolean(BROWSER_OPEN_KEY, false))
 
 $terminalTakeover.subscribe(active => persistBoolean(TAKEOVER_KEY, active))
+$browserTabsOpen.subscribe(open => persistBoolean(BROWSER_OPEN_KEY, open))
 
 export const setTerminalTakeover = (active: boolean) => $terminalTakeover.set(active)
+export const setBrowserTabsOpen = (open: boolean) => $browserTabsOpen.set(open)
 
 /** A command queued to run in the embedded terminal. The terminal pane flushes
  *  (and clears) it once its session is live, so a value set before the pane

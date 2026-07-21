@@ -1,7 +1,9 @@
 import { useStore } from '@nanostores/react'
+import { type FormEvent, useCallback, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Codicon } from '@/components/ui/codicon'
+import { Input } from '@/components/ui/input'
 import { useI18n } from '@/i18n'
 import { openExternalLink } from '@/lib/external-link'
 import { cn } from '@/lib/utils'
@@ -10,6 +12,7 @@ import { $panesFlipped } from '@/store/layout'
 import {
   $browserTabs,
   closeBrowserTab,
+  upsertBrowserTab,
   type BrowserTab,
 } from '@/store/browser-tabs'
 import { RightSidebarSectionHeader } from '../index'
@@ -21,6 +24,16 @@ function formatTime(iso: string): string {
     return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
   } catch {
     return ''
+  }
+}
+
+/** Strip trailing slash + protocol prefix for compact display. */
+function displayUrl(url: string): string {
+  try {
+    const u = new URL(url)
+    return u.hostname + u.pathname.replace(/\/$/, '')
+  } catch {
+    return url
   }
 }
 
@@ -58,6 +71,15 @@ function TabRow({ tab, onOpen, onClose }: { tab: BrowserTab; onOpen: (url: strin
           <Codicon name="link-external" size="0.8125rem" />
         </Button>
         <Button
+          aria-label="Navigate"
+          className="text-(--ui-text-tertiary) hover:text-foreground"
+          onClick={() => onOpen(tab.url)}
+          size="icon-xs"
+          variant="ghost"
+        >
+          <Codicon name="arrow-right" size="0.8125rem" />
+        </Button>
+        <Button
           aria-label="Close tab"
           className="text-(--ui-text-tertiary) hover:text-foreground"
           onClick={() => onClose(tab.id)}
@@ -75,6 +97,21 @@ export function BrowserPane() {
   const tabs = useStore($browserTabs)
   const panesFlipped = useStore($panesFlipped)
   const { t } = useI18n()
+  const [inputUrl, setInputUrl] = useState('')
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleSubmit = useCallback((e: FormEvent) => {
+    e.preventDefault()
+    let url = inputUrl.trim()
+    if (!url) return
+    // Auto-prepend https:// if missing
+    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(url)) {
+      url = 'https://' + url
+    }
+    setInputUrl('')
+    upsertBrowserTab(url, displayUrl(url))
+    openExternalLink(url)
+  }, [inputUrl])
 
   return (
     <aside
@@ -108,6 +145,27 @@ export function BrowserPane() {
           </Button>
         )}
       </RightSidebarSectionHeader>
+
+      {/* URL input bar */}
+      <form className="flex shrink-0 gap-1 px-2 pb-2" onSubmit={handleSubmit}>
+        <Input
+          className="min-w-0 flex-1 text-[0.77rem]"
+          onChange={e => setInputUrl(e.target.value)}
+          placeholder="Enter a URL…"
+          ref={inputRef}
+          type="text"
+          value={inputUrl}
+        />
+        <Button
+          className="shrink-0"
+          disabled={!inputUrl.trim()}
+          size="sm"
+          title="Open URL"
+          type="submit"
+        >
+          <Codicon name="arrow-right" size="0.8125rem" />
+        </Button>
+      </form>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {tabs.length === 0 ? (

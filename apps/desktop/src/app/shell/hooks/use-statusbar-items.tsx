@@ -2,13 +2,13 @@ import { useStore } from '@nanostores/react'
 import { useCallback, useMemo } from 'react'
 
 import type { CommandCenterSection } from '@/app/command-center'
-import { $terminalTakeover, setTerminalTakeover } from '@/app/right-sidebar/store'
+import { $terminalTakeover, $browserTabsOpen, setBrowserTabsOpen, setTerminalTakeover } from '@/app/right-sidebar/store'
 import { ContextUsagePanel } from '@/app/shell/context-usage-panel'
 import { GatewayMenuPanel } from '@/app/shell/gateway-menu-panel'
 import { Codicon } from '@/components/ui/codicon'
 import { GlyphSpinner } from '@/components/ui/glyph-spinner'
 import { useI18n } from '@/i18n'
-import { Activity, AlertCircle, Clock, Command, GitBranch, Hash, LayoutDashboard, Loader2, Terminal, Zap, ZapFilled } from '@/lib/icons'
+import { Activity, AlertCircle, Clock, Command, GitBranch, Globe, Hash, LayoutDashboard, Loader2, Terminal, Zap, ZapFilled } from '@/lib/icons'
 import type { RuntimeReadinessResult } from '@/lib/runtime-readiness'
 import { contextBarLabel, LiveDuration, usageContextLabel } from '@/lib/statusbar'
 import { cn } from '@/lib/utils'
@@ -76,6 +76,7 @@ export function useStatusbarItems({
   const copy = t.shell.statusbar
   const activeSessionId = useStore($activeSessionId)
   const terminalTakeover = useStore($terminalTakeover)
+  const browserTabsOpen = useStore($browserTabsOpen)
   const yoloActive = useStore($yoloActive)
   const busy = useStore($busy)
   const currentUsage = useStore($currentUsage)
@@ -447,6 +448,15 @@ export function useStatusbarItems({
         id: 'terminal',
         onSelect: () => setTerminalTakeover(!$terminalTakeover.get()),
         title: terminalTakeover ? copy.hideTerminal : copy.showTerminal,
+        variant: 'action'
+      },
+      {
+        className: `w-7 justify-center px-0${browserTabsOpen ? ' bg-accent/55 text-foreground' : ''}`,
+        hidden: !chatOpen,
+        icon: <Globe className="size-3.5" />,
+        id: 'browser-tabs',
+        onSelect: () => setBrowserTabsOpen(!$browserTabsOpen.get()),
+        title: browserTabsOpen ? 'Hide browser tabs' : 'Show browser tabs',
         variant: 'action'
       },
       clientVersionItem,

@@ -102,7 +102,8 @@ import { RightSidebarPane } from './right-sidebar'
 import { FileActionDialogs } from './right-sidebar/file-actions'
 import { RemoteFolderPicker } from './right-sidebar/files/remote-picker'
 import { ReviewPane } from './right-sidebar/review'
-import { $terminalTakeover } from './right-sidebar/store'
+import { BrowserPane } from './right-sidebar/browser'
+import { $terminalTakeover, $browserTabsOpen } from './right-sidebar/store'
 import { TerminalPaneChrome } from './right-sidebar/terminal/chrome'
 import { PersistentTerminal } from './right-sidebar/terminal/persistent'
 import { closeActiveTerminal } from './right-sidebar/terminal/terminals'
@@ -166,6 +167,7 @@ export function DesktopController() {
   const selectedStoredSessionId = useStore($selectedStoredSessionId)
   const terminalTakeover = useStore($terminalTakeover)
   const reviewOpen = useStore($reviewOpen)
+  const browserTabsOpen = useStore($browserTabsOpen)
   const fileBrowserOpen = useStore($fileBrowserOpen)
   const previewPaneOpen = useStore($paneOpen(PREVIEW_PANE_ID))
   const panesFlipped = useStore($panesFlipped)
@@ -1123,6 +1125,22 @@ export function DesktopController() {
     </Pane>
   )
 
+  const browserPane = (
+    <Pane
+      defaultOpen
+      disabled={!browserTabsOpen}
+      id="browser-tabs"
+      key="browser-tabs"
+      maxWidth={FILE_BROWSER_MAX_WIDTH}
+      minWidth={220}
+      resizable
+      side={railSide}
+      width={320}
+    >
+      <BrowserPane />
+    </Pane>
+  )
+
   const terminalPane = (
     <Pane
       bottomRow={terminalAsRow}
@@ -1227,6 +1245,7 @@ export function DesktopController() {
         adjacent to the chat.
       */}
       {panesFlipped ? fileBrowserPane : terminalPane}
+      {browserPane}
       {previewPane}
       {reviewPane}
       {panesFlipped ? terminalPane : fileBrowserPane}
