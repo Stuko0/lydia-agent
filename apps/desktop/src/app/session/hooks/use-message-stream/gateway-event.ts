@@ -18,6 +18,7 @@ import { $gateway } from '@/store/gateway'
 import { dispatchNativeNotification } from '@/store/native-notifications'
 import { notify } from '@/store/notifications'
 import { requestDesktopOnboarding } from '@/store/onboarding'
+import { upsertBrowserTab } from '@/store/browser-tabs'
 import { flashPetActivity, markPetUnread, setPetActivity } from '@/store/pet'
 import { followActiveSessionCwd } from '@/store/projects'
 import { clearAllPrompts, setApprovalRequest, setAskpassRequest, setSecretRequest, setSudoRequest } from '@/store/prompts'
@@ -355,6 +356,14 @@ export function useGatewayEventHandler(deps: GatewayEventDeps) {
 
         flushQueuedDeltas(sessionId)
         upsertToolCall(sessionId, toTodoPayload(payload) ?? payload, 'running', event.type)
+
+        // Auto-show browser panel + add tab when the agent navigates
+        if (event.type === 'tool.start' && payload?.name === 'browser_navigate') {
+          const url = String(payload.args?.url || payload.input?.url || '')
+          if (url) {
+            upsertBrowserTab(url)
+          }
+        }
 
         if (isActiveEvent) {
           setPetActivity({ reasoning: false, toolRunning: true })
